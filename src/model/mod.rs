@@ -131,9 +131,9 @@ impl Game {
                     possible_moves.push(Move { target: piece, orig: sq, dest: [5, row-1] });}}
             if self.board[col+1][row] == (Piece {piece: 'e', color: 0}) {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col+1, row] });
-                if col == 1 {if self.board[col+2][row] == (Piece {piece: 'e', color: 0}) {possible_moves.push(Move { target: piece, orig: sq, dest: [col+2, row] })}}}
-            if row >= 1 {if self.board[col+1][row-1].color == 2 {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1, row-1] })}}
-            if row+1 <= 7 {if self.board[col+1][row+1].color == 2 {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1, row+1] })}}
+                if col == 1 && self.board[col+2][row] == (Piece {piece: 'e', color: 0}) {possible_moves.push(Move { target: piece, orig: sq, dest: [col+2, row] })}}
+            if row >= 1 && self.board[col+1][row-1].color == 2 {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1, row-1] })}
+            if row+1 <= 7 && self.board[col+1][row+1].color == 2 {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1, row+1] })}
         }
         if piece.color == 2 {
             if col == 3 {
@@ -143,15 +143,16 @@ impl Game {
                     possible_moves.push(Move { target: piece, orig: sq, dest: [2, row-1] });}}
             if self.board[col-1][row] == (Piece {piece: 'e', color: 0}) {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col-1, row] });
-                if col == 6 {if self.board[col-2][row] == (Piece {piece: 'e', color: 0}) {possible_moves.push(Move { target: piece, orig: sq, dest: [col-2, row] })}}}
-            if row >= 1 {if self.board[col-1][row-1].color == 1 {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1, row-1] })}}
-            if row+1 <= 7 {if self.board[col-1][row+1].color == 1 {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1, row+1] })}}
+                if col == 6 && self.board[col-2][row] == (Piece {piece: 'e', color: 0}) {possible_moves.push(Move { target: piece, orig: sq, dest: [col-2, row] })}}
+            if row >= 1 && self.board[col-1][row-1].color == 1 {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1, row-1] })}
+            if row+1 <= 7 && self.board[col-1][row+1].color == 1 {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1, row+1] })}
         }
         possible_moves
     }
 
     fn _king_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
         let mut possible_moves: Vec<Move> = Vec::new();
+        // TODO
         possible_moves
      }
     fn _rook_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
@@ -186,6 +187,7 @@ impl Game {
     }
     fn _bishop_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
         let mut possible_moves: Vec<Move> = Vec::new();
+        // TODO
         possible_moves
     }
     fn _knight_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
