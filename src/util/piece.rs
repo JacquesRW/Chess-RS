@@ -1,6 +1,8 @@
 #[derive(Copy, Clone, PartialEq)]
 pub struct Piece {
+    // piece = 'e','P','K','Q','R','N' or 'B'
     pub piece: char,
+    // color = 0,1,2
     pub color: usize
 }
 impl Piece {

@@ -64,7 +64,7 @@ impl Board {
         }
     }
 
-    fn update_castle(&mut self, &m: &Move) {
+    fn update_castle(&mut self, m: &Move) {
         if m.target.piece == 'K' {
             self.castle[m.target.color] = [false, false]
         }

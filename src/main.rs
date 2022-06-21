@@ -3,6 +3,9 @@ use crate::util::piece::Piece;
 use crate::util::moves::Move;
 use crate::util::*;
 
+// THIS USES [COLUMN, ROW] CONVENTION JOHN
+// I BETTER NOT BE SEEING NO DUMBASS STUFF
+
 fn main() {
     let mut game = Board::new();
     game.log();
