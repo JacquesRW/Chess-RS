@@ -1,8 +1,6 @@
 # Chess-RS
 Chess in Rust
 
-Chess-RS/
-
 ```
 Chess-RS
 ├─ src/
