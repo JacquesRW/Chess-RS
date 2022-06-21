@@ -16,6 +16,9 @@ fn main() {
         let origin = get_square(&a);
         game.get_piece_selection(origin);
         let moves = game.unvalidated_moves(origin);
+        for item in &moves {
+            item.log();
+        }
 
         let mut a2 = String::new();
         println!("Move to:");

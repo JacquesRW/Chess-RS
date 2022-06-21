@@ -58,28 +58,36 @@ impl Board {
         let row = sq[1];
         let mut possible_moves: Vec<Move> = Vec::new();
         for drow in 1..(row+1) {
+            if row<drow { break }
             if self.board[col][row - drow].color != piece.color {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col,row-drow]});
                 if self.board[col][row - drow].color != 0 { break }
             }
+            else { break }
         }
         for drow in 1..(8-row) {
+            if row+drow>=8 { break }
             if self.board[col][row + drow].color != piece.color {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col,row+drow]});
                 if self.board[col][row + drow].color != 0 { break }
             }
+            else { break }
         }
         for dcol in 1..(col+1) {
+            if col<dcol { break }
             if self.board[col-dcol][row].color != piece.color {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col-dcol,row]});
                 if self.board[col-dcol][row].color != 0 { break }
             }
+            else { break }
         }
         for dcol in 1..(8-row) {
+            if col+dcol>=8 { break }
             if self.board[col+dcol][row].color != piece.color {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col+dcol,row]});
                 if self.board[col+dcol][row].color != 0 { break }
             }
+            else { break }
         }
         possible_moves
     }
@@ -156,4 +164,17 @@ impl Board {
             _ => panic!("Not a valid piece!")
         }
     }
+
+    pub fn _find_all_unvalidated_moves(&self) -> Vec<Move> {
+        let mut possible_moves: Vec<Move> = Vec::new();
+        for column in 0..8 {
+            for row in 0..8 {
+                if self.board[column][row].color == self.color {
+                    let mut current_moves = self.unvalidated_moves([column,row]);
+                    possible_moves.append(&mut current_moves);
+                    }
+                }
+            }
+        possible_moves
+        }
 }
