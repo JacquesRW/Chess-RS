@@ -18,8 +18,8 @@ impl Piece {
         };
         let y = match &self.color {
             0 => "",
-            1 => "White",
-            2 => "Black",
+            1 => "white",
+            2 => "black",
             _ => panic!("Not a valid colour.")
         };
         format!("{y} {x}")

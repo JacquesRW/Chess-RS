@@ -1,7 +1,8 @@
 use crate::model::structs::{Piece, Board, Square, Move};
+use std::cmp::min;
 
 impl Board {
-    fn pawn_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
+    fn _pawn_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
         let mut possible_moves: Vec<Move> = Vec::new();
         let col = sq[0];
         let row = sq[1];
@@ -32,12 +33,27 @@ impl Board {
         possible_moves
     }
 
-    fn king_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
+    fn _king_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
+        let col = sq[0];
+        let row = sq[1];
         let mut possible_moves: Vec<Move> = Vec::new();
-        // TODO
+        if self.castle[piece.color][0] && self.board[col][1] == (Piece {piece: 'e', color: 0}) && self.board[col][2] == (Piece {piece: 'e', color: 0}) && self.board[col][3] == (Piece {piece: 'e', color: 0}){
+            possible_moves.push(Move { target: piece, orig: sq, dest: [col,2]})
+        }
+        if self.castle[piece.color][1] && self.board[col][5] == (Piece {piece: 'e', color: 0}) && self.board[col][6] == (Piece {piece: 'e', color: 0}) {
+            possible_moves.push(Move { target: piece, orig: sq, dest: [col,6]})
+        }
+        if row<=6 && self.board[col][row+1].color != piece.color {possible_moves.push(Move { target: piece, orig: sq, dest: [col,row+1]})}
+        if row>=1 && self.board[col][row-1].color != piece.color {possible_moves.push(Move { target: piece, orig: sq, dest: [col,row-1]})}
+        if col<=6 && self.board[col+1][row].color != piece.color {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1,row]})}
+        if col>=1 && self.board[col-1][row].color != piece.color {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1,row]})}
+        if row<=6 && col<=6 && self.board[col+1][row+1].color != piece.color {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1,row+1]})}
+        if row>=1 && col>=1 && self.board[col-1][row-1].color != piece.color {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1,row-1]})}
+        if row<=6 && col>=1 && self.board[col-1][row+1].color != piece.color {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1,row+1]})}
+        if row>=1 && col<=6 && self.board[col+1][row-1].color != piece.color {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1,row-1]})}
         possible_moves
      }
-    fn rook_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
+    fn _rook_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
         let col = sq[0];
         let row = sq[1];
         let mut possible_moves: Vec<Move> = Vec::new();
@@ -67,12 +83,45 @@ impl Board {
         }
         possible_moves
     }
-    fn bishop_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
+    fn _bishop_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
+        let col = sq[0];
+        let row = sq[1];
+        let mut smaller = min(col, row);
         let mut possible_moves: Vec<Move> = Vec::new();
-        // TODO
+        for change in 1..(smaller+1) {
+            if self.board[col-change][row-change].color != piece.color {
+                possible_moves.push(Move { target: piece, orig: sq, dest: [col-change,row-change]});
+                if self.board[col-change][row-change].color != 0 { break }
+            }
+            else { break }
+        }
+        smaller = min(7-col, row);
+        for change in 1..(smaller+1) {
+            if self.board[col+change][row-change].color != piece.color {
+                possible_moves.push(Move { target: piece, orig: sq, dest: [col+change,row-change]});
+                if self.board[col+change][row-change].color != 0 { break }
+            }
+            else { break }
+        }
+        smaller = min(col, 7-row);
+        for change in 1..(smaller+1) {
+            if self.board[col-change][row+change].color != piece.color {
+                possible_moves.push(Move { target: piece, orig: sq, dest: [col-change,row+change]});
+                if self.board[col-change][row+change].color != 0 { break }
+            }
+            else { break }
+        }
+        smaller = min(7-col, 7-row);
+        for change in 1..(smaller+1) {
+            if self.board[col+change][row+change].color != piece.color {
+                possible_moves.push(Move { target: piece, orig: sq, dest: [col+change,row+change]});
+                if self.board[col+change][row+change].color != 0 { break }
+            }
+            else { break }
+        }
         possible_moves
     }
-    fn knight_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
+    fn _knight_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
         let col = sq[0];
         let row = sq[1];
         let mut possible_moves: Vec<Move> = Vec::new();
@@ -87,23 +136,23 @@ impl Board {
         possible_moves
     }
     
-    fn queen_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
-        let mut possible_moves = self.rook_moves(sq, piece);
-        let mut additional_moves = self.bishop_moves(sq,piece);
+    fn _queen_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
+        let mut possible_moves = self._rook_moves(sq, piece);
+        let mut additional_moves = self._bishop_moves(sq,piece);
         possible_moves.append(&mut additional_moves);
         possible_moves
     }
 
-    pub fn unvalidated_move(&self, sq: Square) -> Vec<Move> {
+    pub fn unvalidated_moves(&self, sq: Square) -> Vec<Move> {
         let piece = self.board[sq[0]][sq[1]];
         if piece.color != self.color {panic!("Not a valid piece")}
         match piece.piece {
-            'P' => self.pawn_moves(sq, piece),
-            'Q' => self.queen_moves(sq, piece),
-            'R' => self.rook_moves(sq, piece),
-            'N' => self.knight_moves(sq, piece),
-            'B' => self.bishop_moves(sq, piece),
-            'K' => self.king_moves(sq, piece),
+            'P' => self._pawn_moves(sq, piece),
+            'Q' => self._queen_moves(sq, piece),
+            'R' => self._rook_moves(sq, piece),
+            'N' => self._knight_moves(sq, piece),
+            'B' => self._bishop_moves(sq, piece),
+            'K' => self._king_moves(sq, piece),
             _ => panic!("Not a valid piece!")
         }
     }

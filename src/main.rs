@@ -1,13 +1,33 @@
 mod model;
-use crate::model::structs::{Piece,Move,Board};
-
+use crate::model::structs::{Move,Board};
+use crate::model::helper::*;
 // THIS USES [COLUMN, ROW] CONVENTION JOHN
 // I BETTER NOT BE SEEING NO DUMBASS STUFF
 
 fn main() {
     let mut game = Board::new();
     game.log();
-    let m = Move::new(Piece::pawn(1),[1,4],[3,4]);
-    game.make_move(m);
-    game.log();
+
+    loop {
+        let mut a = String::new();
+        println!("Piece to move:");
+        let b1 = std::io::stdin().read_line(&mut a).unwrap();
+        if b1 != 4 {break}
+        let origin = get_square(&a);
+        game.get_piece_selection(origin);
+        let moves = game.unvalidated_moves(origin);
+
+        let mut a2 = String::new();
+        println!("Move to:");
+        let b2 = std::io::stdin().read_line(&mut a2).unwrap();
+        if b2 != 4 {break}
+        let destination = get_square(&a2);
+
+        let m = Move::new(game.board[origin[0]][origin[1]],origin,destination);
+        if moves.iter().any(|&i| i==m) {
+            game.make_move(m);
+            game.log();
+        }
+        else {break}
+    }
 }

@@ -61,7 +61,6 @@ impl Board {
     }
 
     pub fn make_move(&mut self, m: Move) {
-        m.log();
         if m.target.color != self.color {
             panic!("Wrong colour trying to move!")
         }

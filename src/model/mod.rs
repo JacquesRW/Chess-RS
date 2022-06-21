@@ -3,7 +3,7 @@ pub mod structs;
 pub mod make_move;
 pub mod validation;
 pub mod helper;
-use structs::{Piece, Move, Board};
+use structs::{Piece, Move, Board, Square};
 
 impl Board {
     pub fn new() -> Board {
@@ -27,7 +27,13 @@ impl Board {
         }
     }
 
+    pub fn get_piece_selection(&self, sq: Square) {
+        println!("{} selected.", self.board[sq[0]][sq[1]].to_string())
+    }
+
     pub fn log(&self) {
+        println!("-------------------------");
+        self.last_move.log();
         println!("-------------------------");
         let board_ref: &[[Piece;8];8] = &self.board;
         for i in 0..8 {
