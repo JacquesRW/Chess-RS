@@ -30,6 +30,4 @@ impl Piece {
     pub fn queen(colour: usize) -> Piece {
         Piece {piece: 'Q', color: colour}
     }
-
-
 }
