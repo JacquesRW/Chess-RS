@@ -1,12 +1,21 @@
 # Chess-RS
 Chess in Rust
 
-|   .gitignore
-|   Cargo.toml
-|   README.md
-+---src
-|   |   main.rs
-|   |
-|   \---model
-|           mod.rs
-|           types.rs
+Chess-RS/
+
+```
+Chess-RS
+├─ src/
+│  ├─ model/
+│  │  ├─ structs/
+│  │  │  ├─ mod.rs
+│  │  ├─ helper.rs
+│  │  ├─ make_move.rs
+│  │  ├─ mod.rs
+│  │  ├─ types.rs
+│  │  ├─ validation.rs
+│  ├─ main.rs
+├─ .gitignore
+├─ cargo.toml
+├─ README.md
+```
