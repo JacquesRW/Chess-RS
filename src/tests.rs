@@ -84,4 +84,28 @@ mod test {
             m.log()
         }
     }
+
+    #[test]
+    fn speed_test() {
+        use rand::thread_rng;
+        use rand::seq::SliceRandom;
+        use std::time::Instant;
+        println!("Performing speed test on move generation for 6125 random moves.");
+        let mut game = Board::new();
+        let mut moves: Vec<Move>;
+        let mut m: Move;
+        let now = Instant::now();
+        for _ in 0..5 {
+            for _ in 0..25 {
+                moves = game.find_all_possible_moves();
+                m = *moves.choose(&mut thread_rng()).unwrap();
+                game.make_move(m);
+            }
+            game.log();
+            for _ in 0..1000 {
+                game.find_all_possible_moves();
+            }
+        }
+        println!("Took {} ms", now.elapsed().as_millis())
+    }
 }

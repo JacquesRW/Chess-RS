@@ -9,27 +9,27 @@ impl Board {
         let row = sq[1];
         if piece.color == 1 {
             if col == 4 {
-                if self.last_move == (Move { target: Piece {piece: 'P', color: 2}, orig: [row+1, 6], dest: [row+1, 4] }) {
+                if row <= 6 && self.last_move == (Move { target: Piece {piece: 'P', color: 2}, orig: [row+1, 6], dest: [row+1, 4] }) {
                     possible_moves.push(Move { target: piece, orig: sq, dest: [5, row+1] });}
-                if self.last_move == (Move { target: Piece {piece: 'P', color: 2}, orig: [row-1,6], dest: [row-1, 4] }) {
+                if row >= 1 && self.last_move == (Move { target: Piece {piece: 'P', color: 2}, orig: [row-1,6], dest: [row-1, 4] }) {
                     possible_moves.push(Move { target: piece, orig: sq, dest: [5, row-1] });}}
-            if self.board[col+1][row] == (Piece {piece: 'e', color: 0}) {
+            if col <= 6 && self.board[col+1][row] == (Piece {piece: 'e', color: 0}) {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col+1, row] });
                 if col == 1 && self.board[col+2][row] == (Piece {piece: 'e', color: 0}) {possible_moves.push(Move { target: piece, orig: sq, dest: [col+2, row] })}}
-            if row >= 1 && self.board[col+1][row-1].color == 2 {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1, row-1] })}
-            if row+1 <= 7 && self.board[col+1][row+1].color == 2 {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1, row+1] })}
+            if row >= 1 && col <= 6 && self.board[col+1][row-1].color == 2 {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1, row-1] })}
+            if row <= 6 && col <= 6 && self.board[col+1][row+1].color == 2 {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1, row+1] })}
         }
         if piece.color == 2 {
             if col == 3 {
-                if self.last_move == (Move { target: Piece {piece: 'P', color: 1}, orig: [row+1, 1], dest: [row+1, 3] }) {
+                if row <= 6 && self.last_move == (Move { target: Piece {piece: 'P', color: 1}, orig: [row+1, 1], dest: [row+1, 3] }) {
                     possible_moves.push(Move { target: piece, orig: sq, dest: [2, row+1] });}
-                if self.last_move == (Move { target: Piece {piece: 'P', color: 1}, orig: [row-1,1], dest: [row-1, 3] }) {
+                if row >= 1 && self.last_move == (Move { target: Piece {piece: 'P', color: 1}, orig: [row-1,1], dest: [row-1, 3] }) {
                     possible_moves.push(Move { target: piece, orig: sq, dest: [2, row-1] });}}
-            if self.board[col-1][row] == (Piece {piece: 'e', color: 0}) {
+            if col >= 1 && self.board[col-1][row] == (Piece {piece: 'e', color: 0}) {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col-1, row] });
                 if col == 6 && self.board[col-2][row] == (Piece {piece: 'e', color: 0}) {possible_moves.push(Move { target: piece, orig: sq, dest: [col-2, row] })}}
-            if row >= 1 && self.board[col-1][row-1].color == 1 {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1, row-1] })}
-            if row+1 <= 7 && self.board[col-1][row+1].color == 1 {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1, row+1] })}
+            if row >= 1 && col >= 1 && self.board[col-1][row-1].color == 1 {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1, row-1] })}
+            if row <= 6 && col >= 1 && self.board[col-1][row+1].color == 1 {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1, row+1] })}
         }
         possible_moves
     }
