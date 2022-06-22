@@ -1,3 +1,6 @@
+//* Makes moves on board. */
+//* Only file that should be mutating the fields of a board. */
+
 use crate::model::structs::{Piece, Board, Move};
 use crate::model::helper::*;
 

@@ -1,3 +1,4 @@
+//* Useful misc public functions. */
 use crate::model::structs::Square;
 
 pub fn get_coords(square: Square) -> String{
@@ -47,6 +48,7 @@ pub fn other_colour(color: usize) -> usize{
     match color {
         1 => 2,
         2 => 1,
+        0 => 0,
         _ => panic!("Not valid colour.")
     }
 }
