@@ -165,7 +165,7 @@ impl Board {
         }
     }
 
-    pub fn _find_all_unvalidated_moves(&self) -> Vec<Move> {
+    pub fn find_all_unvalidated_moves(&self) -> Vec<Move> {
         let mut possible_moves: Vec<Move> = Vec::new();
         for column in 0..8 {
             for row in 0..8 {
