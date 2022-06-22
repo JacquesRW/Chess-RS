@@ -42,17 +42,11 @@ impl Board {
     
     fn update_castle(&mut self) {
         let temp_colour = self.last_move.target.color;
-        if self.last_move.target.piece == 'K' {
-            self.castle[temp_colour] = [false, false]
-        }
-        else if self.last_move.target == Piece::rook(1) {
-            if self.last_move.orig == [0,0] {self.castle[temp_colour][0] = false}
-            else if self.last_move.orig == [0,7] {self.castle[temp_colour][1] = false}
-        }
-        else if self.last_move.target == Piece::rook(2) {
-            if self.last_move.orig == [7,0] {self.castle[temp_colour][0] = false}
-            else if self.last_move.orig == [7,7] {self.castle[temp_colour][1] = false}
-        }
+        if self.last_move.target.piece == 'K' {self.castle[temp_colour] = [false, false]}
+        else if self.last_move.orig == [0,0] || self.last_move.dest == [0,0] {self.castle[1][0] = false}
+        else if self.last_move.orig == [0,7] || self.last_move.dest == [0,7] {self.castle[1][1] = false}
+        else if self.last_move.orig == [7,0] || self.last_move.dest == [7,0] {self.castle[2][0] = false}
+        else if self.last_move.orig == [7,7] || self.last_move.dest == [7,7] {self.castle[2][1] = false}
     }
 
     pub fn make_move(&mut self, m: Move) {
@@ -66,8 +60,10 @@ impl Board {
         self.board[m.dest[0]][m.dest[1]] = m.target;
         self.board[m.orig[0]][m.orig[1]] = Piece::empty();
         self.last_move = m;
-        self.try_castle();
-        self.update_castle();
+        if self.castle[self.color] != [false,false] {
+            self.try_castle();
+            self.update_castle();
+        }
         self.switch_color();
     }
 }
