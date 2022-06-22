@@ -5,6 +5,11 @@ use std::time::{Instant};
 // THIS USES [COLUMN, ROW] CONVENTION JOHN
 // I BETTER NOT BE SEEING NO DUMBASS STUFF
 
+// FOR TESTS USE cargo test -- --test-threads 1 --nocapture
+// NEEDS THIS SO YOU CAN SEE IF THE MOVES ARE RIGHT
+#[cfg(test)]
+mod tests;
+
 fn main() {
     let mut game = Board::new();
     game.log();

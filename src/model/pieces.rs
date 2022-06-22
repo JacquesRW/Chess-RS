@@ -1,5 +1,5 @@
-use crate::model::structs::{Piece, Square, Move};
-use crate::model::helper::*;
+//* Implementation of methods for the Piece struct. */
+use crate::model::structs::Piece;
 
 impl Piece {
     pub fn repr(&self) -> String {
@@ -12,7 +12,7 @@ impl Piece {
             'Q' => "queen",
             'R' => "rook",
             'B' => "bishop",
-            'N' => "kinght",
+            'N' => "knight",
             'e' => "Empty",
             _ => panic!("Not a valid piece")
         };
@@ -45,19 +45,4 @@ impl Piece {
     pub fn queen(colour: usize) -> Piece {
         Piece {piece: 'Q', color: colour}
     }
-}
-
-impl Move {
-
-    pub fn null() -> Move {
-        Move {target: Piece::empty(), orig: [0,0], dest: [0,0]}
-    }
-    pub fn new(piece: Piece, origin: Square, destination: Square) -> Move {
-        Move {target: piece, orig: origin, dest: destination}
-    }
-
-    pub fn log(&self) {
-        println!("{}, {} to {}", self.target.to_string(), get_coords(self.orig), get_coords(self.dest))
-    }
-
 }

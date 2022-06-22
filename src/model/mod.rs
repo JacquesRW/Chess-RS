@@ -1,4 +1,5 @@
-pub mod types;
+pub mod pieces;
+pub mod moves;
 pub mod structs;
 pub mod make_move;
 pub mod validation;
