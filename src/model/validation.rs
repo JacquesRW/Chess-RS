@@ -1,4 +1,5 @@
 use crate::model::structs::{Piece, Board, Square, Move};
+use crate::other_colour;
 use std::cmp::min;
 
 impl Board {
@@ -151,7 +152,7 @@ impl Board {
         possible_moves
     }
 
-    pub fn unvalidated_moves(&self, sq: Square) -> Vec<Move> {
+    fn unvalidated_moves(&self, sq: Square) -> Vec<Move> {
         let piece = self.board[sq[0]][sq[1]];
         if piece.color != self.color {panic!("Not a valid piece")}
         match piece.piece {
@@ -165,16 +166,85 @@ impl Board {
         }
     }
 
-    pub fn find_all_unvalidated_moves(&self) -> Vec<Move> {
+    fn _find_all_unvalidated_moves(&self) -> Vec<Move> {
         let mut possible_moves: Vec<Move> = Vec::new();
         for column in 0..8 {
             for row in 0..8 {
                 if self.board[column][row].color == self.color {
                     let mut current_moves = self.unvalidated_moves([column,row]);
                     possible_moves.append(&mut current_moves);
-                    }
                 }
             }
-        possible_moves
         }
+        possible_moves
+    }
+
+    fn check_for_check(&self, m: Move, king_square: Square, colour: usize) -> bool {
+        let mut temp = self.clone();
+        temp.make_move(m);
+        temp.color = colour;
+        let alt_color = other_colour(temp.color);
+        for pos in temp._pawn_moves(king_square, Piece { piece: 'e', color: colour }) {
+            if temp.board[pos.dest[0]][pos.dest[1]] == (Piece { piece: 'P', color: alt_color}) {
+                return true
+            }
+        }
+        for pos in temp._knight_moves(king_square, Piece { piece: 'e', color: colour }) {
+            if temp.board[pos.dest[0]][pos.dest[1]] == (Piece { piece: 'N', color: alt_color}) {
+                return true
+            }
+        }
+        for pos in temp._rook_moves(king_square, Piece { piece: 'e', color: colour }) {
+            if temp.board[pos.dest[0]][pos.dest[1]] == (Piece { piece: 'R', color: alt_color}) || temp.board[pos.dest[0]][pos.dest[1]] == (Piece { piece: 'Q', color: alt_color}) {
+                return true 
+            }
+        }
+        for pos in temp._bishop_moves(king_square, Piece { piece: 'e', color: colour }) {
+            if temp.board[pos.dest[0]][pos.dest[1]] == (Piece { piece: 'B', color: alt_color}) || temp.board[pos.dest[0]][pos.dest[1]] == (Piece { piece: 'Q', color: alt_color}) {
+                return true 
+            }
+        }
+        false
+    }
+
+    fn possible_moves(&self, sq: Square, king_square: Square, colour: usize) -> Vec<Move> {
+        let unvalidated = self.unvalidated_moves(sq);
+        let mut possible_moves: Vec<Move> = Vec::new();
+        if self.board[sq[0]][sq[1]] == (Piece { piece: 'K', color: colour}) {
+            for m in unvalidated {
+                if !(self.check_for_check(m, m.dest, colour)) {
+                    possible_moves.push(m);
+                }
+            }
+            return possible_moves
+        }
+        else {
+            for m in unvalidated {
+                if !(self.check_for_check(m, king_square, colour)) {
+                    possible_moves.push(m);
+                }
+            }
+            return possible_moves
+        }
+    }
+
+    pub fn selection_possible_moves(&self, sq: Square) -> Vec<Move> {
+        let king_square = self.get_king_square(self.color);
+        self.possible_moves(sq, king_square, self.color)
+    }
+
+    pub fn find_all_possible_moves(&self) -> Vec<Move> {
+        let mut possible_moves: Vec<Move> = Vec::new();
+        let king_square = self.get_king_square(self.color);
+        for column in 0..8 {
+            for row in 0..8 {
+                if self.board[column][row].color == self.color {
+                    let mut current_moves = self.possible_moves([column,row], king_square, self.color);
+                    possible_moves.append(&mut current_moves);
+                }
+            }
+        }
+        possible_moves
+    }
+
 }

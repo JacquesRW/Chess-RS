@@ -5,7 +5,7 @@ use crate::model::structs::{Piece, Board, Move};
 use crate::model::helper::*;
 
 impl Board {
-    fn switch_color(&mut self) {
+    pub fn switch_color(&mut self) {
         self.color = other_colour(self.color);
     }
     

@@ -1,7 +1,6 @@
 mod model;
 use crate::model::structs::{Move,Board};
 use crate::model::helper::*;
-use std::time::{Instant};
 // THIS USES [COLUMN, ROW] CONVENTION JOHN
 // I BETTER NOT BE SEEING NO DUMBASS STUFF
 
@@ -20,9 +19,8 @@ fn main() {
         let origin = get_square(&a);
         game.get_piece_selection(origin);
 
-        let now = Instant::now();
-        let moves = game.find_all_unvalidated_moves();
-        println!("{}",now.elapsed().as_micros());
+        let moves = game.selection_possible_moves(origin);
+        Move::print_destinations(&moves);
 
         let mut a2 = String::new();
         println!("Move to:");

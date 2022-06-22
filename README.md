@@ -5,6 +5,7 @@ Chess in Rust
 Chess-RS
 ├─ src/
 │  ├─ model/
+│  │  ├─ board.rs
 │  │  ├─ helper.rs
 │  │  ├─ make_move.rs
 │  │  ├─ mod.rs

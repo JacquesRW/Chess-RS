@@ -61,4 +61,27 @@ mod test {
         game.make_move(Move { target: Piece { piece: 'P', color: 2}, orig: [3,4], dest: [2,3]});
         game.log();
     }
+
+    #[test]
+    fn movegen_checks() {
+        println!("Checking if move generation under check is implemented properly.");
+        let mut game = Board::new();
+        game.make_move(Move { target: Piece { piece: 'P', color: 1}, orig: [1,4], dest: [3,4]});
+        game.make_move(Move { target: Piece { piece: 'P', color: 2}, orig: [6,4], dest: [4,4]});
+        game.make_move(Move { target: Piece { piece: 'Q', color: 1}, orig: [0,3], dest: [4,7]});
+        game.log();
+        let test1 = game.selection_possible_moves([6,5]);
+        println!("Possible Moves: Expect none.");
+        for m in test1 {
+            m.log()
+        }
+        game.make_move(Move { target: Piece { piece: 'P', color: 2}, orig: [6,3], dest: [5,3]});
+        game.make_move(Move { target: Piece { piece: 'Q', color: 1}, orig: [4,7], dest: [4,4]});
+        game.log();
+        let test2 = game.find_all_possible_moves();
+        println!("Possible Moves: Expect 6.");
+        for m in test2 {
+            m.log()
+        }
+    }
 }

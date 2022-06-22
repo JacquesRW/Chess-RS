@@ -21,6 +21,17 @@ impl Board {
         println!("{} selected.", self.board[sq[0]][sq[1]].to_string())
     }
 
+    pub fn get_king_square(&self, colour: usize) -> Square {
+        for i in 0..8 {
+            for j in 0..8 {
+                if self.board[i][j] == (Piece { piece: 'K', color: colour }) {
+                    return [i,j]
+                }
+            }
+        }
+        panic!("No king found!")
+    }
+
     pub fn log(&self) {
         println!("-------------------------");
         self.last_move.log();

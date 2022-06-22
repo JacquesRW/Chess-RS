@@ -21,4 +21,13 @@ impl Move {
         }
     }
 
+    pub fn print_destinations(moves: &Vec<Self>) {
+        let mut message = String::from("Possible Destinations: ");
+        for m in moves {
+            message += &get_coords(m.dest);
+            message += &String::from(" ");
+        }
+        println!("{message}")
+    }
+
 }
