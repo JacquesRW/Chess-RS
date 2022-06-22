@@ -5,14 +5,15 @@ Chess in Rust
 Chess-RS
 ├─ src/
 │  ├─ model/
-│  │  ├─ structs/
-│  │  │  ├─ mod.rs
 │  │  ├─ helper.rs
 │  │  ├─ make_move.rs
 │  │  ├─ mod.rs
-│  │  ├─ types.rs
+│  │  ├─ moves.rs
+│  │  ├─ pieces.rs
+│  │  ├─ structs.rs
 │  │  ├─ validation.rs
 │  ├─ main.rs
+│  ├─ tests.rs
 ├─ .gitignore
 ├─ cargo.toml
 ├─ README.md

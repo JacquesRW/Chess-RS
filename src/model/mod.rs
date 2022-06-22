@@ -16,13 +16,8 @@ impl Board {
         [Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty()],
         [Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty()],
         [Piece::pawn(2),Piece::pawn(2),Piece::pawn(2),Piece::pawn(2),Piece::pawn(2),Piece::pawn(2),Piece::pawn(2),Piece::pawn(2)],
-        [Piece::rook(2),Piece::knight(2),Piece::bishop(2),Piece::queen(2),Piece::king(2),Piece::bishop(2),Piece::knight(2),Piece::rook(2)]], 
-        
+        [Piece::rook(2),Piece::knight(2),Piece::bishop(2),Piece::queen(2),Piece::king(2),Piece::bishop(2),Piece::knight(2),Piece::rook(2)]],  
         last_move: Move::null(), 
-        //  castle = [
-        //  [has p1 castled, has p2 castled],
-        //  [can p1 castle left, can p1 castle right],
-        //  [can p2 castle left, can p2 castle right]]
         castle: [[false,false], [true, true], [true, true]], 
         color: 1
         }

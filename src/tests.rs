@@ -17,7 +17,6 @@ mod test {
         game.log();
         game.make_move(Move { target: Piece { piece: 'K', color: 2}, orig: [7,4], dest: [7,6]});
         game.log();
-
     }
     #[test]
     fn castling_queenside() {
