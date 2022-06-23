@@ -1,5 +1,5 @@
 mod model;
-use crate::model::structs::{Move,Board};
+use crate::model::defs::{Move,Board};
 use crate::model::helper::*;
 // THIS USES [COLUMN, ROW] CONVENTION JOHN
 // I BETTER NOT BE SEEING NO DUMBASS STUFF

@@ -1,5 +1,5 @@
 //* Implementation of methods for the Piece struct. */
-use crate::model::structs::Piece;
+use crate::model::defs::Piece;
 
 impl Piece {
     pub fn repr(&self) -> String {

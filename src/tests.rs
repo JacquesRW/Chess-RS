@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod test {
-    use crate::model::structs::{Move,Board, Piece};
+    use crate::model::defs::{Move,Board, Piece};
 
     #[test]
     fn castling_kingside() {

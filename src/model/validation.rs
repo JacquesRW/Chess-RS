@@ -1,4 +1,4 @@
-use crate::model::structs::{Piece, Board, Square, Move};
+use crate::model::defs::{Piece, Board, Square, Move};
 use crate::other_colour;
 use std::cmp::min;
 

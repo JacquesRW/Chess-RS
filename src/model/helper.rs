@@ -1,5 +1,5 @@
 //* Useful misc public functions. */
-use crate::model::structs::Square;
+use crate::model::defs::Square;
 
 pub fn get_coords(square: Square) -> String{
     let x = match square[1] {

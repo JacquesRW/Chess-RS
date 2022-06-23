@@ -1,5 +1,5 @@
 //* Implementation of methods for the Move struct. */
-use crate::model::structs::{Piece, Square, Move};
+use crate::model::defs::{Piece, Square, Move};
 use crate::model::helper::*;
 
 impl Move {
