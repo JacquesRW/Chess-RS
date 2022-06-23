@@ -69,4 +69,16 @@ impl Board {
         }
         self.switch_color();
     }
+
+    pub fn pseudo_move(&mut self, m: Move) {
+        self.try_en_passant(&m);
+        self.board[m.dest[0]][m.dest[1]] = m.target;
+        self.board[m.orig[0]][m.orig[1]] = EMPTY;
+        self.last_move = m;
+        if self.castle[(self.color >> 3) as usize] != [false,false] {
+            self.try_castle();
+            self.update_castle();
+        self.switch_color();
+        }
+    }
 }

@@ -19,7 +19,7 @@ impl Move {
             Move { target: WHITE | KING , orig: [0,4], dest: [0,6] } => println!("White castles kingside."),
             Move { target: BLACK | KING , orig: [7,4], dest: [7,2] } => println!("Black castles queenside."),
             Move { target: BLACK | KING , orig: [7,4], dest: [7,6] } => println!("Black castles kingside."),
-            _ => println!("{}, {} to {}", self.target.to_string(), get_coords(self.orig), get_coords(self.dest))
+            _ => println!("{}, {} to {}", as_string(self.target), get_coords(self.orig), get_coords(self.dest))
         }
     }
 

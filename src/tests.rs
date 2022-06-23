@@ -120,7 +120,7 @@ mod test {
         let mut game = Board::new();
         let mut moves: Vec<Move>;
         let mut m: Move;
-        for i in 0..50 {
+        for i in 0..100 {
             moves = game.find_all_possible_moves();
             m = *moves.choose(&mut thread_rng()).unwrap();
             game.make_move(m);

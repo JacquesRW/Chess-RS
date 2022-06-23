@@ -181,7 +181,7 @@ impl Board {
 
     fn check_for_check(&self, m: Move, king_square: Square, colour: u8) -> bool {
         let mut temp = self.clone();
-        temp.make_move(m);
+        temp.pseudo_move(m);
         temp.color = colour;
         let alt_color = other_colour(temp.color);
         for pos in temp._pawn_moves(king_square, colour) {
