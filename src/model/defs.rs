@@ -1,13 +1,6 @@
 //* STRUCT AND TYPE ALIAS DECLARATIONS */
 
-#[derive(Copy, Clone, PartialEq)]
-pub struct Piece {
-    // piece = 'e','P','K','Q','R','N' or 'B'
-    pub piece: char,
-    // color = 0,1,2
-    pub color: usize
-}
-
+pub type Piece = u8;
 pub type Array = [[Piece;8];8];
 pub type Square = [usize;2];
 
@@ -30,5 +23,5 @@ pub struct Board {
     // tracking if can castle
     // castle = [[has white castles, had black castled],[White QS, White KS],[Black QS, Black KS]]
     pub castle: [[bool;2];3],
-    pub color: usize
+    pub color: u8
 }

@@ -1,5 +1,5 @@
 //* Useful misc public functions. */
-use crate::model::structs::Square;
+use crate::model::defs::Square;
 
 pub fn get_coords(square: Square) -> String{
     let x = match square[1] {
@@ -42,13 +42,4 @@ pub fn get_square(coord: &str) -> Square {
         _ => panic!("Invalid square.")
     };
     return [col, row]
-}
-
-pub fn other_colour(color: usize) -> usize{
-    match color {
-        1 => 2,
-        2 => 1,
-        0 => 0,
-        _ => panic!("Not valid colour.")
-    }
 }
