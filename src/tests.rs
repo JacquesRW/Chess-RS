@@ -108,4 +108,21 @@ mod test {
         }
         println!("Took {} ms", now.elapsed().as_millis())
     }
+
+    #[test]
+    fn error_free_movegen_test() {
+        use rand::thread_rng;
+        use rand::seq::SliceRandom;
+        println!("Performing 50 random moves.");
+        let mut game = Board::new();
+        let mut moves: Vec<Move>;
+        let mut m: Move;
+        for i in 0..50 {
+            moves = game.find_all_possible_moves();
+            m = *moves.choose(&mut thread_rng()).unwrap();
+            game.make_move(m);
+            println!("{i}");
+            game.log();
+        }
+    }
 }
