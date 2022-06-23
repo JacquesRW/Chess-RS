@@ -1,7 +1,25 @@
 #[cfg(test)]
 mod test {
-    use crate::model::defs::{Move,Board, Piece};
+    use crate::model::defs::{Move,Board};
     use crate::model::pieces::*;
+
+    #[test]
+    fn checkmate() {
+        println!("Testing checkmate.");
+        let mut game = Board::new();
+        game.make_move(Move { target: WHITE | PAWN, orig: [1,4], dest: [3,4]});
+        game.make_move(Move { target: BLACK | PAWN, orig: [6,4], dest: [4,4]});
+        game.make_move(Move { target: WHITE | BISHOP, orig: [0,5], dest: [3,2]});
+        game.make_move(Move { target: BLACK | PAWN, orig: [6,0], dest: [5,0]});
+        game.make_move(Move { target: WHITE | QUEEN, orig: [0,3], dest: [2,5]});
+        game.make_move(Move { target: BLACK | PAWN, orig: [6,1], dest: [4,1]});
+        game.log();
+        for m in game.find_all_possible_moves() {
+            m.log()
+        }
+        game.make_move(Move { target: WHITE | QUEEN, orig: [2,5], dest: [6,5]});
+        game.log();
+    }
 
     #[test]
     fn castling_kingside() {
@@ -101,9 +119,8 @@ mod test {
                 for _ in 0..10 {
                     moves = game.find_all_possible_moves();
                     m = *moves.choose(&mut thread_rng()).unwrap();
-                    game.make_move(m);
+                    game.pseudo_move(m);
                 }
-                //game.log();
                 for _ in 0..1000 {
                     game.find_all_possible_moves();
                 }
@@ -123,7 +140,7 @@ mod test {
         for i in 0..100 {
             moves = game.find_all_possible_moves();
             m = *moves.choose(&mut thread_rng()).unwrap();
-            game.make_move(m);
+            game.pseudo_move(m);
             println!("{i}");
             game.log();
         }

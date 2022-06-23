@@ -62,7 +62,7 @@ impl Board {
             if row<drow { break }
             if colour(self.board[col][row - drow]) != colour(piece) {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col,row-drow]});
-                if colour(self.board[col][row - drow]) != 0 { break }
+                if colour(self.board[col][row - drow]) != EMPTY { break }
             }
             else { break }
         }
@@ -70,7 +70,7 @@ impl Board {
             if row+drow>=8 { break }
             if colour(self.board[col][row + drow]) != colour(piece) {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col,row+drow]});
-                if colour(self.board[col][row + drow]) != 0 { break }
+                if colour(self.board[col][row + drow]) != EMPTY { break }
             }
             else { break }
         }
@@ -78,15 +78,15 @@ impl Board {
             if col<dcol { break }
             if colour(self.board[col-dcol][row]) != colour(piece) {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col-dcol,row]});
-                if colour(self.board[col-dcol][row]) != 0 { break }
+                if colour(self.board[col-dcol][row]) != EMPTY { break }
             }
             else { break }
         }
-        for dcol in 1..(8-row) {
+        for dcol in 1..(8-col) {
             if col+dcol>=8 { break }
             if colour(self.board[col+dcol][row]) != colour(piece) {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col+dcol,row]});
-                if colour(self.board[col+dcol][row]) != 0 { break }
+                if colour(self.board[col+dcol][row]) != EMPTY { break }
             }
             else { break }
         }
@@ -100,7 +100,7 @@ impl Board {
         for change in 1..(smaller+1) {
             if colour(self.board[col-change][row-change]) != colour(piece) {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col-change,row-change]});
-                if colour(self.board[col-change][row-change]) != 0 { break }
+                if colour(self.board[col-change][row-change]) != EMPTY { break }
             }
             else { break }
         }
@@ -108,7 +108,7 @@ impl Board {
         for change in 1..(smaller+1) {
             if colour(self.board[col+change][row-change]) != colour(piece) {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col+change,row-change]});
-                if colour(self.board[col+change][row-change]) != 0 { break }
+                if colour(self.board[col+change][row-change]) != EMPTY { break }
             }
             else { break }
         }
@@ -116,7 +116,7 @@ impl Board {
         for change in 1..(smaller+1) {
             if colour(self.board[col-change][row+change]) != colour(piece) {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col-change,row+change]});
-                if colour(self.board[col-change][row+change]) != 0 { break }
+                if colour(self.board[col-change][row+change]) != EMPTY { break }
             }
             else { break }
         }
@@ -124,7 +124,7 @@ impl Board {
         for change in 1..(smaller+1) {
             if colour(self.board[col+change][row+change]) != colour(piece) {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col+change,row+change]});
-                if colour(self.board[col+change][row+change]) != 0 { break }
+                if colour(self.board[col+change][row+change]) != EMPTY { break }
             }
             else { break }
         }
@@ -179,7 +179,32 @@ impl Board {
         possible_moves
     }
 
-    fn check_for_check(&self, m: Move, king_square: Square, colour: u8) -> bool {
+    pub fn check_for_check_static(&self, king_square: Square, colour: u8) -> bool {
+        let alt_color = other_colour(self.color);
+        for pos in self._pawn_moves(king_square, colour) {
+            if self.board[pos.dest[0]][pos.dest[1]] == PAWN | alt_color {
+                return true
+            }
+        }
+        for pos in self._knight_moves(king_square, colour) {
+            if self.board[pos.dest[0]][pos.dest[1]] == KNIGHT | alt_color {
+                return true
+            }
+        }
+        for pos in self._rook_moves(king_square, colour) {
+            if self.board[pos.dest[0]][pos.dest[1]] == ROOK | alt_color || self.board[pos.dest[0]][pos.dest[1]] == QUEEN | alt_color {
+                return true 
+            }
+        }
+        for pos in self._bishop_moves(king_square, colour) {
+            if self.board[pos.dest[0]][pos.dest[1]] == BISHOP | alt_color || self.board[pos.dest[0]][pos.dest[1]] == QUEEN | alt_color {
+                return true 
+            }
+        }
+        false
+    }
+
+    pub fn check_for_check(&self, m: Move, king_square: Square, colour: u8) -> bool {
         let mut temp = self.clone();
         temp.pseudo_move(m);
         temp.color = colour;
@@ -246,5 +271,4 @@ impl Board {
         }
         possible_moves
     }
-
 }

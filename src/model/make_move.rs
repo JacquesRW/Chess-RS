@@ -11,11 +11,9 @@ impl Board {
     
     fn try_en_passant(&mut self, &m: &Move) {
         if m.target == WHITE | PAWN && m.orig[0] == 4 && self.last_move == (Move {target: BLACK | PAWN, orig: [6,m.dest[1]], dest: [4,m.dest[1]]}) {
-            println!("White is en passanting!");
             self.board[4][m.dest[1]] = EMPTY;
         }
         else if m.target == BLACK | PAWN && m.orig[0] == 3 && self.last_move == (Move {target: WHITE | PAWN, orig: [1,m.dest[1]], dest: [3,m.dest[1]]})  {
-            println!("Black is en passanting!");
             self.board[3][m.dest[1]] = EMPTY;
         }
     }
@@ -52,13 +50,20 @@ impl Board {
         else if self.last_move.orig == [7,7] || self.last_move.dest == [7,7] {self.castle[2][1] = false}
     }
 
-    pub fn make_move(&mut self, m: Move) {
-        if colour(m.target) != self.color {
-            panic!("Wrong colour trying to move!")
+    fn check_for_mate(&self) -> Option<bool> {
+        let possible_moves = self.find_all_possible_moves();
+        if possible_moves.is_empty() {
+            if self.check_for_check_static(self.get_king_square(self.color), self.color) {
+                return Some(true)
+            }
+            return Some(false)
         }
-        if m.target != self.board[m.orig[0]][m.orig[1]] {
-            panic!("Invalid move type!")
+        else {
+            None
         }
+    }
+
+    pub fn pseudo_move(&mut self, m: Move) {
         self.try_en_passant(&m);
         self.board[m.dest[0]][m.dest[1]] = m.target;
         self.board[m.orig[0]][m.orig[1]] = EMPTY;
@@ -70,15 +75,22 @@ impl Board {
         self.switch_color();
     }
 
-    pub fn pseudo_move(&mut self, m: Move) {
+    pub fn make_move(&mut self, m: Move) -> Option<bool> {
+        if colour(m.target) != self.color {
+            panic!("Wrong colour trying to move!")
+        }
+        if m.target != self.board[m.orig[0]][m.orig[1]] {
+            panic!("Invalid move type!")
+        }
         self.try_en_passant(&m);
+        self.last_move = m;
         self.board[m.dest[0]][m.dest[1]] = m.target;
         self.board[m.orig[0]][m.orig[1]] = EMPTY;
-        self.last_move = m;
         if self.castle[(self.color >> 3) as usize] != [false,false] {
             self.try_castle();
             self.update_castle();
-        self.switch_color();
         }
+        self.switch_color();
+        self.check_for_mate()
     }
 }

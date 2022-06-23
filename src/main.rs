@@ -35,8 +35,18 @@ fn main() {
 
         let m = Move::new(game.board[origin[0]][origin[1]],origin,destination);
         if moves.iter().any(|&i| i==m) {
-            game.make_move(m);
+            let check = game.make_move(m);
             game.log();
+            if !check.is_none() {
+                if check.unwrap() {
+                    println!("Checkmate!");
+                    break;
+                }
+                else {
+                    println!("Stalemate!");
+                    break;
+                }
+            }
         }
         else {break}
     }

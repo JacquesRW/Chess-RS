@@ -31,11 +31,11 @@ impl Board {
                 }
             }
         }
-        self.raw_log();
+        self.log();
         panic!("No king found!")
     }
 
-    pub fn raw_log(&self) {
+    pub fn _raw_log(&self) {
         println!("-------------------------");
         self.last_move.log();
         println!("-------------------------");
