@@ -1,35 +1,54 @@
 //* Misc public functions for board. */
 use crate::model::defs::{Board, Piece, Square, Move};
+use crate::model::pieces::*;
 impl Board {
     pub fn new() -> Board {
         Board {
-        board: [[Piece::rook(1),Piece::knight(1),Piece::bishop(1),Piece::queen(1),Piece::king(1),Piece::bishop(1),Piece::knight(1),Piece::rook(1)],
-        [Piece::pawn(1),Piece::pawn(1),Piece::pawn(1),Piece::pawn(1),Piece::pawn(1),Piece::pawn(1),Piece::pawn(1),Piece::pawn(1)],
-        [Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty()],
-        [Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty()],
-        [Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty()],
-        [Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty(),Piece::empty()],
-        [Piece::pawn(2),Piece::pawn(2),Piece::pawn(2),Piece::pawn(2),Piece::pawn(2),Piece::pawn(2),Piece::pawn(2),Piece::pawn(2)],
-        [Piece::rook(2),Piece::knight(2),Piece::bishop(2),Piece::queen(2),Piece::king(2),Piece::bishop(2),Piece::knight(2),Piece::rook(2)]],  
+        board: [[WHITE | ROOK, WHITE | KNIGHT, WHITE | BISHOP, WHITE | QUEEN, WHITE | KING, WHITE | BISHOP, WHITE | KNIGHT, WHITE | ROOK],
+        [WHITE | PAWN, WHITE | PAWN, WHITE | PAWN, WHITE | PAWN, WHITE | PAWN, WHITE | PAWN, WHITE | PAWN, WHITE | PAWN],
+        [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+        [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+        [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+        [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+        [BLACK | PAWN, BLACK | PAWN, BLACK | PAWN, BLACK | PAWN, BLACK | PAWN, BLACK | PAWN, BLACK | PAWN, BLACK | PAWN],
+        [BLACK | ROOK, BLACK | KNIGHT, BLACK | BISHOP, BLACK | QUEEN, BLACK | KING, BLACK | BISHOP, BLACK | KNIGHT, BLACK | ROOK]],  
         last_move: Move::null(), 
         castle: [[false,false], [true, true], [true, true]], 
-        color: 1
+        color: WHITE
         }
     }
 
     pub fn get_piece_selection(&self, sq: Square) {
-        println!("{} selected.", self.board[sq[0]][sq[1]].to_string())
+        println!("{} selected.", as_string(self.board[sq[0]][sq[1]]))
     }
 
-    pub fn get_king_square(&self, colour: usize) -> Square {
+    pub fn get_king_square(&self, colour: u8) -> Square {
+        let pc = KING | colour;
         for i in 0..8 {
             for j in 0..8 {
-                if self.board[i][j] == (Piece { piece: 'K', color: colour }) {
+                if self.board[i][j] == pc {
                     return [i,j]
                 }
             }
         }
+        self.raw_log();
         panic!("No king found!")
+    }
+
+    pub fn raw_log(&self) {
+        println!("-------------------------");
+        self.last_move.log();
+        println!("-------------------------");
+        let board_ref: &[[Piece;8];8] = &self.board;
+        for i in 0..8 {
+            let mut line: String = String::from(" ");
+            for j in 0..8 {
+                line.push_str(&board_ref[7-i][j].to_string());
+                line.push_str(" ");
+            }
+            println!("{}", line)
+        }
+        println!("-------------------------");
     }
 
     pub fn log(&self) {
@@ -40,7 +59,7 @@ impl Board {
         for i in 0..8 {
             let mut line: String = String::from(" ");
             for j in 0..8 {
-                line.push_str(&(board_ref[7-i][j].repr()));
+                line.push_str(&repr(board_ref[7-i][j]));
                 line.push_str(" ");
             }
             println!("{}", line)

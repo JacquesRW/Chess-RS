@@ -43,12 +43,3 @@ pub fn get_square(coord: &str) -> Square {
     };
     return [col, row]
 }
-
-pub fn other_colour(color: usize) -> usize{
-    match color {
-        1 => 2,
-        2 => 1,
-        0 => 0,
-        _ => panic!("Not valid colour.")
-    }
-}

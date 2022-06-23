@@ -1,6 +1,7 @@
 mod model;
 use crate::model::defs::{Move,Board};
 use crate::model::helper::*;
+use crate::model::pieces::*;
 // THIS USES [COLUMN, ROW] CONVENTION JOHN
 // I BETTER NOT BE SEEING NO DUMBASS STUFF
 
@@ -8,6 +9,10 @@ use crate::model::helper::*;
 mod tests;
 
 fn main() {
+    println!("{KING}");
+    println!("{BLACK}");
+    let pc = BLACK | KING;
+    println!("{pc}");
     let mut game = Board::new();
     game.log();
 
