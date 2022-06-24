@@ -9,20 +9,31 @@ impl Board {
                 eval += value(self.board[i][j])
             }
         }
-        eval
+        if self.color == WHITE {return eval}
+        -eval
     }
     pub fn alpha_beta_max(&mut self, mut alpha: i64, beta: i64, depth_left: u8) -> i64 {
         if depth_left == 0 { return self.evaluate() }
         let moves = self.find_all_possible_moves();
+        let mut check: Option<bool>;
         for m in moves {
             let mut temp = self.clone();
-            temp.make_move(m);
+            check = temp.make_move(m);
+            if check.is_some() { 
+                if check.unwrap() {
+                    return -999
+                }
+                if !check.unwrap() {
+                    return 0
+                }
+            }
             let score = temp.alpha_beta_min(alpha, beta, depth_left - 1);
             if score >= beta { 
                 return beta 
             }
             // self.unmake_move(m);
             if score > alpha { 
+                self.best_move = m;
                 alpha = score 
             }
         }
@@ -32,9 +43,18 @@ impl Board {
     pub fn alpha_beta_min(&mut self, alpha: i64, mut beta: i64, depth_left: u8) -> i64 {
         if depth_left == 0 { return self.evaluate() }
         let moves = self.find_all_possible_moves();
+        let mut check: Option<bool>;
         for m in moves {
             let mut temp = self.clone();
-            temp.make_move(m);
+            check = temp.make_move(m);
+            if check.is_some() { 
+                if check.unwrap() {
+                    return 999
+                }
+                if !check.unwrap() {
+                    return 0
+                }
+            }
             let score = temp.alpha_beta_max(alpha, beta, depth_left - 1);
             if score <= alpha { 
                 return alpha 

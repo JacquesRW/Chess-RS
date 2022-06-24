@@ -28,5 +28,6 @@ pub struct Board {
     // capture on last move, if any
     pub capture: Option<Piece>,
     pub prev_castle: [[bool;2];3],
-    pub prev_move: Move
+    pub prev_move: Move,
+    pub best_move: Move
 }

@@ -11,15 +11,41 @@ mod test {
         game.make_move(Move { target: BLACK | PAWN, orig: [6,4], dest: [4,4]});
         game.make_move(Move { target: WHITE | BISHOP, orig: [0,5], dest: [3,2]});
         game.make_move(Move { target: BLACK | PAWN, orig: [6,0], dest: [5,0]});
+        game.log();
+        let mut score = game.alpha_beta_max(-99999, 99999, 4);
+        println!("Current eval is {score}.");
         game.make_move(Move { target: WHITE | QUEEN, orig: [0,3], dest: [2,5]});
+        game.log();
+        score = game.alpha_beta_max(-99999, 99999, 4);
+        println!("Current eval is {score}.");
         game.make_move(Move { target: BLACK | PAWN, orig: [6,1], dest: [4,1]});
         game.log();
-        for m in game.find_all_possible_moves() {
-            m.log()
-        }
+        score = game.alpha_beta_max(-99999, 99999, 4);
+        println!("Current eval is {score}.");
         let check = game.make_move(Move { target: WHITE | QUEEN, orig: [2,5], dest: [6,5]});
         if check.unwrap() {println!("Checkmate!")}
         game.log();
+    }
+
+    #[test]
+    fn test_ai() {
+        println!("Testing ai playing against each other.");
+        let mut game = Board::new();
+        game.make_move(Move { target: WHITE | PAWN, orig: [1,4], dest: [3,4]});
+        game.make_move(Move { target: BLACK | PAWN, orig: [6,4], dest: [4,4]});
+        game.make_move(Move { target: WHITE | BISHOP, orig: [0,5], dest: [3,2]});
+        game.make_move(Move { target: BLACK | PAWN, orig: [6,0], dest: [5,0]});
+        game.make_move(Move { target: WHITE | QUEEN, orig: [0,3], dest: [2,5]});
+        game.make_move(Move { target: BLACK | PAWN, orig: [6,1], dest: [4,1]});
+        game.log();
+        let mut score: i64;
+        for _ in 0..10 {
+            score = game.alpha_beta_max(-99999, 99999, 4);
+            println!("Current eval is {score}.");
+            let check = game.make_move(game.best_move);
+            if check.is_some() {if check.unwrap() {println!("Checkmate!")}}
+            game.log();
+        }
     }
 
     #[test]

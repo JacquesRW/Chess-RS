@@ -18,7 +18,8 @@ impl Board {
         // stuff for implementing unmake_move
         capture: None,
         prev_castle: [[false,false], [true, true], [true, true]],
-        prev_move: Move::null()
+        prev_move: Move::null(),
+        best_move: Move::null()
         }
     }
 
