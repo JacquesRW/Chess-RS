@@ -208,6 +208,11 @@ impl Board {
                 return true 
             }
         }
+        for pos in self._king_moves(king_square,colour) {
+            if self.board[pos.dest[0]][pos.dest[1]] == KING | alt_color || self.board[pos.dest[0]][pos.dest[1]] == QUEEN | alt_color {
+                return true 
+            }
+        }
         false
     }
 
@@ -233,6 +238,11 @@ impl Board {
         }
         for pos in temp._bishop_moves(king_square, colour) {
             if temp.board[pos.dest[0]][pos.dest[1]] == BISHOP | alt_color || temp.board[pos.dest[0]][pos.dest[1]] == QUEEN | alt_color {
+                return true 
+            }
+        }
+        for pos in self._king_moves(king_square,colour) {
+            if self.board[pos.dest[0]][pos.dest[1]] == KING | alt_color || self.board[pos.dest[0]][pos.dest[1]] == QUEEN | alt_color {
                 return true 
             }
         }

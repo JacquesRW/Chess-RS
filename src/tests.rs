@@ -3,6 +3,7 @@ mod test {
     use crate::model::defs::{Move,Board};
     use crate::model::pieces::*;
 
+
     #[test]
     fn checkmate() {
         println!("Testing checkmate.");

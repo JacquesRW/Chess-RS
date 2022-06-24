@@ -6,6 +6,7 @@ use crate::model::helper::*;
 
 #[cfg(test)]
 mod tests;
+mod puzzles;
 
 fn main() {
     let mut game = Board::new();
