@@ -6,12 +6,12 @@ Chess-RS
 ├─ src/
 │  ├─ model/
 │  │  ├─ board.rs
+│  │  ├─ defs.rs
 │  │  ├─ helper.rs
 │  │  ├─ make_move.rs
 │  │  ├─ mod.rs
 │  │  ├─ moves.rs
 │  │  ├─ pieces.rs
-│  │  ├─ structs.rs
 │  │  ├─ validation.rs
 │  ├─ main.rs
 │  ├─ tests.rs

@@ -14,7 +14,11 @@ impl Board {
         [BLACK | ROOK, BLACK | KNIGHT, BLACK | BISHOP, BLACK | QUEEN, BLACK | KING, BLACK | BISHOP, BLACK | KNIGHT, BLACK | ROOK]],  
         last_move: Move::null(), 
         castle: [[false,false], [true, true], [true, true]], 
-        color: WHITE
+        color: WHITE,
+        // stuff for implementing unmake_move
+        capture: None,
+        prev_castle: [[false,false], [true, true], [true, true]],
+        prev_move: Move::null()
         }
     }
 

@@ -9,6 +9,10 @@ impl Move {
         Move {target: EMPTY, orig: [0,0], dest: [0,0]}
     }
 
+    pub fn _reverse(&self) -> Move {
+        Move { target: self.target, orig: self.dest, dest: self.orig}
+    }
+
     pub fn new(piece: Piece, origin: Square, destination: Square) -> Move {
         Move {target: piece, orig: origin, dest: destination}
     }

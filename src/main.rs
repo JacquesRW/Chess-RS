@@ -36,6 +36,8 @@ fn main() {
         let m = Move::new(game.board[origin[0]][origin[1]],origin,destination);
         if moves.iter().any(|&i| i==m) {
             let check = game.make_move(m);
+            let score = game.alpha_beta_max(-99999, 99999, 1);
+            println!("Current eval is {score}.");
             game.log();
             if !check.is_none() {
                 if check.unwrap() {

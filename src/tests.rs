@@ -17,7 +17,8 @@ mod test {
         for m in game.find_all_possible_moves() {
             m.log()
         }
-        game.make_move(Move { target: WHITE | QUEEN, orig: [2,5], dest: [6,5]});
+        let check = game.make_move(Move { target: WHITE | QUEEN, orig: [2,5], dest: [6,5]});
+        if check.unwrap() {println!("Checkmate!")}
         game.log();
     }
 
@@ -133,7 +134,7 @@ mod test {
     fn error_free_movegen_test() {
         use rand::thread_rng;
         use rand::seq::SliceRandom;
-        println!("Performing 50 random moves.");
+        println!("Performing 100 random moves.");
         let mut game = Board::new();
         let mut moves: Vec<Move>;
         let mut m: Move;

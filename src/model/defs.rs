@@ -23,5 +23,10 @@ pub struct Board {
     // tracking if can castle
     // castle = [[has white castles, had black castled],[White QS, White KS],[Black QS, Black KS]]
     pub castle: [[bool;2];3],
-    pub color: u8
+    // current player
+    pub color: u8,
+    // capture on last move, if any
+    pub capture: Option<Piece>,
+    pub prev_castle: [[bool;2];3],
+    pub prev_move: Move
 }

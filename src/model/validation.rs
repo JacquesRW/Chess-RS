@@ -16,8 +16,8 @@ impl Board {
             if col <= 6 && self.board[col+1][row] == EMPTY {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col+1, row] });
                 if col == 1 && self.board[col+2][row] == EMPTY {possible_moves.push(Move { target: piece, orig: sq, dest: [col+2, row] })}}
-            if row >= 1 && col <= 6 && colour(self.board[col+1][row-1]) == 2 {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1, row-1] })}
-            if row <= 6 && col <= 6 && colour(self.board[col+1][row+1]) == 2 {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1, row+1] })}
+            if row >= 1 && col <= 6 && colour(self.board[col+1][row-1]) == BLACK {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1, row-1] })}
+            if row <= 6 && col <= 6 && colour(self.board[col+1][row+1]) == BLACK {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1, row+1] })}
         }
         if colour(piece) == BLACK {
             if col == 3 {
@@ -28,8 +28,8 @@ impl Board {
             if col >= 1 && self.board[col-1][row] == EMPTY {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col-1, row] });
                 if col == 6 && self.board[col-2][row] == EMPTY {possible_moves.push(Move { target: piece, orig: sq, dest: [col-2, row] })}}
-            if row >= 1 && col >= 1 && colour(self.board[col-1][row-1]) == 1 {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1, row-1] })}
-            if row <= 6 && col >= 1 && colour(self.board[col-1][row+1]) == 1 {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1, row+1] })}
+            if row >= 1 && col >= 1 && colour(self.board[col-1][row-1]) == WHITE {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1, row-1] })}
+            if row <= 6 && col >= 1 && colour(self.board[col-1][row+1]) == WHITE {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1, row+1] })}
         }
         possible_moves
     }
@@ -38,10 +38,10 @@ impl Board {
         let col = sq[0];
         let row = sq[1];
         let mut possible_moves: Vec<Move> = Vec::new();
-        if self.castle[(colour(piece) >> 3) as usize][0] && self.board[col][1] == EMPTY && self.board[col][2] == EMPTY && self.board[col][3] == EMPTY {
+        if self.castle[(colour(piece) >> 3) as usize][0] && row == 4 && self.board[col][1] == EMPTY && self.board[col][2] == EMPTY && self.board[col][3] == EMPTY {
             possible_moves.push(Move { target: piece, orig: sq, dest: [col,2]})
         }
-        if self.castle[(colour(piece) >> 3) as usize ][1] && self.board[col][5] == EMPTY && self.board[col][6] == EMPTY {
+        if self.castle[(colour(piece) >> 3) as usize ][1] && row == 4 && self.board[col][5] == EMPTY && self.board[col][6] == EMPTY {
             possible_moves.push(Move { target: piece, orig: sq, dest: [col,6]})
         }
         if row<=6 && colour(self.board[col][row+1]) != colour(piece) {possible_moves.push(Move { target: piece, orig: sq, dest: [col,row+1]})}

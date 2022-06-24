@@ -9,6 +9,13 @@ impl Board {
         self.color = other_colour(self.color);
     }
     
+    fn update_capture(&mut self, &m: &Move) {
+        if self.board[m.dest[0]][m.dest[1]] != EMPTY {
+            self.capture = Some(self.board[m.dest[0]][m.dest[1]]);
+        }
+        self.capture = None;
+    }
+
     fn try_en_passant(&mut self, &m: &Move) {
         if m.target == WHITE | PAWN && m.orig[0] == 4 && self.last_move == (Move {target: BLACK | PAWN, orig: [6,m.dest[1]], dest: [4,m.dest[1]]}) {
             self.board[4][m.dest[1]] = EMPTY;
@@ -64,6 +71,7 @@ impl Board {
     }
 
     pub fn pseudo_move(&mut self, m: Move) {
+        self.update_capture(&m);
         self.try_en_passant(&m);
         self.board[m.dest[0]][m.dest[1]] = m.target;
         self.board[m.orig[0]][m.orig[1]] = EMPTY;
