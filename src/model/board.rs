@@ -3,24 +3,7 @@ use crate::model::defs::{Board, Piece, Square, Move};
 use crate::model::pieces::*;
 impl Board {
     pub fn new() -> Board {
-        Board {
-        board: [[WHITE | ROOK, WHITE | KNIGHT, WHITE | BISHOP, WHITE | QUEEN, WHITE | KING, WHITE | BISHOP, WHITE | KNIGHT, WHITE | ROOK],
-        [WHITE | PAWN, WHITE | PAWN, WHITE | PAWN, WHITE | PAWN, WHITE | PAWN, WHITE | PAWN, WHITE | PAWN, WHITE | PAWN],
-        [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-        [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-        [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-        [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-        [BLACK | PAWN, BLACK | PAWN, BLACK | PAWN, BLACK | PAWN, BLACK | PAWN, BLACK | PAWN, BLACK | PAWN, BLACK | PAWN],
-        [BLACK | ROOK, BLACK | KNIGHT, BLACK | BISHOP, BLACK | QUEEN, BLACK | KING, BLACK | BISHOP, BLACK | KNIGHT, BLACK | ROOK]],  
-        last_move: Move::null(), 
-        castle: [[false,false], [true, true], [true, true]], 
-        color: WHITE,
-        // stuff for implementing unmake_move
-        capture: None,
-        prev_castle: [[false,false], [true, true], [true, true]],
-        prev_move: Move::null(),
-        best_move: Move::null()
-        }
+        Board::from_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
     }
 
     pub fn get_piece_selection(&self, sq: Square) {
@@ -69,6 +52,8 @@ impl Board {
             }
             println!("{}", line)
         }
+        println!("-------------------------");
+        println!("{} to move.", match self.color { WHITE => "White", BLACK => "Black", _ => panic!("Invalid colour!")});
         println!("-------------------------");
     }
 }

@@ -1,3 +1,7 @@
+//* ALPHA-BETA MINIMAX  */
+//* CURRENTLY BRANCHES LOADS OF BOARDS */
+//* GONNA TRY TO IMPLEMENT UNMAKE MOVE TO FIX THIS */
+
 use crate::model::defs::*;
 use crate::model::pieces::*;
 

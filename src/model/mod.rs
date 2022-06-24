@@ -6,3 +6,4 @@ pub mod validation;
 pub mod helper;
 pub mod board;
 pub mod engine;
+pub mod fen;

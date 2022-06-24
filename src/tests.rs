@@ -31,18 +31,12 @@ mod test {
     fn test_ai() {
         println!("Testing ai playing against each other.");
         let mut game = Board::new();
-        game.make_move(Move { target: WHITE | PAWN, orig: [1,4], dest: [3,4]});
-        game.make_move(Move { target: BLACK | PAWN, orig: [6,4], dest: [4,4]});
-        game.make_move(Move { target: WHITE | BISHOP, orig: [0,5], dest: [3,2]});
-        game.make_move(Move { target: BLACK | PAWN, orig: [6,0], dest: [5,0]});
-        game.make_move(Move { target: WHITE | QUEEN, orig: [0,3], dest: [2,5]});
-        game.make_move(Move { target: BLACK | PAWN, orig: [6,1], dest: [4,1]});
         game.log();
         let mut score: i64;
         for _ in 0..10 {
             score = game.alpha_beta_max(-99999, 99999, 4);
-            println!("Current eval is {score}.");
             let check = game.make_move(game.best_move);
+            println!("Current eval is {score}.");
             if check.is_some() {if check.unwrap() {println!("Checkmate!")}}
             game.log();
         }
@@ -85,14 +79,14 @@ mod test {
     #[test]
     fn white_en_passant() {
         println!("Testing en passant.");
-        let mut game = Board::new();
-        game.make_move(Move { target: WHITE | PAWN, orig: [1,4], dest: [3,4]});
-        game.make_move(Move { target: BLACK | PAWN, orig: [6,4], dest: [5,4]});
-        game.make_move(Move { target: WHITE | PAWN, orig: [3,4], dest: [4,4]});
-        game.make_move(Move { target: BLACK | PAWN, orig: [6,3], dest: [4,3]});
+        let mut game = Board::from_fen("rnbqkbnr/ppp2ppp/4p3/3pP3/8/8/PPPP1PPP/RNBQKBNR w KQkq d6 0 1");
         game.log();
-        game.make_move(Move { target: WHITE | PAWN, orig: [4,4], dest: [5,3]});
-        game.log();
+        let m = Move { target: WHITE | PAWN, orig: [4,4], dest: [5,3]};
+        let moves = game.find_all_possible_moves();
+        if moves.iter().any(|&i| i==m) {
+            game.make_move(m);
+            game.log();
+        }
     }
     #[test]
     fn black_en_passant() {
@@ -104,8 +98,12 @@ mod test {
         game.make_move(Move { target: BLACK | PAWN, orig: [4,4], dest: [3,4]});
         game.make_move(Move { target: WHITE | PAWN, orig: [1,3], dest: [3,3]});
         game.log();
-        game.make_move(Move { target: BLACK | PAWN, orig: [3,4], dest: [2,3]});
-        game.log();
+        let m = Move { target: BLACK | PAWN, orig: [3,4], dest: [2,3]};
+        let moves = game.find_all_possible_moves();
+        if moves.iter().any(|&i| i==m) {
+            game.make_move(m);
+            game.log();
+        }
     }
 
     #[test]

@@ -8,26 +8,33 @@ impl Board {
         let col = sq[0];
         let row = sq[1];
         if colour(piece) == WHITE {
+            // en passants
             if col == 4 {
-                if row <= 6 && self.last_move == (Move { target: PAWN | BLACK , orig: [row+1, 6], dest: [row+1, 4] }) {
+                if row <= 6 && self.last_move == (Move { target: PAWN | BLACK , orig: [6, row+1], dest: [4, row+1] }) {
                     possible_moves.push(Move { target: piece, orig: sq, dest: [5, row+1] });}
-                if row >= 1 && self.last_move == (Move { target: PAWN | BLACK, orig: [row-1,6], dest: [row-1, 4] }) {
+                if row >= 1 && self.last_move == (Move { target: PAWN | BLACK, orig: [6, row-1], dest: [4, row-1] }) {
                     possible_moves.push(Move { target: piece, orig: sq, dest: [5, row-1] });}}
+            // normal 1 move forwards
             if col <= 6 && self.board[col+1][row] == EMPTY {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col+1, row] });
                 if col == 1 && self.board[col+2][row] == EMPTY {possible_moves.push(Move { target: piece, orig: sq, dest: [col+2, row] })}}
+            // takes
             if row >= 1 && col <= 6 && colour(self.board[col+1][row-1]) == BLACK {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1, row-1] })}
             if row <= 6 && col <= 6 && colour(self.board[col+1][row+1]) == BLACK {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1, row+1] })}
         }
         if colour(piece) == BLACK {
+            // en passants
             if col == 3 {
-                if row <= 6 && self.last_move == (Move { target: WHITE | PAWN, orig: [row+1, 1], dest: [row+1, 3] }) {
+                if row <= 6 && self.last_move == (Move { target: WHITE | PAWN, orig: [1, row+1], dest: [3, row+1] }) {
                     possible_moves.push(Move { target: piece, orig: sq, dest: [2, row+1] });}
-                if row >= 1 && self.last_move == (Move { target: WHITE | PAWN, orig: [row-1,1], dest: [row-1, 3] }) {
+                if row >= 1 && self.last_move == (Move { target: WHITE | PAWN, orig: [1, row-1], dest: [3, row-1] }) {
                     possible_moves.push(Move { target: piece, orig: sq, dest: [2, row-1] });}}
+            // normal 1 move forwards
             if col >= 1 && self.board[col-1][row] == EMPTY {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col-1, row] });
+                // 2 move initial push
                 if col == 6 && self.board[col-2][row] == EMPTY {possible_moves.push(Move { target: piece, orig: sq, dest: [col-2, row] })}}
+            // takes
             if row >= 1 && col >= 1 && colour(self.board[col-1][row-1]) == WHITE {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1, row-1] })}
             if row <= 6 && col >= 1 && colour(self.board[col-1][row+1]) == WHITE {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1, row+1] })}
         }

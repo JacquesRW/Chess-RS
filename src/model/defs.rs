@@ -25,9 +25,8 @@ pub struct Board {
     pub castle: [[bool;2];3],
     // current player
     pub color: u8,
-    // capture on last move, if any
+    // last capture
     pub capture: Option<Piece>,
-    pub prev_castle: [[bool;2];3],
-    pub prev_move: Move,
+    // best move according to minimax
     pub best_move: Move
 }
