@@ -25,7 +25,8 @@ impl Board {
             check = temp.make_move(m);
             if check.is_some() { 
                 if check.unwrap() {
-                    return -999
+                    self.best_move = m;
+                    return 999
                 }
                 if !check.unwrap() {
                     return 0
@@ -53,7 +54,7 @@ impl Board {
             check = temp.make_move(m);
             if check.is_some() { 
                 if check.unwrap() {
-                    return 999
+                    return -999
                 }
                 if !check.unwrap() {
                     return 0

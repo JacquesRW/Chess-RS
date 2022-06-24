@@ -27,6 +27,16 @@ impl Move {
         }
     }
 
+    pub fn to_string(&self) -> String {
+        match self {
+            Move { target: WHITE | KING , orig: [0,4], dest: [0,2] } => format!("castle queenside."),
+            Move { target: WHITE | KING , orig: [0,4], dest: [0,6] } => format!("castle kingside."),
+            Move { target: BLACK | KING , orig: [7,4], dest: [7,2] } => format!("castle queenside."),
+            Move { target: BLACK | KING , orig: [7,4], dest: [7,6] } => format!("castle kingside."),
+            _ => format!("{}, {} to {}", as_string(self.target), get_coords(self.orig), get_coords(self.dest))
+        }
+    }
+
     pub fn print_destinations(moves: &Vec<Self>) {
         let mut message = String::from("Possible Destinations: ");
         for m in moves {

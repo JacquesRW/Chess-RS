@@ -32,7 +32,7 @@ fn main() {
         if moves.iter().any(|&i| i==m) {
             let check = game.make_move(m);
             let score = game.alpha_beta_max(-99999, 99999, 4);
-            println!("Current eval is {score}.");
+            println!("Current eval is {score}, the best move is {}", game.best_move.to_string());
             game.log();
             if !check.is_none() {
                 if check.unwrap() {

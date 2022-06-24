@@ -1,5 +1,5 @@
 //* Misc public functions for board. */
-use crate::model::defs::{Board, Piece, Square, Move};
+use crate::model::defs::{Board, Piece, Square};
 use crate::model::pieces::*;
 impl Board {
     pub fn new() -> Board {

@@ -65,7 +65,6 @@ fn convert_row(s: &str) -> [Piece;8] {
             counter += 1;
         }
         else {
-            println!("numeric {ch}, {counter}.");
             let len = (ch as usize) - 48;
             for i in 0..len {
                 row[counter + i] = EMPTY;
