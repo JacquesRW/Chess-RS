@@ -2,7 +2,7 @@
 use crate::model::defs::{Board, Piece, Square};
 use crate::model::pieces::*;
 impl Board {
-    pub fn new() -> Board {
+    pub fn _new() -> Board {
         Board::from_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
     }
 
