@@ -53,7 +53,7 @@ pub fn repr(pc: Piece) -> String {
     let color = match colour(pc) {
         WHITE => "1",
         BLACK => "2",
-        EMPTY => "0",
+        EMPTY => " ",
         _ => panic!("Not valid colour.")
     };
     let piece = match name(pc) {
@@ -63,7 +63,7 @@ pub fn repr(pc: Piece) -> String {
         ROOK => "R",
         QUEEN => "Q",
         KING => "K",
-        EMPTY => "e",
+        EMPTY => " ",
         _ => panic!("Not a valid piece!")
     };
     format!("{piece}{color}")

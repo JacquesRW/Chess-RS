@@ -73,13 +73,13 @@ impl Board {
         return beta
     }
 
-    pub fn analyse(&mut self){
+    pub fn analyse(&mut self, depth: u8){
         let now = Instant::now();
-        let eval = self.alpha_beta_max(-99999, 99999, 4);
+        let eval = self.alpha_beta_max(-99999, 99999, depth);
         println!("Took {} ms to evalute position.", now.elapsed().as_millis());
         if eval > 0 {println!("Current evaluation is {eval} in favour of {}.", as_string(self.color))}
         if eval < 0 {println!("Current evaluation is {} in favour of {}.", -eval, as_string(other_colour(self.color)))}
-        else {println!("Current position is equal.")}
+        if eval == 0 {println!("Current position is equal.")}
         println!("The best move is {}", self.best_move.to_string())
     }
 }
