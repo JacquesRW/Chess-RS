@@ -47,7 +47,7 @@ impl Board {
     }
 
     pub fn alpha_beta_min(&mut self, alpha: i64, mut beta: i64, depth_left: u8) -> i64 {
-        if depth_left == 0 { return self.evaluate() }
+        if depth_left == 0 { return -self.evaluate() }
         let moves = self.find_all_possible_moves();
         let mut check: Option<bool>;
         for m in moves {

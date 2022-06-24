@@ -46,7 +46,7 @@ fn main() {
         }
         else {break}
 
-        game.analyse(4);
+        game.analyse(5);
         let check = game.make_move(game.best_move);
         game.log();
         if check.is_some() {

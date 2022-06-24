@@ -6,7 +6,7 @@ pub fn _play_puzzle(s: &str) {
     let mut counter = 0;
     for _ in 0..10 {
         counter += 1;
-        game.analyse(5);
+        game.analyse(4);
         let check = game.make_move(game.best_move);
         game.log();
         if check.is_some() {
