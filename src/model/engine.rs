@@ -4,6 +4,7 @@
 
 use crate::model::defs::*;
 use crate::model::pieces::*;
+use std::time::Instant;
 
 impl Board {
     pub fn evaluate(&self) -> i64 {
@@ -70,5 +71,15 @@ impl Board {
             }
         }
         return beta
+    }
+
+    pub fn analyse(&mut self){
+        let now = Instant::now();
+        let eval = self.alpha_beta_max(-99999, 99999, 4);
+        println!("Took {} ms to evalute position.", now.elapsed().as_millis());
+        if eval > 0 {println!("Current evaluation is {eval} in favour of {}.", as_string(self.color))}
+        if eval < 0 {println!("Current evaluation is {} in favour of {}.", -eval, as_string(other_colour(self.color)))}
+        else {println!("Current position is equal.")}
+        println!("The best move is {}", self.best_move.to_string())
     }
 }
