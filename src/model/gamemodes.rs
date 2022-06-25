@@ -5,10 +5,11 @@ use crate::model::pieces::*;
 #[inline(always)]
 pub fn p_v_e(fen: &str, player_color: Piece) {
     let mut game = Board::from_fen(fen);
+    let ai_color = other_colour(player_color);
     game.log();
-
+    let mut check: Option<bool>;
     loop {
-        let check: Option<bool>;
+        println!("Your Move.");
         if game.color == player_color {
             let mut a = String::new();
             println!("Piece to move:");
@@ -40,14 +41,17 @@ pub fn p_v_e(fen: &str, player_color: Piece) {
                         break;
                     }
                 }
-            else { println!("Not a valid move!") }
+            }
         }
-        else if game.color == other_colour(player_color) {
-            game.analyse(4);
+        if game.color == ai_color {
+            println!("AI Moving.");
+            game.analyse(5);
             check = game.make_move(game.best_move);
         }
-        else { check = None; }
-
+        else { 
+            println!("UH OH");
+            break;
+        }
         game.log();
         if check.is_some() {
             if check.unwrap() { println!("Checkmate!") };
@@ -55,5 +59,7 @@ pub fn p_v_e(fen: &str, player_color: Piece) {
             break;
         }
     }
-}
+    let mut a = String::new();
+    let end = std::io::stdin().read_line(&mut a).unwrap();
+    println!("{}", end);
 }
