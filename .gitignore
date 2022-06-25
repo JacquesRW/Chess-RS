@@ -3,3 +3,4 @@ TODO.txt
 .vscode/
 Cargo.lock
 **/*.rs.bk
+/resources

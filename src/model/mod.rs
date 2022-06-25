@@ -7,4 +7,3 @@ pub mod helper;
 pub mod board;
 pub mod engine;
 pub mod fen;
-pub mod gamemodes;

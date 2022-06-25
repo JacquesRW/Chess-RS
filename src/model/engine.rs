@@ -81,6 +81,5 @@ impl Board {
         if eval > 0 {println!("Current evaluation is {eval} in favour of {}.", as_string(self.color))}
         if eval < 0 {println!("Current evaluation is {} in favour of {}.", -eval, as_string(other_colour(self.color)))}
         if eval == 0 {println!("Current position is equal.")}
-        println!("The best move is {}", self.best_move.to_string())
     }
 }

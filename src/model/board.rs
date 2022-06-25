@@ -51,7 +51,7 @@ impl Board {
                 line.push_str(&repr(board_ref[7-i][j]));
                 line.push_str(" ");
             }
-            println!("{}", line)
+            println!("{}", line);
         }
         println!("-------------------------");
         println!("{} to move.", match self.color { WHITE => "White", BLACK => "Black", _ => panic!("Invalid colour!")});

@@ -14,7 +14,7 @@ pub struct Move {
     pub dest: Square 
 }
 
-#[derive(Clone)]
+#[derive(Clone, Copy)]
 pub struct Board {
     // current board
     pub board: Array,
