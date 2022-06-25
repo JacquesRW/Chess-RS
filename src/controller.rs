@@ -44,16 +44,12 @@ pub fn p_v_e(fen: &str, player_color: Piece) {
 impl Board {
     fn player_move(&mut self) -> Option<bool> {
         let mut a = String::new();
-        println!("Piece to move:");
         std::io::stdin().read_line(&mut a).unwrap();
         let origin = get_square(&a);
         self.get_piece_selection(origin);
 
         let moves = self.selection_possible_moves(origin);
-        Move::print_destinations(&moves);
-
         let mut a2 = String::new();
-        println!("Move to:");
         std::io::stdin().read_line(&mut a2).unwrap();
         let destination = get_square(&a2);
 
