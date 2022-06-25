@@ -20,6 +20,7 @@ pub const ROOK: Piece = 0b00000100;
 pub const QUEEN: Piece = 0b00000101;
 pub const KING: Piece = 0b00000110;
 
+#[inline(always)]
 pub fn other_colour(color: Piece) -> Piece {
     match color {
         WHITE => BLACK,
@@ -29,6 +30,7 @@ pub fn other_colour(color: Piece) -> Piece {
     }
 }
 
+#[inline(always)]
 pub fn as_string(pc: Piece) -> String {
     let color = match colour(pc) {
         WHITE => "white",
@@ -49,6 +51,7 @@ pub fn as_string(pc: Piece) -> String {
     format!("{color} {piece}")
 }
 
+#[inline(always)]
 pub fn repr(pc: Piece) -> String {
     let color = match colour(pc) {
         WHITE => "1",
@@ -69,6 +72,7 @@ pub fn repr(pc: Piece) -> String {
     format!("{piece}{color}")
 }
 
+#[inline(always)]
 pub fn value(pc: Piece) -> i64 {
     let x = match colour(pc) {
         WHITE => 1,

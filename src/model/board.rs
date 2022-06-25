@@ -10,6 +10,7 @@ impl Board {
         println!("{} selected.", as_string(self.board[sq[0]][sq[1]]))
     }
 
+    #[inline(always)]
     pub fn get_king_square(&self, colour: u8) -> Square {
         let pc = KING | colour;
         for i in 0..8 {

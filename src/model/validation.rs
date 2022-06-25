@@ -159,6 +159,7 @@ impl Board {
         possible_moves
     }
 
+    #[inline(always)]
     fn unvalidated_moves(&self, sq: Square) -> Vec<Move> {
         let piece = self.board[sq[0]][sq[1]];
         if colour(piece) != self.color {panic!("Not a valid piece")}
@@ -216,6 +217,7 @@ impl Board {
         false
     }
 
+    #[inline(always)]
     pub fn check_for_check(&self, m: Move, king_square: Square, colour: u8) -> bool {
         let mut temp = self.clone();
         temp.pseudo_move(m);

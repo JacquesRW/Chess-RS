@@ -7,6 +7,7 @@ use crate::model::pieces::*;
 use std::time::Instant;
 
 impl Board {
+    #[inline(always)]
     pub fn evaluate(&self) -> i64 {
         let mut eval: i64 = 0;
         for i in 0..8 {
