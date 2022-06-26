@@ -4,7 +4,7 @@ pub type Piece = u8;
 pub type Array = [[Piece;8];8];
 pub type Square = [usize;2];
 
-#[derive(Copy, Clone, PartialEq)]
+#[derive(Copy, Clone, PartialEq, Eq, Hash)]
 pub struct Move {
     // piece to move
     pub target: Piece,
@@ -12,6 +12,12 @@ pub struct Move {
     pub orig: Square,
     // destination square of move
     pub dest: Square 
+}
+
+#[derive(Clone, Copy)]
+pub struct ScoredMove {
+    pub m: Move,
+    pub s: i64
 }
 
 #[derive(Clone, Copy)]

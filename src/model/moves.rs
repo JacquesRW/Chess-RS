@@ -1,5 +1,5 @@
 //* Implementation of methods for the Move struct. */
-use crate::model::defs::{Piece, Square, Move};
+use crate::model::defs::{Piece, Square, Move, ScoredMove};
 use crate::model::helper::*;
 use crate::model::pieces::*;
 
@@ -45,5 +45,10 @@ impl Move {
         }
         println!("{message}")
     }
+}
 
+pub fn output_move_list(move_list: &Vec<ScoredMove>) {
+    for m in move_list {
+        println!("{} Eval: {}", m.m.to_string(), m.s)
+    }
 }

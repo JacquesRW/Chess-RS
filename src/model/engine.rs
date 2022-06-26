@@ -3,12 +3,14 @@
 //* GONNA TRY TO IMPLEMENT UNMAKE MOVE TO FIX THIS */
 
 use crate::model::defs::*;
+use crate::model::moves::*;
 use crate::model::pieces::*;
+use std::collections::HashMap;
 use std::time::Instant;
 
 impl Board {
     #[inline(always)]
-    pub fn evaluate(&self) -> i64 {
+    fn evaluate(&self) -> i64 {
         let mut eval: i64 = 0;
         for i in 0..8 {
             for j in 0..8 {
@@ -18,7 +20,7 @@ impl Board {
         if self.color == WHITE {return eval}
         -eval
     }
-    pub fn alpha_beta_max(&mut self, mut alpha: i64, beta: i64, depth_left: u8) -> i64 {
+    fn alpha_beta_max(&mut self, mut alpha: i64, beta: i64, depth_left: u8) -> i64 {
         if depth_left == 0 { return self.evaluate() }
         let moves = self.find_all_possible_moves();
         let mut check: Option<bool>;
@@ -27,7 +29,6 @@ impl Board {
             check = temp.make_move(m);
             if check.is_some() { 
                 if check.unwrap() {
-                    self.best_move = m;
                     return 999
                 }
                 if !check.unwrap() {
@@ -40,14 +41,13 @@ impl Board {
             }
             // self.unmake_move(m);
             if score > alpha { 
-                self.best_move = m;
                 alpha = score 
             }
         }
         return alpha
     }
 
-    pub fn alpha_beta_min(&mut self, alpha: i64, mut beta: i64, depth_left: u8) -> i64 {
+    fn alpha_beta_min(&mut self, alpha: i64, mut beta: i64, depth_left: u8) -> i64 {
         if depth_left == 0 { return -self.evaluate() }
         let moves = self.find_all_possible_moves();
         let mut check: Option<bool>;
@@ -74,12 +74,44 @@ impl Board {
         return beta
     }
 
-    pub fn analyse(&mut self, depth: u8){
+    #[inline(always)]
+    fn move_list_ab_max(&mut self, alpha: i64, beta: i64, depth_left: u8, move_list: &Vec<ScoredMove>) -> Vec<ScoredMove> {
+        let mut new_move_list: Vec<ScoredMove> = Vec::new();
+        let mut check: Option<bool>;
+        for m in move_list {
+            let mut score: i64 = 0;
+            let mut temp = self.clone();
+            check = temp.make_move(m.m);
+            if check.is_some() { 
+                if check.unwrap() {
+                    score = 999;
+                }
+                if !check.unwrap() {
+                    score = 0;
+                }
+            }
+            else {
+                score= temp.alpha_beta_min(alpha, beta, depth_left - 1);
+            }
+            new_move_list.push(ScoredMove {m: m.m, s: score} )
+        }
+        new_move_list.sort_by(|a, b| a.s.cmp(&b.s));
+        new_move_list.reverse();
+        return new_move_list
+    }
+
+    #[inline(always)]
+    pub fn analyse(&mut self, depth: u8) -> Move {
         let now = Instant::now();
-        let eval = self.alpha_beta_max(-99999, 99999, depth);
+        let mut move_list: Vec<ScoredMove> = Vec::new();
+        let moves = self.find_all_possible_moves();
+        for mo in moves {
+            move_list.push(ScoredMove { m: mo, s: 0 });
+        }
+        for d in 1..(depth+1) {
+            move_list = self.move_list_ab_max(-99999, 99999, d, &move_list);
+        }
         println!("Took {} ms to evalute position.", now.elapsed().as_millis());
-        if eval > 0 {println!("Current evaluation is {eval} in favour of {}.", as_string(self.color))}
-        if eval < 0 {println!("Current evaluation is {} in favour of {}.", -eval, as_string(other_colour(self.color)))}
-        if eval == 0 {println!("Current position is equal.")}
+        move_list[0].m
     }
 }
