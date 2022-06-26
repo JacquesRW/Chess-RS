@@ -4,8 +4,9 @@ pub fn _play_puzzle(s: &str) {
     let mut game = Board::from_fen(s);
     game.log();
     let mut counter = 0;
-    for _ in 0..10 {
+    for _ in 0..3 {
         counter += 1;
+        //game._old_analyse(5);
         let m = game.analyse(5);
         let check = game.make_move(m);
         game.log();
@@ -35,6 +36,6 @@ mod test {
 
     #[test]
     pub fn one_puzzle() {
-        _play_puzzle(_PUZZLES[0]);
+        _play_puzzle(_PUZZLES[2]);
     }
 }

@@ -82,7 +82,7 @@ impl Board {
 
 
     #[inline(always)]
-    fn move_list_ab_max(&mut self, alpha: i64, beta: i64, depth_left: u8, move_list: &Vec<ScoredMove>) -> Vec<ScoredMove> {
+    fn move_list_ab_max(&mut self, mut alpha: i64, beta: i64, depth_left: u8, move_list: Vec<ScoredMove>) -> Vec<ScoredMove> {
         // takes in an ordered (hopefully) list and calls alpha-beta minimax on those moves
         // aims to increase amount of branches pruned
         let mut new_move_list: Vec<ScoredMove> = Vec::new();
@@ -102,6 +102,10 @@ impl Board {
             else {
                 score = temp.alpha_beta_min(alpha, beta, depth_left - 1);
             }
+            // WORK OUT ISSUE HERE
+            //if score >= alpha {
+            //    alpha = score
+            //}
             new_move_list.push(ScoredMove {m: m.m, s: score} )
         }
         new_move_list.sort_by(|a, b| a.s.cmp(&b.s));
@@ -120,10 +124,20 @@ impl Board {
             move_list.push(ScoredMove { m: mo, s: 0 });
         }
         for d in 1..(depth+1) {
-            println!("Depth {d}.");
-            move_list = self.move_list_ab_max(-99999, 99999, d, &move_list);
+            move_list = self.move_list_ab_max(-99999, 99999, d, move_list);
+            //output_move_list(&move_list);
+            if move_list[0].s == 999 {
+                break;
+            }
+            println!("Depth {d} took {}ms.", now.elapsed().as_millis());
         }
         println!("Took {} ms to evalute position.", now.elapsed().as_millis());
         move_list[0].m
+    }
+
+    pub fn _old_analyse(&mut self, depth: u8) {
+        let now = Instant::now();
+        self.alpha_beta_max(-99999, 99999, depth);
+        println!("Took {} ms to evalute position.", now.elapsed().as_millis());
     }
 }
