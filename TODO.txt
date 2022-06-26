@@ -1,0 +1,12 @@
+MINIMAX ALGORITHM:
+    quiscience checks
+    improve evaluation function
+
+PERFORMANCE STUFF:
+
+refactor last_move to en passant square Option<Square>
+
+Board.piece_count field:
+    dictionary of each piece and the count of 
+    then check on make_move if m.dest is empty, if not subtract 1 from the relevant type count (remember to take en passant into account)
+
