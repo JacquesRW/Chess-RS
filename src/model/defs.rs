@@ -33,6 +33,4 @@ pub struct Board {
     pub color: u8,
     // last capture
     pub capture: Option<Piece>,
-    // best move according to minimax
-    pub best_move: Move
 }
