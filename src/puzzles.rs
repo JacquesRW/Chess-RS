@@ -4,9 +4,9 @@ pub fn _play_puzzle(s: &str) {
     let mut game = Board::from_fen(s);
     game.log();
     let mut counter = 0;
-    for _ in 0..7 {
+    for _ in 0..1 {
         counter += 1;
-        let m = game.analyse(6);
+        let m = game.analyse(3);
         let check = game.make_move(m);
         game.log();
         if check.is_some() {

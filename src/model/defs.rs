@@ -4,7 +4,7 @@ pub type Piece = u8;
 pub type Array = [[Piece;8];8];
 pub type Square = [usize;2];
 
-#[derive(Copy, Clone, PartialEq, Eq, Hash)]
+#[derive(Copy, Clone, PartialEq)]
 pub struct Move {
     // piece to move
     pub target: Piece,
@@ -29,5 +29,7 @@ pub struct Board {
     // current player
     pub color: u8,
     // king locations
-    pub kings: [Square; 2]
+    pub kings: [Square; 2],
+    // captured piece on last move
+    pub capture: Piece,
 }

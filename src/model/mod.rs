@@ -2,6 +2,7 @@ pub mod pieces;
 pub mod moves;
 pub mod defs;
 pub mod make_move;
+pub mod unmake_move;
 pub mod validation;
 pub mod helper;
 pub mod board;

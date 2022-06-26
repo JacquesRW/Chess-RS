@@ -28,17 +28,22 @@ impl Board {
         let moves = self.find_all_possible_moves();
         let mut check: Option<bool>;
         for m in moves {
-            let mut temp = self.clone();
-            check = temp.make_move(m);
+            let pen_castle = self.castle;
+            let pen_move = self.last_move;
+            let capture = self.board[m.dest[0]][m.dest[1]];
+            check = self.make_move(m);
             if check.is_some() { 
                 if check.unwrap() {
+                    self.unmake_move(m, pen_move, pen_castle, capture);
                     return 999
                 }
                 if !check.unwrap() {
+                    self.unmake_move(m, pen_move, pen_castle, capture);
                     return 0
                 }
             }
-            let score = temp.alpha_beta_min(alpha, beta, depth_left - 1);
+            let score = self.alpha_beta_min(alpha, beta, depth_left - 1);
+            self.unmake_move(m, pen_move, pen_castle, capture);
             if score >= beta { 
                 return beta 
             }
@@ -54,17 +59,22 @@ impl Board {
         let moves = self.find_all_possible_moves();
         let mut check: Option<bool>;
         for m in moves {
-            let mut temp = self.clone();
-            check = temp.make_move(m);
+            let pen_castle = self.castle;
+            let pen_move = self.last_move;
+            let capture = self.board[m.dest[0]][m.dest[1]];
+            check = self.make_move(m);
             if check.is_some() { 
                 if check.unwrap() {
+                    self.unmake_move(m, pen_move, pen_castle, capture);
                     return -999
                 }
                 if !check.unwrap() {
+                    self.unmake_move(m, pen_move, pen_castle, capture);
                     return 0
                 }
             }
-            let score = temp.alpha_beta_max(alpha, beta, depth_left - 1);
+            let score = self.alpha_beta_max(alpha, beta, depth_left - 1);
+            self.unmake_move(m, pen_move, pen_castle, capture);
             if score <= alpha { 
                 return alpha 
             }
@@ -81,25 +91,31 @@ impl Board {
         // aims to increase amount of branches pruned
         let mut new_move_list: Vec<ScoredMove> = Vec::new();
         let mut check: Option<bool>;
-        for m in move_list {
+        for sm in move_list {
+            let mo = sm.m;
+            let pen_castle = self.castle;
+            let pen_move = self.last_move;
+            let capture = self.board[mo.dest[0]][mo.dest[1]];
             let mut score: i64 = 0;
-            let mut temp = self.clone();
-            check = temp.make_move(m.m);
+            check = self.make_move(mo);
             if check.is_some() { 
                 if check.unwrap() {
+                    self.unmake_move(mo, pen_move, pen_castle, capture);
                     score = 999;
                 }
                 if !check.unwrap() {
+                    self.unmake_move(mo, pen_move, pen_castle, capture);
                     score = 0;
                 }
             }
             else {
-                score = temp.alpha_beta_min(alpha, beta, depth_left - 1);
+                score = self.alpha_beta_min(alpha, beta, depth_left - 1);
             }
+            self.unmake_move(mo, pen_move, pen_castle, capture);
             if score > alpha {
                 alpha = score - 1;
             }
-            new_move_list.push(ScoredMove {m: m.m, s: score} )
+            new_move_list.push(ScoredMove {m: mo, s: score} )
         }
         new_move_list.sort_by(|a, b| a.s.cmp(&b.s));
         new_move_list.reverse();

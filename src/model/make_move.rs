@@ -73,6 +73,7 @@ impl Board {
     #[inline(always)]
     pub fn pseudo_move(&mut self, m: Move) {
         // no checking for checkmate
+        self.capture = self.board[m.dest[0]][m.dest[1]];
         self.try_en_passant(&m);
         self.board[m.dest[0]][m.dest[1]] = m.target;
         self.board[m.orig[0]][m.orig[1]] = EMPTY;
