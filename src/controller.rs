@@ -21,7 +21,7 @@ pub fn p_v_e(fen: &str, player_color: Piece) {
 
         stdout.queue(cursor::RestorePosition).unwrap();
         stdout.flush().unwrap();
-        thread::sleep(time::Duration::from_millis(100));
+        thread::sleep(time::Duration::from_millis(500));
         stdout.queue(cursor::RestorePosition).unwrap();
         stdout.queue(terminal::Clear(terminal::ClearType::All)).unwrap();
         stdout.execute(cursor::Show).unwrap();
@@ -56,7 +56,7 @@ pub fn e_v_e(fen: &str) {
 
         stdout.queue(cursor::RestorePosition).unwrap();
         stdout.flush().unwrap();
-        thread::sleep(time::Duration::from_millis(100));
+        thread::sleep(time::Duration::from_millis(1000));
         stdout.queue(cursor::RestorePosition).unwrap();
         stdout.queue(terminal::Clear(terminal::ClearType::All)).unwrap();
         stdout.execute(cursor::Show).unwrap();
@@ -90,7 +90,6 @@ pub fn p_v_p(fen: &str) {
 
         stdout.queue(cursor::RestorePosition).unwrap();
         stdout.flush().unwrap();
-        thread::sleep(time::Duration::from_millis(100));
         stdout.queue(cursor::RestorePosition).unwrap();
         stdout.queue(terminal::Clear(terminal::ClearType::All)).unwrap();
         stdout.execute(cursor::Show).unwrap();
@@ -130,7 +129,7 @@ impl Board {
 
     fn ai_move(&mut self) -> Option<bool> {
         println!("AI Moving.");
-        let m = self.analyse(4);
+        let m = self.analyse(5);
         self.make_move(m)
     }
 }

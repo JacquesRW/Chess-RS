@@ -58,6 +58,7 @@ impl Board {
         possible_moves
     }
 
+    #[inline(always)]
     fn _castle_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
         let col = sq[0];
         let row = sq[1];
@@ -83,7 +84,6 @@ impl Board {
         possible_moves
     }
 
-    #[inline(always)]
     fn _rook_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
         let col = sq[0];
         let row = sq[1];
@@ -123,7 +123,6 @@ impl Board {
         possible_moves
     }
 
-    #[inline(always)]
     fn _bishop_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
         let col = sq[0];
         let row = sq[1];
@@ -163,7 +162,6 @@ impl Board {
         possible_moves
     }
 
-    #[inline(always)]
     fn _knight_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
         let col = sq[0];
         let row = sq[1];
@@ -186,7 +184,6 @@ impl Board {
         possible_moves
     }
 
-    #[inline(always)]
     fn unvalidated_moves(&self, sq: Square) -> Vec<Move> {
         let piece = self.board[sq[0]][sq[1]];
         if colour(piece) != self.color {panic!("Not a valid piece")}
@@ -214,7 +211,6 @@ impl Board {
         possible_moves
     }
 
-    #[inline(always)]
     pub fn check_for_check_static(&self, king_square: Square, colour: u8) -> bool {
         let alt_color = other_colour(self.color);
         for pos in self._pawn_moves(king_square, colour) {
@@ -245,7 +241,6 @@ impl Board {
         false
     }
 
-    #[inline(always)]
     pub fn check_for_check(&self, m: Move, king_square: Square, colour: u8) -> bool {
         let mut temp = self.clone();
         temp.pseudo_move(m);

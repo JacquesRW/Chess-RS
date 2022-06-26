@@ -7,8 +7,10 @@ edition = "2021"
 rand = "0.8"
 crossterm = "0.23"
 
-# for speed testing
 [profile.test]
+opt-level = 3
+
+[profile.dev]
 opt-level = 3
 
 [profile.release.build-override]

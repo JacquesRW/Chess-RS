@@ -5,6 +5,7 @@ use crate::model::defs::{Board, Move};
 use crate::model::pieces::*;
 
 impl Board {
+    #[inline(always)]
     pub fn switch_color(&mut self) {
         self.color = other_colour(self.color);
     }
@@ -73,11 +74,12 @@ impl Board {
         self.board[m.dest[0]][m.dest[1]] = colo | QUEEN;
     }
 
+    #[inline(always)]
     pub fn pseudo_move(&mut self, m: Move) {
         self.try_en_passant(&m);
         self.board[m.dest[0]][m.dest[1]] = m.target;
         self.board[m.orig[0]][m.orig[1]] = EMPTY;
-        if name(m.target) == PAWN && (m.dest[0] == 7 || m.dest[0] == 0) {
+        if (m.dest[0] == 7 || m.dest[0] == 0) && name(m.target) == PAWN {
             self.try_promote(&m);
         }
         self.last_move = m;
@@ -88,6 +90,7 @@ impl Board {
         self.switch_color();
     }
 
+    #[inline(always)]
     pub fn make_move(&mut self, m: Move) -> Option<bool> {
         self.pseudo_move(m);
         self.check_for_mate()

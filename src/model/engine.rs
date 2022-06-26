@@ -100,7 +100,7 @@ impl Board {
                 }
             }
             else {
-                score= temp.alpha_beta_min(alpha, beta, depth_left - 1);
+                score = temp.alpha_beta_min(alpha, beta, depth_left - 1);
             }
             new_move_list.push(ScoredMove {m: m.m, s: score} )
         }
@@ -120,9 +120,9 @@ impl Board {
             move_list.push(ScoredMove { m: mo, s: 0 });
         }
         for d in 1..(depth+1) {
+            println!("Depth {d}.");
             move_list = self.move_list_ab_max(-99999, 99999, d, &move_list);
         }
-        output_move_list(&move_list);
         println!("Took {} ms to evalute position.", now.elapsed().as_millis());
         move_list[0].m
     }
