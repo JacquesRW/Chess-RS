@@ -12,7 +12,7 @@ impl Move {
     pub fn _reverse(&self) -> Move {
         Move { target: self.target, orig: self.dest, dest: self.orig}
     }
-
+    #[inline(always)]
     pub fn new(piece: Piece, origin: Square, destination: Square) -> Move {
         Move {target: piece, orig: origin, dest: destination}
     }

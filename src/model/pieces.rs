@@ -1,9 +1,11 @@
 //* Stuff for the Pieces type. */
 use crate::model::defs::Piece;
 
+#[inline(always)]
 pub fn colour(pc: Piece) -> Piece {
     (pc >> 3) << 3
 }
+#[inline(always)]
 pub fn name(pc: Piece) -> Piece {
     (pc << 5) >> 5
 }

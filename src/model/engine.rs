@@ -1,10 +1,7 @@
 //* ALPHA-BETA MINIMAX  */
-//* CURRENTLY BRANCHES LOADS OF BOARDS */
-//* GONNA TRY TO IMPLEMENT UNMAKE MOVE TO FIX THIS */
 
 use crate::model::defs::*;
 use crate::model::pieces::*;
-use crate::model::moves::*;
 use std::time::Instant;
 
 impl Board {
@@ -126,7 +123,6 @@ impl Board {
                 break;
             }
         }
-        //_output_move_list(&move_list);
         println!("Took {} ms to evalute position.", now.elapsed().as_millis());
         println!("Current eval is {}.", match self.color { BLACK => -move_list[0].s, WHITE => move_list[0].s, _ => panic!("Invalid colour!")});
         move_list[0].m
