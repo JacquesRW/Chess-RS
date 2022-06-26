@@ -11,8 +11,7 @@ use crate::model::pieces::*;
 mod puzzles;
 pub const _START_POSITION: &str = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
-pub const _TEST_POSITIONS: [&str;2] = ["r2qk2r/ppp4p/3p1pn1/3Pn1p1/2B1P3/2N2P1P/PP2QP2/R4RK1 w kq - 1 15",
-                                        "4k2r/1P6/8/8/8/8/PP6/6K1 w kq - 1 15",];
+pub const _TEST_POSITIONS: [&str;1] = ["r2qk2r/ppp4p/3p1pn1/3Pn1p1/2B1P3/2N2P1P/PP2QP2/R4RK1 w kq - 1 15"];
 
 fn main() {
     _p_v_e(_TEST_POSITIONS[0], WHITE);

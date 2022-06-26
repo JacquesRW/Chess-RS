@@ -4,6 +4,7 @@
 
 use crate::model::defs::*;
 use crate::model::pieces::*;
+use crate::model::moves::*;
 use std::time::Instant;
 
 impl Board {
@@ -23,6 +24,7 @@ impl Board {
     }
 
     // alpha-beta pruning minimax method
+    // PLANNED introduction of quiescence search rather than eval
     // POTENTIAL refactor to negamax
     fn alpha_beta_max(&mut self, mut alpha: i64, beta: i64, depth_left: u8) -> i64 {
         if depth_left == 0 { return self.evaluate() }
@@ -43,7 +45,6 @@ impl Board {
             if score >= beta { 
                 return beta 
             }
-            // self.unmake_move(m);
             if score > alpha { 
                 alpha = score 
             }
@@ -70,7 +71,6 @@ impl Board {
             if score <= alpha { 
                 return alpha 
             }
-            // self.unmake_move(m);
             if score < beta { 
                 beta = score 
             }
@@ -78,10 +78,9 @@ impl Board {
         return beta
     }
 
-
     #[inline(always)]
     fn move_list_ab_max(&mut self, mut alpha: i64, beta: i64, depth_left: u8, move_list: Vec<ScoredMove>) -> Vec<ScoredMove> {
-        // takes in an ordered (hopefully) list and calls alpha-beta minimax on those moves
+        // takes in an ordered vector of moves and calls alpha-beta minimax on those moves
         // aims to increase amount of branches pruned
         let mut new_move_list: Vec<ScoredMove> = Vec::new();
         let mut check: Option<bool>;
@@ -112,7 +111,7 @@ impl Board {
 
     #[inline(always)]
     pub fn analyse(&mut self, depth: u8) -> Move {
-        // currently an iterative deepening search w/ minimax
+        // an iterative deepening search
         // PLANNED Zobrist hashing for more performance
         let now = Instant::now();
         let mut move_list: Vec<ScoredMove> = Vec::new();
@@ -121,20 +120,15 @@ impl Board {
             move_list.push(ScoredMove { m: mo, s: 0 });
         }
         for d in 1..(depth+1) {
+            println!("Depth {d}.");
             move_list = self.move_list_ab_max(-99999, 99999, d, move_list);
-            //output_move_list(&move_list);
             if move_list[0].s == 999 {
                 break;
             }
-            println!("Depth {d} took {}ms.", now.elapsed().as_millis());
         }
+        //_output_move_list(&move_list);
         println!("Took {} ms to evalute position.", now.elapsed().as_millis());
+        println!("Current eval is {}.", match self.color { BLACK => -move_list[0].s, WHITE => move_list[0].s, _ => panic!("Invalid colour!")});
         move_list[0].m
-    }
-
-    pub fn _old_analyse(&mut self, depth: u8) {
-        let now = Instant::now();
-        self.alpha_beta_max(-99999, 99999, depth);
-        println!("Took {} ms to evalute position.", now.elapsed().as_millis());
     }
 }
