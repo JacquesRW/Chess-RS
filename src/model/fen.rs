@@ -42,15 +42,15 @@ fn en_passant_square(s: &str, c: Piece) -> Move {
     Move { target: other_colour(c) | PAWN, orig: [(sq[0] as i32 - x) as usize ,sq[1]], dest: [(sq[0] as i32 + x) as usize,sq[1]]}
 }
 
-fn can_castle(s: &str) -> [[bool;2];3] {
-    if s == "-" { return [[false,false], [true, true], [true, true]]}
-    let mut castle = [[false,false], [false, false], [false, false]];
+fn can_castle(s: &str) -> [[bool;2];2] {
+    if s == "-" { return [[true, true], [true, true]]}
+    let mut castle = [[false, false], [false, false]];
     for ch in s.chars() {
         match ch {
-            'Q' => castle[1][0] = true,
-            'K' => castle[1][1] = true,
-            'q' => castle[2][0] = true,
-            'k' => castle[2][1] = true,
+            'Q' => castle[0][0] = true,
+            'K' => castle[0][1] = true,
+            'q' => castle[1][0] = true,
+            'k' => castle[1][1] = true,
             _ => panic!("Not good castle info!")
         }
     }
@@ -85,11 +85,16 @@ impl Board {
             position[i] = convert_row(rows[7 - i]);
         }
         let c = find_color(vec[1]);
-        Board {
+        let mut board = Board {
             board: position,
             color: c,
             last_move: en_passant_square(vec[3], c), 
             castle: can_castle(vec[2]),
-        }
+            pieces: [Vec::new(),Vec::new()],
+            kings: [[0,0],[0,0]]
+        };
+        board.kings = [board.get_king_square(WHITE),board.get_king_square(BLACK)];
+        board.pieces = [board.get_pieces(WHITE), board.get_pieces(BLACK)];
+        board
     }
 }

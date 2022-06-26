@@ -20,12 +20,16 @@ pub struct ScoredMove {
     pub s: i64
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone)]
 pub struct Board {
     // current board
     pub board: Array,
     pub last_move: Move, // PLANNED REFACTOR to "en passant square" FOR PERFORMANCE
-    pub castle: [[bool;2];3], // PLANNED REFACTOR TO u8 FOR CONVENIENCE
+    pub castle: [[bool;2];2], // PLANNED REFACTOR TO u8 FOR CONVENIENCE
     // current player
     pub color: u8,
+    // piece locations
+    pub pieces: [Vec<Square>;2],
+    // king locations
+    pub kings: [Square; 2]
 }

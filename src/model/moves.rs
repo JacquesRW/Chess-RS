@@ -23,7 +23,7 @@ impl Move {
             Move { target: WHITE | KING , orig: [0,4], dest: [0,6] } => println!("White castles kingside."),
             Move { target: BLACK | KING , orig: [7,4], dest: [7,2] } => println!("Black castles queenside."),
             Move { target: BLACK | KING , orig: [7,4], dest: [7,6] } => println!("Black castles kingside."),
-            _ => println!("{}, {} to {}", as_string(self.target), get_coords(self.orig), get_coords(self.dest))
+            _ => println!("{}, {} to {}", as_string(self.target), get_coords(&self.orig), get_coords(&self.dest))
         }
     }
 
@@ -33,14 +33,14 @@ impl Move {
             Move { target: WHITE | KING , orig: [0,4], dest: [0,6] } => format!("castle kingside."),
             Move { target: BLACK | KING , orig: [7,4], dest: [7,2] } => format!("castle queenside."),
             Move { target: BLACK | KING , orig: [7,4], dest: [7,6] } => format!("castle kingside."),
-            _ => format!("{}, {} to {}", as_string(self.target), get_coords(self.orig), get_coords(self.dest))
+            _ => format!("{}, {} to {}", as_string(self.target), get_coords(&self.orig), get_coords(&self.dest))
         }
     }
 
     pub fn _print_destinations(moves: &Vec<Self>) {
         let mut message = String::from("Possible Destinations: ");
         for m in moves {
-            message += &get_coords(m.dest);
+            message += &get_coords(&m.dest);
             message += &String::from(" ");
         }
         println!("{message}")

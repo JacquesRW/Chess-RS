@@ -64,12 +64,12 @@ impl Board {
         let row = sq[1];
         let mut possible_moves: Vec<Move> = Vec::new();
         let colo = colour(piece);
-        if self.castle[(colo >> 3) as usize][0] && row == 4 && self.board[col][1] == EMPTY && self.board[col][2] == EMPTY && self.board[col][3] == EMPTY {
+        if self.castle[colour_to_index(colo)][0] && row == 4 && self.board[col][1] == EMPTY && self.board[col][2] == EMPTY && self.board[col][3] == EMPTY {
             if !self.check_for_check_static(sq, colo) && !self.check_for_check_static([col, 1], colo) && !self.check_for_check_static([col, 2], colo) && !self.check_for_check_static([col, 3], colo) {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col,2]})
             }
         }
-        if self.castle[(colo >> 3) as usize ][1] && row == 4 && self.board[col][5] == EMPTY && self.board[col][6] == EMPTY {
+        if self.castle[colour_to_index(colo)][1] && row == 4 && self.board[col][5] == EMPTY && self.board[col][6] == EMPTY {
             if !self.check_for_check_static(sq, colo) && !self.check_for_check_static([col, 5], colo) && !self.check_for_check_static([col, 6], colo) {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col,6]})
             }
@@ -88,9 +88,10 @@ impl Board {
         let col = sq[0];
         let row = sq[1];
         let mut possible_moves: Vec<Move> = Vec::new();
+        let colo = colour(piece);
         for drow in 1..(row+1) {
             if row<drow { break }
-            if colour(self.board[col][row - drow]) != colour(piece) {
+            if colour(self.board[col][row - drow]) != colo {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col,row-drow]});
                 if colour(self.board[col][row - drow]) != EMPTY { break }
             }
@@ -98,7 +99,7 @@ impl Board {
         }
         for drow in 1..(8-row) {
             if row+drow>=8 { break }
-            if colour(self.board[col][row + drow]) != colour(piece) {
+            if colour(self.board[col][row + drow]) != colo {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col,row+drow]});
                 if colour(self.board[col][row + drow]) != EMPTY { break }
             }
@@ -106,7 +107,7 @@ impl Board {
         }
         for dcol in 1..(col+1) {
             if col<dcol { break }
-            if colour(self.board[col-dcol][row]) != colour(piece) {
+            if colour(self.board[col-dcol][row]) != colo {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col-dcol,row]});
                 if colour(self.board[col-dcol][row]) != EMPTY { break }
             }
@@ -114,7 +115,7 @@ impl Board {
         }
         for dcol in 1..(8-col) {
             if col+dcol>=8 { break }
-            if colour(self.board[col+dcol][row]) != colour(piece) {
+            if colour(self.board[col+dcol][row]) != colo {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col+dcol,row]});
                 if colour(self.board[col+dcol][row]) != EMPTY { break }
             }
@@ -128,8 +129,9 @@ impl Board {
         let row = sq[1];
         let mut smaller = min(col, row);
         let mut possible_moves: Vec<Move> = Vec::new();
+        let colo = colour(piece);
         for change in 1..(smaller+1) {
-            if colour(self.board[col-change][row-change]) != colour(piece) {
+            if colour(self.board[col-change][row-change]) != colo {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col-change,row-change]});
                 if colour(self.board[col-change][row-change]) != EMPTY { break }
             }
@@ -137,7 +139,7 @@ impl Board {
         }
         smaller = min(7-col, row);
         for change in 1..(smaller+1) {
-            if colour(self.board[col+change][row-change]) != colour(piece) {
+            if colour(self.board[col+change][row-change]) != colo {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col+change,row-change]});
                 if colour(self.board[col+change][row-change]) != EMPTY { break }
             }
@@ -145,7 +147,7 @@ impl Board {
         }
         smaller = min(col, 7-row);
         for change in 1..(smaller+1) {
-            if colour(self.board[col-change][row+change]) != colour(piece) {
+            if colour(self.board[col-change][row+change]) != colo {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col-change,row+change]});
                 if colour(self.board[col-change][row+change]) != EMPTY { break }
             }
@@ -153,7 +155,7 @@ impl Board {
         }
         smaller = min(7-col, 7-row);
         for change in 1..(smaller+1) {
-            if colour(self.board[col+change][row+change]) != colour(piece) {
+            if colour(self.board[col+change][row+change]) != colo {
                 possible_moves.push(Move { target: piece, orig: sq, dest: [col+change,row+change]});
                 if colour(self.board[col+change][row+change]) != EMPTY { break }
             }
@@ -166,14 +168,15 @@ impl Board {
         let col = sq[0];
         let row = sq[1];
         let mut possible_moves: Vec<Move> = Vec::new();
-        if row<=5 && col<=6 && colour(self.board[col+1][row+2]) != colour(piece) {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1,row+2] })}
-        if row>=2 && col<=6 && colour(self.board[col+1][row-2]) != colour(piece) {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1,row-2] })}
-        if row<=5 && col>=1 && colour(self.board[col-1][row+2]) != colour(piece) {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1,row+2] })}
-        if row>=2 && col>=1 && colour(self.board[col-1][row-2]) != colour(piece) {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1,row-2] })}
-        if row<=6 && col<=5 && colour(self.board[col+2][row+1]) != colour(piece) {possible_moves.push(Move { target: piece, orig: sq, dest: [col+2,row+1] })}
-        if row>=1 && col<=5 && colour(self.board[col+2][row-1]) != colour(piece) {possible_moves.push(Move { target: piece, orig: sq, dest: [col+2,row-1] })}
-        if row<=6 && col>=2 && colour(self.board[col-2][row+1]) != colour(piece) {possible_moves.push(Move { target: piece, orig: sq, dest: [col-2,row+1] })}
-        if row>=1 && col>=2 && colour(self.board[col-2][row-1]) != colour(piece) {possible_moves.push(Move { target: piece, orig: sq, dest: [col-2,row-1] })}
+        let colo = colour(piece);
+        if row<=5 && col<=6 && colour(self.board[col+1][row+2]) != colo {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1,row+2] })}
+        if row>=2 && col<=6 && colour(self.board[col+1][row-2]) != colo {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1,row-2] })}
+        if row<=5 && col>=1 && colour(self.board[col-1][row+2]) != colo {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1,row+2] })}
+        if row>=2 && col>=1 && colour(self.board[col-1][row-2]) != colo {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1,row-2] })}
+        if row<=6 && col<=5 && colour(self.board[col+2][row+1]) != colo {possible_moves.push(Move { target: piece, orig: sq, dest: [col+2,row+1] })}
+        if row>=1 && col<=5 && colour(self.board[col+2][row-1]) != colo {possible_moves.push(Move { target: piece, orig: sq, dest: [col+2,row-1] })}
+        if row<=6 && col>=2 && colour(self.board[col-2][row+1]) != colo {possible_moves.push(Move { target: piece, orig: sq, dest: [col-2,row+1] })}
+        if row>=1 && col>=2 && colour(self.board[col-2][row-1]) != colo {possible_moves.push(Move { target: piece, orig: sq, dest: [col-2,row-1] })}
         possible_moves
     }
     

@@ -6,6 +6,11 @@ pub fn colour(pc: Piece) -> Piece {
     (pc >> 3) << 3
 }
 #[inline(always)]
+pub fn colour_to_index(colour: u8) -> usize {
+    ((colour >> 3) - 1) as usize
+}
+
+#[inline(always)]
 pub fn name(pc: Piece) -> Piece {
     (pc << 5) >> 5
 }
