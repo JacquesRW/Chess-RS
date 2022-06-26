@@ -102,10 +102,9 @@ impl Board {
             else {
                 score = temp.alpha_beta_min(alpha, beta, depth_left - 1);
             }
-            // WORK OUT ISSUE HERE
-            //if score >= alpha {
-            //    alpha = score
-            //}
+            if score > alpha {
+                alpha = score - 1;
+            }
             new_move_list.push(ScoredMove {m: m.m, s: score} )
         }
         new_move_list.sort_by(|a, b| a.s.cmp(&b.s));
