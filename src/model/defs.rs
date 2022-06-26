@@ -28,6 +28,4 @@ pub struct Board {
     pub castle: [[bool;2];3], // PLANNED REFACTOR TO u8 FOR CONVENIENCE
     // current player
     pub color: u8,
-    // last capture
-    pub capture: Option<Piece>,
 }

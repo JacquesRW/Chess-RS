@@ -8,14 +8,6 @@ impl Board {
     pub fn switch_color(&mut self) {
         self.color = other_colour(self.color);
     }
-    
-    #[inline(always)]
-    fn update_capture(&mut self, &m: &Move) {
-        if self.board[m.dest[0]][m.dest[1]] != EMPTY {
-            self.capture = Some(self.board[m.dest[0]][m.dest[1]]);
-        }
-        self.capture = None;
-    }
 
     #[inline(always)]
     fn try_en_passant(&mut self, &m: &Move) {
@@ -82,7 +74,6 @@ impl Board {
     }
 
     pub fn pseudo_move(&mut self, m: Move) {
-        self.update_capture(&m);
         self.try_en_passant(&m);
         self.board[m.dest[0]][m.dest[1]] = m.target;
         self.board[m.orig[0]][m.orig[1]] = EMPTY;
