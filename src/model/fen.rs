@@ -90,7 +90,6 @@ impl Board {
             color: c,
             last_move: en_passant_square(vec[3], c), 
             castle: can_castle(vec[2]), 
-            best_move: Move::null(),
             capture: None
         }
     }

@@ -11,7 +11,6 @@ use crate::model::pieces::*;
 // I BETTER NOT BE SEEING NO DUMBASS STUFF
 
 #[cfg(test)]
-mod tests;
 mod puzzles;
 
 pub const _TEST_POSITIONS: [&str;1] = ["r2qk2r/ppp4p/3p1pn1/3Pn1p1/2B1P3/2N2P1P/PP2QP2/R4RK1 w kq - 1 15"];
