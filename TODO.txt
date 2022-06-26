@@ -6,7 +6,9 @@ PERFORMANCE STUFF:
 
 refactor last_move to en passant square Option<Square>
 
-Board.piece_count field:
-    dictionary of each piece and the count of 
-    then check on make_move if m.dest is empty, if not subtract 1 from the relevant type count (remember to take en passant into account)
+Board.pieces field:
+    [w_pieces, b_pieces]
+    each a Vec of positions that contain pieces
+    then check on make_move if m.dest in alt_color piece count - if so then remove
+    speeds up eval by only iterating through shorter list to find pieces and calculate their value + positional benefit
 

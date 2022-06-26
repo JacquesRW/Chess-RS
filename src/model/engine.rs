@@ -11,6 +11,9 @@ use std::time::Instant;
 impl Board {
     #[inline(always)]
     fn evaluate(&self) -> i64 {
+        // currently on material eval
+        // PLANNED refactor to pieces field in Board struct for speed
+        // PLANNED adding positional benefits
         let mut eval: i64 = 0;
         for i in 0..8 {
             for j in 0..8 {
@@ -20,6 +23,9 @@ impl Board {
         if self.color == WHITE {return eval}
         -eval
     }
+
+    // alpha-beta pruning minimax method
+    // POTENTIAL refactor to negamax
     fn alpha_beta_max(&mut self, mut alpha: i64, beta: i64, depth_left: u8) -> i64 {
         if depth_left == 0 { return self.evaluate() }
         let moves = self.find_all_possible_moves();
@@ -74,8 +80,11 @@ impl Board {
         return beta
     }
 
+
     #[inline(always)]
     fn move_list_ab_max(&mut self, alpha: i64, beta: i64, depth_left: u8, move_list: &Vec<ScoredMove>) -> Vec<ScoredMove> {
+        // takes in an ordered (hopefully) list and calls alpha-beta minimax on those moves
+        // aims to increase amount of branches pruned
         let mut new_move_list: Vec<ScoredMove> = Vec::new();
         let mut check: Option<bool>;
         for m in move_list {
@@ -102,6 +111,8 @@ impl Board {
 
     #[inline(always)]
     pub fn analyse(&mut self, depth: u8) -> Move {
+        // currently an iterative deepening search w/ minimax
+        // PLANNED Zobrist hashing for more performance
         let now = Instant::now();
         let mut move_list: Vec<ScoredMove> = Vec::new();
         let moves = self.find_all_possible_moves();
@@ -111,6 +122,7 @@ impl Board {
         for d in 1..(depth+1) {
             move_list = self.move_list_ab_max(-99999, 99999, d, &move_list);
         }
+        output_move_list(&move_list);
         println!("Took {} ms to evalute position.", now.elapsed().as_millis());
         move_list[0].m
     }

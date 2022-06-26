@@ -35,6 +35,6 @@ mod test {
 
     #[test]
     pub fn one_puzzle() {
-        _play_puzzle(_PUZZLES[3]);
+        _play_puzzle(_PUZZLES[0]);
     }
 }

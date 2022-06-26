@@ -75,11 +75,20 @@ impl Board {
         }
     }
 
+    #[inline(always)]
+    fn try_promote(&mut self, &m: &Move) {
+        let colo = colour(self.color);
+        self.board[m.dest[0]][m.dest[1]] = colo | QUEEN;
+    }
+
     pub fn pseudo_move(&mut self, m: Move) {
         self.update_capture(&m);
         self.try_en_passant(&m);
         self.board[m.dest[0]][m.dest[1]] = m.target;
         self.board[m.orig[0]][m.orig[1]] = EMPTY;
+        if name(m.target) == PAWN && (m.dest[0] == 7 || m.dest[0] == 0) {
+            self.try_promote(&m);
+        }
         self.last_move = m;
         if self.castle[(self.color >> 3) as usize] != [false,false] {
             self.try_castle();
@@ -89,21 +98,7 @@ impl Board {
     }
 
     pub fn make_move(&mut self, m: Move) -> Option<bool> {
-        if colour(m.target) != self.color {
-            panic!("Wrong colour trying to move!")
-        }
-        if m.target != self.board[m.orig[0]][m.orig[1]] {
-            panic!("Invalid move type!")
-        }
-        self.try_en_passant(&m);
-        self.last_move = m;
-        self.board[m.dest[0]][m.dest[1]] = m.target;
-        self.board[m.orig[0]][m.orig[1]] = EMPTY;
-        if self.castle[(self.color >> 3) as usize] != [false,false] {
-            self.try_castle();
-            self.update_castle();
-        }
-        self.switch_color();
+        self.pseudo_move(m);
         self.check_for_mate()
     }
 }

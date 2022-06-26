@@ -24,11 +24,8 @@ pub struct ScoredMove {
 pub struct Board {
     // current board
     pub board: Array,
-    // last move played - for castling and en passant
-    pub last_move: Move,
-    // tracking if can castle
-    // castle = [[has white castles, had black castled],[White QS, White KS],[Black QS, Black KS]]
-    pub castle: [[bool;2];3],
+    pub last_move: Move, // PLANNED REFACTOR to "en passant square" FOR PERFORMANCE
+    pub castle: [[bool;2];3], // PLANNED REFACTOR TO u8 FOR CONVENIENCE
     // current player
     pub color: u8,
     // last capture

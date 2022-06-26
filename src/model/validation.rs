@@ -41,26 +41,49 @@ impl Board {
         possible_moves
     }
 
-    fn _king_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
+    #[inline(always)]
+    fn _base_king_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
+        let col = sq[0];
+        let row = sq[1];
+        let colo = colour(piece);
+        let mut possible_moves: Vec<Move> = Vec::new();
+        if row<=6 && colour(self.board[col][row+1]) != colo {possible_moves.push(Move { target: piece, orig: sq, dest: [col,row+1]})}
+        if row>=1 && colour(self.board[col][row-1]) != colo {possible_moves.push(Move { target: piece, orig: sq, dest: [col,row-1]})}
+        if col<=6 && colour(self.board[col+1][row]) != colo {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1,row]})}
+        if col>=1 && colour(self.board[col-1][row]) != colo {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1,row]})}
+        if row<=6 && col<=6 && colour(self.board[col+1][row+1]) != colo {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1,row+1]})}
+        if row>=1 && col>=1 && colour(self.board[col-1][row-1]) != colo {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1,row-1]})}
+        if row<=6 && col>=1 && colour(self.board[col-1][row+1]) != colo {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1,row+1]})}
+        if row>=1 && col<=6 && colour(self.board[col+1][row-1]) != colo {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1,row-1]})}
+        possible_moves
+    }
+
+    fn _castle_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
         let col = sq[0];
         let row = sq[1];
         let mut possible_moves: Vec<Move> = Vec::new();
-        if self.castle[(colour(piece) >> 3) as usize][0] && row == 4 && self.board[col][1] == EMPTY && self.board[col][2] == EMPTY && self.board[col][3] == EMPTY {
-            possible_moves.push(Move { target: piece, orig: sq, dest: [col,2]})
+        let colo = colour(piece);
+        if self.castle[(colo >> 3) as usize][0] && row == 4 && self.board[col][1] == EMPTY && self.board[col][2] == EMPTY && self.board[col][3] == EMPTY {
+            if !self.check_for_check_static(sq, colo) && !self.check_for_check_static([col, 1], colo) && !self.check_for_check_static([col, 2], colo) && !self.check_for_check_static([col, 3], colo) {
+                possible_moves.push(Move { target: piece, orig: sq, dest: [col,2]})
+            }
         }
-        if self.castle[(colour(piece) >> 3) as usize ][1] && row == 4 && self.board[col][5] == EMPTY && self.board[col][6] == EMPTY {
-            possible_moves.push(Move { target: piece, orig: sq, dest: [col,6]})
+        if self.castle[(colo >> 3) as usize ][1] && row == 4 && self.board[col][5] == EMPTY && self.board[col][6] == EMPTY {
+            if !self.check_for_check_static(sq, colo) && !self.check_for_check_static([col, 5], colo) && !self.check_for_check_static([col, 6], colo) {
+                possible_moves.push(Move { target: piece, orig: sq, dest: [col,6]})
+            }
         }
-        if row<=6 && colour(self.board[col][row+1]) != colour(piece) {possible_moves.push(Move { target: piece, orig: sq, dest: [col,row+1]})}
-        if row>=1 && colour(self.board[col][row-1]) != colour(piece) {possible_moves.push(Move { target: piece, orig: sq, dest: [col,row-1]})}
-        if col<=6 && colour(self.board[col+1][row]) != colour(piece) {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1,row]})}
-        if col>=1 && colour(self.board[col-1][row]) != colour(piece) {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1,row]})}
-        if row<=6 && col<=6 && colour(self.board[col+1][row+1]) != colour(piece) {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1,row+1]})}
-        if row>=1 && col>=1 && colour(self.board[col-1][row-1]) != colour(piece) {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1,row-1]})}
-        if row<=6 && col>=1 && colour(self.board[col-1][row+1]) != colour(piece) {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1,row+1]})}
-        if row>=1 && col<=6 && colour(self.board[col+1][row-1]) != colour(piece) {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1,row-1]})}
         possible_moves
-     }
+    }
+
+    fn _king_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
+        let mut possible_moves = self._base_king_moves(sq, piece);
+        let mut additional_moves = self._castle_moves(sq,piece);
+        possible_moves.append(&mut additional_moves);
+        possible_moves
+    }
+
+    #[inline(always)]
     fn _rook_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
         let col = sq[0];
         let row = sq[1];
@@ -99,6 +122,8 @@ impl Board {
         }
         possible_moves
     }
+
+    #[inline(always)]
     fn _bishop_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
         let col = sq[0];
         let row = sq[1];
@@ -137,6 +162,8 @@ impl Board {
         }
         possible_moves
     }
+
+    #[inline(always)]
     fn _knight_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
         let col = sq[0];
         let row = sq[1];
@@ -187,6 +214,7 @@ impl Board {
         possible_moves
     }
 
+    #[inline(always)]
     pub fn check_for_check_static(&self, king_square: Square, colour: u8) -> bool {
         let alt_color = other_colour(self.color);
         for pos in self._pawn_moves(king_square, colour) {
@@ -209,7 +237,7 @@ impl Board {
                 return true 
             }
         }
-        for pos in self._king_moves(king_square,colour) {
+        for pos in self._base_king_moves(king_square,colour) {
             if self.board[pos.dest[0]][pos.dest[1]] == KING | alt_color || self.board[pos.dest[0]][pos.dest[1]] == QUEEN | alt_color {
                 return true 
             }
@@ -243,7 +271,7 @@ impl Board {
                 return true 
             }
         }
-        for pos in self._king_moves(king_square,colour) {
+        for pos in self._base_king_moves(king_square,colour) {
             if self.board[pos.dest[0]][pos.dest[1]] == KING | alt_color || self.board[pos.dest[0]][pos.dest[1]] == QUEEN | alt_color {
                 return true 
             }
@@ -251,6 +279,7 @@ impl Board {
         false
     }
 
+    #[inline(always)]
     fn possible_moves(&self, sq: Square, king_square: Square, colour: u8) -> Vec<Move> {
         let unvalidated = self.unvalidated_moves(sq);
         let mut possible_moves: Vec<Move> = Vec::new();
@@ -277,6 +306,7 @@ impl Board {
         self.possible_moves(sq, king_square, self.color)
     }
 
+    #[inline(always)]
     pub fn find_all_possible_moves(&self) -> Vec<Move> {
         let mut possible_moves: Vec<Move> = Vec::new();
         let king_square = self.get_king_square(self.color);
