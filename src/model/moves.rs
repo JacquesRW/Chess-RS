@@ -27,7 +27,7 @@ impl Move {
         }
     }
 
-    pub fn to_string(&self) -> String {
+    pub fn _to_string(&self) -> String {
         match self {
             Move { target: WHITE | KING , orig: [0,4], dest: [0,2] } => format!("castle queenside."),
             Move { target: WHITE | KING , orig: [0,4], dest: [0,6] } => format!("castle kingside."),
@@ -37,7 +37,7 @@ impl Move {
         }
     }
 
-    pub fn print_destinations(moves: &Vec<Self>) {
+    pub fn _print_destinations(moves: &Vec<Self>) {
         let mut message = String::from("Possible Destinations: ");
         for m in moves {
             message += &get_coords(m.dest);
@@ -47,8 +47,11 @@ impl Move {
     }
 }
 
-pub fn output_move_list(move_list: &Vec<ScoredMove>) {
+pub fn _output_move_list(move_list: &Vec<ScoredMove>) {
+    // MOSTLY MEANINGLESS
+    // due to pruning strategies worse moves will not be effectively evaluated
+    // so will only return an upper bound for them
     for m in move_list {
-        println!("{} Eval: {}", m.m.to_string(), m.s)
+        println!("{} Eval: {}", m.m._to_string(), m.s)
     }
 }

@@ -6,7 +6,7 @@ impl Board {
         Board::from_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
     }
 
-    pub fn get_piece_selection(&self, sq: Square) {
+    pub fn _get_piece_selection(&self, sq: Square) {
         println!("{} selected.", as_string(self.board[sq[0]][sq[1]]))
     }
 

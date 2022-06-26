@@ -8,7 +8,7 @@ use crossterm::{QueueableCommand, cursor, terminal, ExecutableCommand};
 // not good atm bc i was just using it for testing
 
 #[inline(always)]
-pub fn p_v_e(fen: &str, player_color: Piece) {
+pub fn _p_v_e(fen: &str, player_color: Piece) {
     let mut game = Board::from_fen(fen);
     let mut stdout = stdout();
     stdout.queue(cursor::SavePosition).unwrap();
@@ -44,7 +44,7 @@ pub fn p_v_e(fen: &str, player_color: Piece) {
 }
 
 #[inline(always)]
-pub fn e_v_e(fen: &str) {
+pub fn _e_v_e(fen: &str) {
     let mut game = Board::from_fen(fen);
     let mut stdout = stdout();
     stdout.queue(cursor::SavePosition).unwrap();
@@ -78,7 +78,7 @@ pub fn e_v_e(fen: &str) {
     println!("{}", end);
 }
 
-pub fn p_v_p(fen: &str) {
+pub fn _p_v_p(fen: &str) {
     let mut game = Board::from_fen(fen);
     let mut stdout = stdout();
     stdout.queue(cursor::SavePosition).unwrap();

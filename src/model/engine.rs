@@ -3,9 +3,7 @@
 //* GONNA TRY TO IMPLEMENT UNMAKE MOVE TO FIX THIS */
 
 use crate::model::defs::*;
-use crate::model::moves::*;
 use crate::model::pieces::*;
-use std::collections::HashMap;
 use std::time::Instant;
 
 impl Board {
