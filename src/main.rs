@@ -21,5 +21,5 @@ use std::io::{Write, stdout};
 use crossterm::{QueueableCommand, cursor, terminal, ExecutableCommand};
 
 fn main() {
-    p_v_e(_TEST_POSITIONS[0], WHITE);
+    e_v_e(_TEST_POSITIONS[0]);
 }
