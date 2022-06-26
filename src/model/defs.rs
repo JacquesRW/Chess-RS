@@ -28,8 +28,6 @@ pub struct Board {
     pub castle: [[bool;2];2], // PLANNED REFACTOR TO u8 FOR CONVENIENCE
     // current player
     pub color: u8,
-    // piece locations
-    pub pieces: [Vec<Square>;2],
     // king locations
     pub kings: [Square; 2]
 }

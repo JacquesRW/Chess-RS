@@ -24,18 +24,6 @@ impl Board {
         panic!("No king found!")
     }
 
-    pub fn get_pieces(&self, color: u8) -> Vec<Square> {
-        let mut pieces: Vec<Square> = Vec::new();
-        for column in 0..8 {
-            for row in 0..8 {
-                if colour(self.board[column][row]) == color {
-                    pieces.push([column, row]);
-                }
-            }
-        }
-        pieces
-    }
-
     pub fn _raw_log(&self) {
         println!("-------------------------");
         self.last_move.log();

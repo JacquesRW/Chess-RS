@@ -1,7 +1,7 @@
 //* Makes moves on board. */
 //* Only file that should be mutating the fields of a board. */
 
-use crate::model::defs::{Board, Move, Square};
+use crate::model::defs::{Board, Move};
 use crate::model::pieces::*;
 
 impl Board {
@@ -14,11 +14,9 @@ impl Board {
     fn try_en_passant(&mut self, &m: &Move) {
         if m.target == WHITE | PAWN && m.orig[0] == 4 && self.last_move == (Move {target: BLACK | PAWN, orig: [6,m.dest[1]], dest: [4,m.dest[1]]}) {
             self.board[4][m.dest[1]] = EMPTY;
-            self.pieces[1].remove(self.pieces[0].iter().position(|&x: &Square| x == [4,1]).expect("Piece locale not found!"));
         }
         else if m.target == BLACK | PAWN && m.orig[0] == 3 && self.last_move == (Move {target: WHITE | PAWN, orig: [1,m.dest[1]], dest: [3,m.dest[1]]})  {
             self.board[3][m.dest[1]] = EMPTY;
-            self.pieces[0].remove(self.pieces[0].iter().position(|&x: &Square | x == [3, 1]).expect("Piece locale not found!"));
         }
     }
     
@@ -27,22 +25,18 @@ impl Board {
         if self.last_move == (Move { target: WHITE | KING, orig: [0,4], dest: [0,2] }) {
             self.board[0][3] = WHITE | ROOK;
             self.board[0][0] = EMPTY;
-            self.castle[0][0] = true;
         }
         else if self.last_move == (Move { target: WHITE | KING, orig: [0,4], dest: [0,6] }) {
             self.board[0][5] = WHITE | ROOK;
             self.board[0][7] = EMPTY;
-            self.castle[0][0] = true;
         }
         else if self.last_move == (Move { target: BLACK | KING, orig: [7,4], dest: [7,2] }) {
             self.board[7][3] = BLACK | ROOK;
             self.board[7][0] = EMPTY;
-            self.castle[0][1] = true;
         }
         else if self.last_move == (Move { target: BLACK | KING, orig: [7,4], dest: [7,6] }) {
             self.board[7][5] = BLACK | ROOK;
             self.board[7][7] = EMPTY;
-            self.castle[0][1] = true;
         }
     }
     
@@ -78,7 +72,7 @@ impl Board {
 
     #[inline(always)]
     pub fn pseudo_move(&mut self, m: Move) {
-        // no updates to self.pieces or checking for checkmate
+        // no checking for checkmate
         self.try_en_passant(&m);
         self.board[m.dest[0]][m.dest[1]] = m.target;
         self.board[m.orig[0]][m.orig[1]] = EMPTY;
@@ -95,15 +89,7 @@ impl Board {
 
     #[inline(always)]
     pub fn make_move(&mut self, m: Move) -> Option<bool> {
-        // updates piece locales
         // checks for mate and returns True (if mate), False (if stalemate), None (else)
-        let inx = colour_to_index(self.color);
-        if self.board[m.dest[0]][m.dest[1]] != EMPTY {
-            let inx = colour_to_index(other_colour(self.color));
-            self.pieces[inx].remove(self.pieces[inx].iter().position(|&x | x == m.dest).expect("Piece locale not found!"));
-        }
-        self.pieces[inx].remove(self.pieces[inx].iter().position(|&x | x == m.orig).expect("Piece locale not found!"));
-        self.pieces[inx].push(m.dest);
         self.pseudo_move(m);
         self.check_for_mate()
     }

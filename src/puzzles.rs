@@ -25,9 +25,6 @@ pub const _PUZZLES: [&str; 4] = ["8/2krR3/1pp3bp/42p1/PPNp4/3P1PKP/8/8 w - - 0 1
 #[cfg(test)]
 mod test {
     use crate::puzzles::*;
-    use crate::model::pieces::*;
-    use crate::model::helper::*;
-    use crate::model::defs::*;
 
     #[test]
     pub fn all_puzzles() {
@@ -39,39 +36,5 @@ mod test {
     #[test]
     pub fn one_puzzle() {
         _play_puzzle(_PUZZLES[1]);
-    }
-
-    #[test]
-    pub fn pieces_kings_test() {
-        let mut game = Board::from_fen("rn5r/pp3kpp/2p1R3/5p2/3P4/2B2N2/PPP3PP/2K4n w - - 1 17");
-        game.log();
-        println!("White Pieces:");
-        for p in &game.pieces[0] {
-            println!("{}", get_coords(p));
-        }
-        println!("Black Pieces:");
-        for p in &game.pieces[1] {
-            println!("{}", get_coords(p));
-        }
-        game.make_move(Move {target: WHITE | ROOK, orig: [5,4], dest: [5,2]} );
-        game.log();
-        println!("Black Pieces:");
-        for p in &game.pieces[1] {
-            println!("{}", get_coords(p));
-        }
-        println!("White Pieces:");
-        for p in &game.pieces[0] {
-            println!("{}", get_coords(p));
-        }
-        game.make_move(Move {target: BLACK | PAWN, orig: [6,1], dest: [5,2]} );
-        game.log();
-        println!("Black Pieces:");
-        for p in &game.pieces[1] {
-            println!("{}", get_coords(p));
-        }
-        println!("White Pieces:");
-        for p in &game.pieces[0] {
-            println!("{}", get_coords(p));
-        }
     }
 }

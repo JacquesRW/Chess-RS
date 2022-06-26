@@ -90,11 +90,9 @@ impl Board {
             color: c,
             last_move: en_passant_square(vec[3], c), 
             castle: can_castle(vec[2]),
-            pieces: [Vec::new(),Vec::new()],
             kings: [[0,0],[0,0]]
         };
         board.kings = [board.get_king_square(WHITE),board.get_king_square(BLACK)];
-        board.pieces = [board.get_pieces(WHITE), board.get_pieces(BLACK)];
         board
     }
 }
