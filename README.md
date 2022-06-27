@@ -10,8 +10,10 @@ Chess-RS
 │  │  │  ├─ eval.rs
 │  │  │  ├─ minimax.rs
 │  │  │  ├─ mod.rs
+│  │  │  ├─ quiesce.rs
 │  │  ├─ board.rs
 │  │  ├─ defs.rs
+│  │  ├─ fen.rs
 │  │  ├─ helper.rs
 │  │  ├─ make_move.rs
 │  │  ├─ mod.rs
