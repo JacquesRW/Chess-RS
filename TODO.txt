@@ -6,14 +6,11 @@ PERFORMANCE STUFF:
 
 refactor last_move to en passant square Option<Square>
 
-Board.pieces field:
-    [w_pieces, b_pieces]
-    each a Vec of positions that contain pieces
-    then check on make_move if m.dest in alt_color piece count - if so then remove
-    speeds up eval by only iterating through shorter list to find pieces and calculate their value + positional benefit
-
+Board.kings field:
+    deprecate get_king_square apart from when loading a Board
+    update king squares on king moves only
 
 COMPARISON: Old vs New
-Python code analysed 800-900 paths per second (w/ a simpler eval function).
-Current code analyses 36000-40000 paths per second.
-At minimum a 40x speed increase.
+Python code evaluates <1000 paths per second (w/ a simpler eval function).
+Current (release) rust code evaluates 50000-100000 paths per second, depending on the complexity of the position.
+At minimum a 50x speed increase.
