@@ -12,3 +12,8 @@ Board.pieces field:
     then check on make_move if m.dest in alt_color piece count - if so then remove
     speeds up eval by only iterating through shorter list to find pieces and calculate their value + positional benefit
 
+
+COMPARISON: Old vs New
+Python code analysed 800-900 paths per second (w/ a simpler eval function).
+Current code analyses 36000-40000 paths per second.
+At minimum a 40x speed increase.

@@ -7,12 +7,24 @@ use std::time::Instant;
 
 const MAX: i64 = 999999;
 
+use std::sync::atomic::{AtomicUsize, Ordering};
+
+static TOTAL_CALLS: AtomicUsize = AtomicUsize::new(0);
+
+fn function_to_count() {
+    TOTAL_CALLS.fetch_add(1, Ordering::SeqCst);
+}
+
 impl Board {
     // alpha-beta pruning minimax method
     // PLANNED introduction of quiescence search rather than eval
     // POTENTIAL refactor to negamax
+    #[inline(always)]
     fn alpha_beta_max(&mut self, mut alpha: i64, beta: i64, depth_left: u8) -> i64 {
-        if depth_left == 0 { return self.evaluate() }
+        if depth_left == 0 { 
+            function_to_count();
+            return self.evaluate() 
+        }
         let moves = self.find_all_possible_moves();
         let mut check: Option<bool>;
         for m in moves {
@@ -41,9 +53,12 @@ impl Board {
         }
         return alpha
     }
-
+    #[inline(always)]
     fn alpha_beta_min(&mut self, alpha: i64, mut beta: i64, depth_left: u8) -> i64 {
-        if depth_left == 0 { return -self.evaluate() }
+        if depth_left == 0 { 
+            function_to_count();
+            return -self.evaluate() 
+        }
         let moves = self.find_all_possible_moves();
         let mut check: Option<bool>;
         for m in moves {
@@ -130,7 +145,8 @@ impl Board {
                 break;
             }
         }
-        println!("Took {} ms to evalute position.", now.elapsed().as_millis());
+        println!("Took {} ms to evalute {:?} positions.", now.elapsed().as_millis(), TOTAL_CALLS.load(Ordering::SeqCst));
+        TOTAL_CALLS.store(0, Ordering::SeqCst);
         println!("Current eval is {}.", match self.color { BLACK => -move_list[0].s, WHITE => move_list[0].s, _ => panic!("Invalid colour!")});
         move_list[0].m
     }

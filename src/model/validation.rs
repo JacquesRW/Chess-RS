@@ -83,7 +83,7 @@ impl Board {
         possible_moves.append(&mut additional_moves);
         possible_moves
     }
-
+    #[inline(always)]
     fn _rook_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
         let col = sq[0];
         let row = sq[1];
@@ -123,7 +123,7 @@ impl Board {
         }
         possible_moves
     }
-
+    #[inline(always)]
     fn _bishop_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
         let col = sq[0];
         let row = sq[1];
@@ -179,7 +179,7 @@ impl Board {
         if row>=1 && col>=2 && colour(self.board[col-2][row-1]) != colo {possible_moves.push(Move { target: piece, orig: sq, dest: [col-2,row-1] })}
         possible_moves
     }
-    
+    #[inline(always)]
     fn _queen_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
         let mut possible_moves = self._rook_moves(sq, piece);
         let mut additional_moves = self._bishop_moves(sq,piece);

@@ -62,8 +62,8 @@ impl Board {
         for i in 0..8 {
             for j in 0..8 {
                 piece = self.board[i][j];
-                eval += sign(piece) * (value(piece) + weight(piece,i,j))
-            }
+                eval += sign(piece) * (value(piece) + weight(piece,i,j));
+                }
         }
         eval * sign(self.color)
     }
