@@ -1,6 +1,7 @@
 use crate::model::defs::*;
 use crate::model::pieces::*;
 use crate::model::engine::constants::*;
+const MAX: i64 = 999999;
 
 #[inline(always)]
 fn value(pc: Piece) -> i64 {
@@ -64,5 +65,36 @@ impl Board {
                 }
         }
         eval * sign(self.color)
+    }
+
+    pub fn quiesce(&mut self, mut alpha: i64, beta: i64) -> i64 {
+        let stand_pat = self.evaluate();
+        if stand_pat >= beta {return beta}
+        if alpha < stand_pat {
+            alpha = stand_pat;
+        }
+        let captures = self.find_all_possible_takes();
+        let mut check: Option<bool>;
+        for m in captures {
+            let pen_castle = self.castle;
+            let pen_move = self.last_move;
+            let capture = self.board[m.dest[0]][m.dest[1]];
+            check = self.make_move(m);
+            if check.is_some() { 
+                if check.unwrap() {
+                    self.unmake_move(m, pen_move, pen_castle, capture);
+                    return MAX
+                }
+                if !check.unwrap() {
+                    self.unmake_move(m, pen_move, pen_castle, capture);
+                    return 0
+                }
+            }
+            let score = -self.quiesce(-beta, -alpha);
+            self.unmake_move(m, pen_move, pen_castle, capture);
+            if score >= beta { return beta }
+            if score > alpha { alpha = score }
+        }
+        alpha
     }
 }

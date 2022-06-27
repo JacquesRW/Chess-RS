@@ -7,7 +7,7 @@ pub fn _play_puzzle(s: &str) {
     let mut counter = 0;
     for _ in 0..8 {
         counter += 1;
-        let m = game.analyse(6);
+        let m = game.analyse(4);
         let check = game.make_move(m);
         game.log();
         if check.is_some() {
@@ -36,6 +36,6 @@ mod test {
 
     #[test]
     pub fn one_puzzle() {
-        _play_puzzle(_PUZZLES[1]);
+        _play_puzzle(_PUZZLES[3]);
     }
 }

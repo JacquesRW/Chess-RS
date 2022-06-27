@@ -1,7 +1,6 @@
 //* ALPHA-BETA MINIMAX  */
 
 use crate::model::defs::*;
-//use crate::model::moves::*;
 use crate::model::pieces::*;
 use std::time::Instant;
 
@@ -21,7 +20,7 @@ impl Board {
     fn negamax(&mut self, mut alpha: i64, beta: i64, depth_left: u8) -> i64 {
         if depth_left == 0 {
             function_to_count();
-            return self.evaluate() 
+            return self.quiesce(alpha, beta) 
         }
         let moves = self.find_all_possible_moves();
         let mut check: Option<bool>;

@@ -11,7 +11,7 @@ impl Board {
     }
 
     #[inline(always)]
-    fn try_en_passant(&mut self, &m: &Move) {
+    fn try_en_passant(&mut self, m: &Move) {
         if m.target == WHITE | PAWN && m.orig[0] == 4 && self.last_move == (Move {target: BLACK | PAWN, orig: [6,m.dest[1]], dest: [4,m.dest[1]]}) {
             self.board[4][m.dest[1]] = EMPTY;
         }
@@ -21,33 +21,32 @@ impl Board {
     }
     
     #[inline(always)]
-    fn try_castle(&mut self) { 
-        if self.last_move == (Move { target: WHITE | KING, orig: [0,4], dest: [0,2] }) {
+    fn try_castle(&mut self, &m: &Move) { 
+        if m == (Move { target: WHITE | KING, orig: [0,4], dest: [0,2] }) {
             self.board[0][3] = WHITE | ROOK;
             self.board[0][0] = EMPTY;
         }
-        else if self.last_move == (Move { target: WHITE | KING, orig: [0,4], dest: [0,6] }) {
+        else if m == (Move { target: WHITE | KING, orig: [0,4], dest: [0,6] }) {
             self.board[0][5] = WHITE | ROOK;
             self.board[0][7] = EMPTY;
         }
-        else if self.last_move == (Move { target: BLACK | KING, orig: [7,4], dest: [7,2] }) {
+        else if m == (Move { target: BLACK | KING, orig: [7,4], dest: [7,2] }) {
             self.board[7][3] = BLACK | ROOK;
             self.board[7][0] = EMPTY;
         }
-        else if self.last_move == (Move { target: BLACK | KING, orig: [7,4], dest: [7,6] }) {
+        else if m == (Move { target: BLACK | KING, orig: [7,4], dest: [7,6] }) {
             self.board[7][5] = BLACK | ROOK;
             self.board[7][7] = EMPTY;
         }
     }
     
     #[inline(always)]
-    fn update_castle(&mut self) {
-        let temp_colour = colour(self.last_move.target);
-        if name(self.last_move.target) == KING {self.castle[colour_to_index(temp_colour)] = [false, false]}
-        else if self.last_move.orig == [0,0] || self.last_move.dest == [0,0] {self.castle[0][0] = false}
-        else if self.last_move.orig == [0,7] || self.last_move.dest == [0,7] {self.castle[0][1] = false}
-        else if self.last_move.orig == [7,0] || self.last_move.dest == [7,0] {self.castle[1][0] = false}
-        else if self.last_move.orig == [7,7] || self.last_move.dest == [7,7] {self.castle[1][1] = false}
+    fn update_castle(&mut self, m: &Move) {
+        if name(m.target) == KING {self.castle[colour_to_index(colour(m.target))] = [false, false]}
+        else if m.orig == [0,0] || m.dest == [0,0] {self.castle[0][0] = false}
+        else if m.orig == [0,7] || m.dest == [0,7] {self.castle[0][1] = false}
+        else if m.orig == [7,0] || m.dest == [7,0] {self.castle[1][0] = false}
+        else if m.orig == [7,7] || m.dest == [7,7] {self.castle[1][1] = false}
     }
 
     #[inline(always)]
@@ -65,7 +64,7 @@ impl Board {
     }
 
     #[inline(always)]
-    fn try_promote(&mut self, &m: &Move) {
+    fn try_promote(&mut self, m: &Move) {
         let colo = colour(self.color);
         self.board[m.dest[0]][m.dest[1]] = colo | QUEEN;
     }
@@ -80,11 +79,11 @@ impl Board {
         if (m.dest[0] == 7 || m.dest[0] == 0) && name(m.target) == PAWN {
             self.try_promote(&m);
         }
-        self.last_move = m;
         if self.castle[colour_to_index(self.color)] != [false,false] {
-            self.try_castle();
-            self.update_castle();
+            self.try_castle(&m);
+            self.update_castle(&m);
         }
+        self.last_move = m;
         self.switch_color();
     }
 
