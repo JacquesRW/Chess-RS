@@ -92,7 +92,7 @@ impl Board {
         if alpha < stand_pat {
             alpha = stand_pat;
         }
-        let mut captures = self.find_all_possible_takes();
+        let mut captures = self.find_all_possible_quiet_moves();
         captures.sort_by(|a, b| a.score(self.board[a.dest[0]][a.dest[1]]).cmp(&b.score(self.board[b.dest[0]][b.dest[1]])));
         captures.reverse();
         let mut check: Option<bool>;

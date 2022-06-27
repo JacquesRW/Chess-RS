@@ -28,14 +28,14 @@ mod test {
     use crate::puzzles::*;
 
     #[test]
-    pub fn all_puzzles() {
+    fn all_puzzles() {
         for puzzle in _PUZZLES {
             _play_puzzle(puzzle);
         }
     }
 
     #[test]
-    pub fn one_puzzle() {
+    fn one_puzzle() {
         _play_puzzle(_PUZZLES[1]);
     }
 }

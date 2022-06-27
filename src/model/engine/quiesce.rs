@@ -1,13 +1,20 @@
+//* Finds only takes and promotions. */
+//* Need to add finding checks. */
+
 use crate::model::defs::{Piece, Board, Square, Move};
 use crate::model::pieces::*;
 use std::cmp::min;
 
 impl Board {
-    fn _pawn_takes(&self, sq: Square, piece: Piece) -> Vec<Move> {
+    fn _pawn_takes_promotions(&self, sq: Square, piece: Piece) -> Vec<Move> {
         let mut possible_takes: Vec<Move> = Vec::new();
         let col = sq[0];
         let row = sq[1];
         if colour(piece) == WHITE {
+            // promotion
+            if col == 6 && self.board[7][row] == EMPTY {
+                possible_takes.push(Move { target: piece, orig: sq, dest: [7,row]})
+            }
             // en passants
             if col == 4 {
                 if row <= 6 && self.last_move == (Move { target: PAWN | BLACK , orig: [6, row+1], dest: [4, row+1] }) {
@@ -19,6 +26,10 @@ impl Board {
             if row <= 6 && col <= 6 && colour(self.board[col+1][row+1]) == BLACK {possible_takes.push(Move { target: piece, orig: sq, dest: [col+1, row+1] })}
         }
         if colour(piece) == BLACK {
+            // promotion
+            if col == 1 && self.board[0][row] == EMPTY {
+                possible_takes.push(Move { target: piece, orig: sq, dest: [0,row]})
+            }
             // en passants
             if col == 3 {
                 if row <= 6 && self.last_move == (Move { target: WHITE | PAWN, orig: [1, row+1], dest: [3, row+1] }) {
@@ -152,7 +163,7 @@ impl Board {
         let piece = self.board[sq[0]][sq[1]];
         if colour(piece) != self.color {panic!("Not a valid piece")}
         match name(piece) {
-            PAWN => self._pawn_takes(sq, piece),
+            PAWN => self._pawn_takes_promotions(sq, piece),
             QUEEN => self._queen_takes(sq, piece),
             ROOK => self._rook_takes(sq, piece),
             KNIGHT => self._knight_takes(sq, piece),
@@ -185,7 +196,7 @@ impl Board {
     }
 
     #[inline(always)]
-    pub fn find_all_possible_takes(&self) -> Vec<Move> {
+    pub fn find_all_possible_quiet_moves(&self) -> Vec<Move> {
         let mut possible_takes: Vec<Move> = Vec::new();
         let king_square = self.get_king_square(self.color);
         for column in 0..8 {
