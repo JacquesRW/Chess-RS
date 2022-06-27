@@ -54,9 +54,7 @@ fn weight(piece: Piece, i: usize, j: usize) -> i64 {
 impl Board {
     #[inline(always)]
     pub fn evaluate(&self) -> i64 {
-        // currently on material eval
-        // PLANNED refactor to pieces field in Board struct for speed
-        // PLANNED adding positional benefits
+        // PLANNED transition to endgame values
         let mut eval: i64 = 0;
         let mut piece: Piece;
         for i in 0..8 {

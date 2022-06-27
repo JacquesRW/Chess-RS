@@ -18,9 +18,8 @@ fn function_to_count() {
 impl Board {
     // alpha-beta pruning minimax method
     // PLANNED introduction of quiescence search rather than eval
-    // POTENTIAL refactor to negamax
-    fn alpha_beta_max(&mut self, mut alpha: i64, beta: i64, depth_left: u8) -> i64 {
-        if depth_left == 0 { 
+    fn negamax(&mut self, mut alpha: i64, beta: i64, depth_left: u8) -> i64 {
+        if depth_left == 0 {
             function_to_count();
             return self.evaluate() 
         }
@@ -41,7 +40,7 @@ impl Board {
                     return 0
                 }
             }
-            let score = self.alpha_beta_min(alpha, beta, depth_left - 1);
+            let score = -self.negamax(-beta, -alpha, depth_left - 1);
             self.unmake_move(m, pen_move, pen_castle, capture);
             if score >= beta { 
                 return beta 
@@ -53,42 +52,8 @@ impl Board {
         return alpha
     }
 
-    fn alpha_beta_min(&mut self, alpha: i64, mut beta: i64, depth_left: u8) -> i64 {
-        if depth_left == 0 { 
-            function_to_count();
-            return -self.evaluate() 
-        }
-        let moves = self.find_all_possible_moves();
-        let mut check: Option<bool>;
-        for m in moves {
-            let pen_castle = self.castle;
-            let pen_move = self.last_move;
-            let capture = self.board[m.dest[0]][m.dest[1]];
-            check = self.make_move(m);
-            if check.is_some() { 
-                if check.unwrap() {
-                    self.unmake_move(m, pen_move, pen_castle, capture);
-                    return -MAX
-                }
-                if !check.unwrap() {
-                    self.unmake_move(m, pen_move, pen_castle, capture);
-                    return 0
-                }
-            }
-            let score = self.alpha_beta_max(alpha, beta, depth_left - 1);
-            self.unmake_move(m, pen_move, pen_castle, capture);
-            if score <= alpha { 
-                return alpha 
-            }
-            if score < beta { 
-                beta = score 
-            }
-        }
-        return beta
-    }
-
     #[inline(always)]
-    fn move_list_ab_max(&mut self, mut alpha: i64, beta: i64, depth_left: u8, move_list: Vec<ScoredMove>) -> Vec<ScoredMove> {
+    fn negamax_root(&mut self, mut alpha: i64, beta: i64, depth_left: u8, move_list: Vec<ScoredMove>) -> Vec<ScoredMove> {
         // takes in an ordered vector of moves and calls alpha-beta minimax on those moves
         // aims to increase amount of branches pruned
         let mut new_move_list: Vec<ScoredMove> = Vec::new();
@@ -112,7 +77,7 @@ impl Board {
                 }
             }
             else {
-                score = self.alpha_beta_min(alpha, beta, depth_left - 1);
+                score = -self.negamax(-beta, -alpha, depth_left - 1);
             }
             self.unmake_move(mo, pen_move, pen_castle, capture);
             if score > alpha {
@@ -138,7 +103,7 @@ impl Board {
         }
         for d in 1..(depth+1) {
             //println!("Depth {d}.");
-            move_list = self.move_list_ab_max(-9999999, 9999999, d, move_list);
+            move_list = self.negamax_root(-9999999, 9999999, d, move_list);
             //_output_move_list(&move_list);
             if move_list[0].s == MAX {
                 break;
