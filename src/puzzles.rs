@@ -1,5 +1,6 @@
 use crate::model::defs::Board;
 
+#[inline(always)]
 pub fn _play_puzzle(s: &str) {
     let mut game = Board::from_fen(s);
     game.log();

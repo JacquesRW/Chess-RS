@@ -26,7 +26,7 @@ impl Board {
 
     fn ai_move(&mut self) -> Option<bool> {
         println!("AI Moving.");
-        let m = self.analyse(5);
+        let m = self.analyse(4);
         self.make_move(m)
     }
 }

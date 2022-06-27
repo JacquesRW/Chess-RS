@@ -83,7 +83,7 @@ impl Board {
         possible_moves.append(&mut additional_moves);
         possible_moves
     }
-    #[inline(always)]
+
     fn _rook_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
         let col = sq[0];
         let row = sq[1];
@@ -123,7 +123,7 @@ impl Board {
         }
         possible_moves
     }
-    #[inline(always)]
+
     fn _bishop_moves(&self, sq: Square, piece: Piece) -> Vec<Move> {
         let col = sq[0];
         let row = sq[1];

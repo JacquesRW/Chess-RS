@@ -19,7 +19,6 @@ impl Board {
     // alpha-beta pruning minimax method
     // PLANNED introduction of quiescence search rather than eval
     // POTENTIAL refactor to negamax
-    #[inline(always)]
     fn alpha_beta_max(&mut self, mut alpha: i64, beta: i64, depth_left: u8) -> i64 {
         if depth_left == 0 { 
             function_to_count();
@@ -53,7 +52,7 @@ impl Board {
         }
         return alpha
     }
-    #[inline(always)]
+
     fn alpha_beta_min(&mut self, alpha: i64, mut beta: i64, depth_left: u8) -> i64 {
         if depth_left == 0 { 
             function_to_count();
