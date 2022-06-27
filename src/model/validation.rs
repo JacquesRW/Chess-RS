@@ -215,7 +215,7 @@ impl Board {
     }
 
     pub fn check_for_check_static(&self, king_square: Square, colour: u8) -> bool {
-        let alt_color = other_colour(self.color);
+        let alt_color = other_colour(colour);
         for pos in self._pawn_moves(king_square, colour) {
             if self.board[pos.dest[0]][pos.dest[1]] == PAWN | alt_color {
                 return true
@@ -237,7 +237,7 @@ impl Board {
             }
         }
         for pos in self._base_king_moves(king_square,colour) {
-            if self.board[pos.dest[0]][pos.dest[1]] == KING | alt_color || self.board[pos.dest[0]][pos.dest[1]] == QUEEN | alt_color {
+            if self.board[pos.dest[0]][pos.dest[1]] == KING | alt_color {
                 return true 
             }
         }

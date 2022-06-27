@@ -16,14 +16,14 @@ fn function_to_count() {
 }
 
 impl Board {
-    // alpha-beta pruning minimax method
-    // PLANNED introduction of quiescence search rather than eval
     fn negamax(&mut self, mut alpha: i64, beta: i64, depth_left: u8) -> i64 {
         if depth_left == 0 {
             function_to_count();
-            return self.quiesce(alpha, beta, 2) 
+            return self.quiesce(alpha, beta, 4) 
         }
-        let moves = self.find_all_possible_moves();
+        let mut moves = self.find_all_possible_moves();
+        moves.sort_by(|a, b| a.score(self.board[a.dest[0]][a.dest[1]]).cmp(&b.score(self.board[b.dest[0]][b.dest[1]])));
+        moves.reverse();
         let mut check: Option<bool>;
         for m in moves {
             let pen_castle = self.castle;

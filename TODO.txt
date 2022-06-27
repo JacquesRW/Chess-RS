@@ -1,16 +1,9 @@
-MINIMAX ALGORITHM:
-    quiscience checks
-    improve evaluation function
+ENGINE:
+- Add checks to quiescence
+- Optimise move ordering (currently sorting list before iterating through, potentially could be improved)
 
 PERFORMANCE STUFF:
-
-refactor last_move to en passant square Option<Square>
-
-Board.kings field:
+- refactor last_move to en passant square Option<Square>
+- Board.kings field:
     deprecate get_king_square apart from when loading a Board
     update king squares on king moves only
-
-COMPARISON: Old vs New
-Python code evaluates <1000 paths per second (w/ a simpler eval function).
-Current (release) rust code evaluates 50000-100000 paths per second, depending on the complexity of the position.
-At minimum a 50x speed increase.

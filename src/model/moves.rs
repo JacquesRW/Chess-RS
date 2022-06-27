@@ -1,10 +1,26 @@
 //* Implementation of methods for the Move struct. */
-use crate::model::defs::{Move, ScoredMove};
+use crate::model::defs::{Move, ScoredMove, Piece};
 use crate::model::helper::*;
 use crate::model::pieces::*;
 
-impl Move {
+// MVV_LVA[victim][attacker]
+pub const MVV_LVA: [[u8; 7]; 7] = [
+    [0, 0, 0, 0, 0, 0, 0],       // victim EMPTY
+    [0, 15, 14, 13, 12, 11, 10], // victim PAWN
+    [0, 25, 24, 23, 22, 21, 20], // victim KNIGHT
+    [0, 35, 34, 33, 32, 31, 30], // victim BISHOP
+    [0, 45, 44, 43, 42, 41, 40], // victim ROOK
+    [0, 55, 54, 53, 52, 51, 50], // victim QUEEN
+    [0, 0, 0, 0, 0, 0, 0],       // victim KING
+];
 
+
+impl Move {
+    #[inline(always)]
+    pub fn score(&self, victim: Piece) -> u8 {
+        MVV_LVA[name(victim) as usize][name(self.target) as usize]
+    }
+    
     pub fn null() -> Move {
         Move {target: EMPTY, orig: [0,0], dest: [0,0]}
     }

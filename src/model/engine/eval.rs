@@ -74,6 +74,7 @@ impl Board {
         eval * sign(self.color)
     }
 
+    #[inline(always)]
     pub fn quiesce(&mut self, mut alpha: i64, beta: i64, depth_left: u8) -> i64 {
         let stand_pat = self.evaluate();
         if depth_left == 0 { 
@@ -91,7 +92,9 @@ impl Board {
         if alpha < stand_pat {
             alpha = stand_pat;
         }
-        let captures = self.find_all_possible_takes();
+        let mut captures = self.find_all_possible_takes();
+        captures.sort_by(|a, b| a.score(self.board[a.dest[0]][a.dest[1]]).cmp(&b.score(self.board[b.dest[0]][b.dest[1]])));
+        captures.reverse();
         let mut check: Option<bool>;
         for m in captures {
             let pen_castle = self.castle;
