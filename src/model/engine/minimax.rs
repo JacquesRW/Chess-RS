@@ -138,7 +138,7 @@ impl Board {
             move_list.push(ScoredMove { m: mo, s: 0 });
         }
         for d in 1..(depth+1) {
-            println!("Depth {d}.");
+            //println!("Depth {d}.");
             move_list = self.move_list_ab_max(-9999999, 9999999, d, move_list);
             //_output_move_list(&move_list);
             if move_list[0].s == MAX {
