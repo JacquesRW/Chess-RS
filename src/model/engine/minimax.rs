@@ -1,25 +1,13 @@
 //* ALPHA-BETA MINIMAX  */
 
 use crate::model::defs::*;
+//use crate::model::moves::*;
 use crate::model::pieces::*;
 use std::time::Instant;
 
-impl Board {
-    #[inline(always)]
-    fn evaluate(&self) -> i64 {
-        // currently on material eval
-        // PLANNED refactor to pieces field in Board struct for speed
-        // PLANNED adding positional benefits
-        let mut eval: i64 = 0;
-        for i in 0..8 {
-            for j in 0..8 {
-                eval += value(self.board[i][j])
-            }
-        }
-        if self.color == WHITE {return eval}
-        -eval
-    }
+const MAX: i64 = 999999;
 
+impl Board {
     // alpha-beta pruning minimax method
     // PLANNED introduction of quiescence search rather than eval
     // POTENTIAL refactor to negamax
@@ -35,7 +23,7 @@ impl Board {
             if check.is_some() { 
                 if check.unwrap() {
                     self.unmake_move(m, pen_move, pen_castle, capture);
-                    return 999
+                    return MAX
                 }
                 if !check.unwrap() {
                     self.unmake_move(m, pen_move, pen_castle, capture);
@@ -66,7 +54,7 @@ impl Board {
             if check.is_some() { 
                 if check.unwrap() {
                     self.unmake_move(m, pen_move, pen_castle, capture);
-                    return -999
+                    return -MAX
                 }
                 if !check.unwrap() {
                     self.unmake_move(m, pen_move, pen_castle, capture);
@@ -91,6 +79,7 @@ impl Board {
         // aims to increase amount of branches pruned
         let mut new_move_list: Vec<ScoredMove> = Vec::new();
         let mut check: Option<bool>;
+        let colo = self.color;
         for sm in move_list {
             let mo = sm.m;
             let pen_castle = self.castle;
@@ -101,7 +90,7 @@ impl Board {
             if check.is_some() { 
                 if check.unwrap() {
                     self.unmake_move(mo, pen_move, pen_castle, capture);
-                    score = 999;
+                    score = MAX;
                 }
                 if !check.unwrap() {
                     self.unmake_move(mo, pen_move, pen_castle, capture);
@@ -115,6 +104,7 @@ impl Board {
             if score > alpha {
                 alpha = score - 1;
             }
+            self.color = colo;
             new_move_list.push(ScoredMove {m: mo, s: score} )
         }
         new_move_list.sort_by(|a, b| a.s.cmp(&b.s));
@@ -134,8 +124,9 @@ impl Board {
         }
         for d in 1..(depth+1) {
             println!("Depth {d}.");
-            move_list = self.move_list_ab_max(-99999, 99999, d, move_list);
-            if move_list[0].s == 999 {
+            move_list = self.move_list_ab_max(-9999999, 9999999, d, move_list);
+            //_output_move_list(&move_list);
+            if move_list[0].s == MAX {
                 break;
             }
         }

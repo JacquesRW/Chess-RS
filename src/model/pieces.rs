@@ -83,24 +83,3 @@ pub fn repr(pc: Piece) -> &'static str {
         _ => panic!("Not valid colour.")
     }
 }
-
-#[inline(always)]
-pub fn value(pc: Piece) -> i64 {
-    let x = match colour(pc) {
-        WHITE => 1,
-        BLACK => -1,
-        EMPTY => 0,
-        _ => panic!("Not valid colour!")
-    };
-    let y =match name(pc) { 
-        EMPTY => 0,
-        PAWN => 10,
-        BISHOP => 30,
-        KNIGHT => 30,
-        ROOK => 50,
-        QUEEN => 90,
-        KING => 900,
-        _ => panic!("Not a valid piece!")
-    };
-    x * y
-}
