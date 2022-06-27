@@ -1,5 +1,5 @@
 //* Implementation of methods for the Move struct. */
-use crate::model::defs::{Piece, Square, Move, ScoredMove};
+use crate::model::defs::{Move, ScoredMove};
 use crate::model::helper::*;
 use crate::model::pieces::*;
 
@@ -7,14 +7,6 @@ impl Move {
 
     pub fn null() -> Move {
         Move {target: EMPTY, orig: [0,0], dest: [0,0]}
-    }
-
-    pub fn _reverse(&self) -> Move {
-        Move { target: self.target, orig: self.dest, dest: self.orig}
-    }
-    #[inline(always)]
-    pub fn new(piece: Piece, origin: Square, destination: Square) -> Move {
-        Move {target: piece, orig: origin, dest: destination}
     }
 
     pub fn log(&self) {

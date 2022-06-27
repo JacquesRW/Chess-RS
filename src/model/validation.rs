@@ -260,17 +260,17 @@ impl Board {
             }
         }
         for pos in temp._rook_moves(king_square, colour) {
-            if temp.board[pos.dest[0]][pos.dest[1]] == ROOK | alt_color || temp.board[pos.dest[0]][pos.dest[1]] == QUEEN | alt_color {
+            if temp.board[pos.dest[0]][pos.dest[1]] == ROOK | alt_color || temp.board[pos.dest[0]][pos.dest[1]] == alt_color | QUEEN {
                 return true 
             }
         }
         for pos in temp._bishop_moves(king_square, colour) {
-            if temp.board[pos.dest[0]][pos.dest[1]] == BISHOP | alt_color || temp.board[pos.dest[0]][pos.dest[1]] == QUEEN | alt_color {
+            if temp.board[pos.dest[0]][pos.dest[1]] == BISHOP | alt_color || temp.board[pos.dest[0]][pos.dest[1]] == alt_color | QUEEN {
                 return true 
             }
         }
         for pos in self._base_king_moves(king_square,colour) {
-            if self.board[pos.dest[0]][pos.dest[1]] == KING | alt_color || self.board[pos.dest[0]][pos.dest[1]] == QUEEN | alt_color {
+            if self.board[pos.dest[0]][pos.dest[1]] == KING | alt_color {
                 return true 
             }
         }
@@ -299,7 +299,7 @@ impl Board {
         }
     }
 
-    pub fn selection_possible_moves(&self, sq: Square) -> Vec<Move> {
+    pub fn _selection_possible_moves(&self, sq: Square) -> Vec<Move> {
         let king_square = self.get_king_square(self.color);
         self.possible_moves(sq, king_square, self.color)
     }

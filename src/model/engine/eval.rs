@@ -28,7 +28,7 @@ fn sign(piece: Piece) -> i64 {
 #[inline(always)]
 fn weight(piece: Piece, i: usize, j: usize) -> i64 {
     match colour(piece) {
-        WHITE => match name(piece) {
+        BLACK => match name(piece) {
             PAWN => PW[i][j],
             KNIGHT => NW[i][j],
             BISHOP => BW[i][j],
@@ -37,7 +37,7 @@ fn weight(piece: Piece, i: usize, j: usize) -> i64 {
             KING => KW[i][j],
             _ => panic!("Not valid!")
         },
-        BLACK => match name(piece) {
+        WHITE => match name(piece) {
             PAWN => PW[7-i][j],
             KNIGHT => NW[7-i][j],
             BISHOP => BW[7-i][j],
