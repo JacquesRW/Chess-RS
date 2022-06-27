@@ -1,9 +1,9 @@
 use crate::model::defs::*;
 use crate::model::helper::*;
 use crate::model::pieces::*;
-use std::{thread, time};
-use std::io::{Write, stdout};
-use crossterm::{QueueableCommand, cursor, terminal, ExecutableCommand};
+//use std::{thread, time};
+//use std::io::{Write, stdout};
+//use crossterm::{QueueableCommand, cursor, terminal, ExecutableCommand};
 
 impl Board {
     fn player_move(&mut self) -> Option<bool> {
@@ -37,21 +37,21 @@ impl Board {
 #[inline(always)]
 pub fn _p_v_e(fen: &str, player_color: Piece) {
     let mut game = Board::from_fen(fen);
-    let mut stdout = stdout();
-    stdout.queue(cursor::SavePosition).unwrap();
+    //let mut stdout = stdout();
+    //stdout.queue(cursor::SavePosition).unwrap();
     game.log();
     let mut check: Option<bool>;
     loop {
-        stdout.execute(cursor::Hide).unwrap();
+        //stdout.execute(cursor::Hide).unwrap();
         if game.color == player_color {check = game.player_move();}
         else {check = game.ai_move()}
 
-        stdout.queue(cursor::RestorePosition).unwrap();
-        stdout.flush().unwrap();
-        thread::sleep(time::Duration::from_millis(500));
-        stdout.queue(cursor::RestorePosition).unwrap();
-        stdout.queue(terminal::Clear(terminal::ClearType::All)).unwrap();
-        stdout.execute(cursor::Show).unwrap();
+        //stdout.queue(cursor::RestorePosition).unwrap();
+        //stdout.flush().unwrap();
+        //thread::sleep(time::Duration::from_millis(500));
+        //stdout.queue(cursor::RestorePosition).unwrap();
+        //stdout.queue(terminal::Clear(terminal::ClearType::All)).unwrap();
+        //stdout.execute(cursor::Show).unwrap();
 
         game.log();
 

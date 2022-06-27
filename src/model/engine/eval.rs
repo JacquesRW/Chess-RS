@@ -52,6 +52,13 @@ fn weight(piece: Piece, i: usize, j: usize) -> i64 {
         }
 }
 
+use std::sync::atomic::{AtomicUsize, Ordering};
+pub static QS_CALLS: AtomicUsize = AtomicUsize::new(0);
+
+pub fn function_to_count_qs() {
+    QS_CALLS.fetch_add(1, Ordering::SeqCst);
+}
+
 impl Board {
     #[inline(always)]
     pub fn evaluate(&self) -> i64 {
@@ -67,9 +74,20 @@ impl Board {
         eval * sign(self.color)
     }
 
-    pub fn quiesce(&mut self, mut alpha: i64, beta: i64) -> i64 {
+    pub fn quiesce(&mut self, mut alpha: i64, beta: i64, depth_left: u8) -> i64 {
         let stand_pat = self.evaluate();
-        if stand_pat >= beta {return beta}
+        if depth_left == 0 { 
+            function_to_count_qs();
+            return stand_pat 
+        }
+        if stand_pat >= beta { 
+            function_to_count_qs();
+            return beta 
+        }
+        if stand_pat < alpha - 900 {
+            function_to_count_qs();
+            return alpha
+        }
         if alpha < stand_pat {
             alpha = stand_pat;
         }
@@ -82,19 +100,22 @@ impl Board {
             check = self.make_move(m);
             if check.is_some() { 
                 if check.unwrap() {
+                    function_to_count_qs();
                     self.unmake_move(m, pen_move, pen_castle, capture);
                     return MAX
                 }
                 if !check.unwrap() {
+                    function_to_count_qs();
                     self.unmake_move(m, pen_move, pen_castle, capture);
                     return 0
                 }
             }
-            let score = -self.quiesce(-beta, -alpha);
+            let score = -self.quiesce(-beta, -alpha, depth_left-1);
             self.unmake_move(m, pen_move, pen_castle, capture);
             if score >= beta { return beta }
             if score > alpha { alpha = score }
         }
+        function_to_count_qs();
         alpha
     }
 }

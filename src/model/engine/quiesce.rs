@@ -56,35 +56,35 @@ impl Board {
         let alt_colo = other_colour(colour(piece));
         for drow in 1..(row+1) {
             if row<drow { break }
-            if colour(self.board[col][row - drow]) != EMPTY {break;}
             if colour(self.board[col][row - drow]) == alt_colo {
                 possible_takes.push(Move { target: piece, orig: sq, dest: [col,row-drow]});
                 break;
             }
+            if colour(self.board[col][row - drow]) != EMPTY {break;}
         }
         for drow in 1..(8-row) {
-            if row+drow>=8 { break }
-            if colour(self.board[col][row + drow]) != EMPTY {break;}
+            if row+drow>=8 { break }  
             if colour(self.board[col][row + drow]) == alt_colo {
                 possible_takes.push(Move { target: piece, orig: sq, dest: [col,row+drow]});
                 break;
             }
+            if colour(self.board[col][row + drow]) != EMPTY {break;}
         }
         for dcol in 1..(col+1) {
             if col<dcol { break }
-            if colour(self.board[col-dcol][row]) != EMPTY {break;}
             if colour(self.board[col-dcol][row]) == alt_colo {
                 possible_takes.push(Move { target: piece, orig: sq, dest: [col-dcol,row]});
                 break;
             }
+            if colour(self.board[col-dcol][row]) != EMPTY {break;}
         }
         for dcol in 1..(8-col) {
             if col+dcol>=8 { break }
-            if colour(self.board[col+dcol][row]) != EMPTY {break;}
             if colour(self.board[col+dcol][row]) == alt_colo {
                 possible_takes.push(Move { target: piece, orig: sq, dest: [col+dcol,row]});
                 break;
             }
+            if colour(self.board[col+dcol][row]) != EMPTY {break;}
         }
         possible_takes
     }
@@ -96,31 +96,31 @@ impl Board {
         let mut possible_takes: Vec<Move> = Vec::new();
         let alt_colo = other_colour(colour(piece));
         for change in 1..(smaller+1) {
-            if colour(self.board[col-change][row-change]) != EMPTY { break }
             if colour(self.board[col-change][row-change]) == alt_colo {
                 possible_takes.push(Move { target: piece, orig: sq, dest: [col-change,row-change]});
             }
+            if colour(self.board[col-change][row-change]) != EMPTY { break }
         }
         smaller = min(7-col, row);
         for change in 1..(smaller+1) {
-            if colour(self.board[col+change][row-change]) != EMPTY { break }
             if colour(self.board[col+change][row-change]) == alt_colo {
                 possible_takes.push(Move { target: piece, orig: sq, dest: [col+change,row-change]});
             }
+            if colour(self.board[col+change][row-change]) != EMPTY { break }
         }
         smaller = min(col, 7-row);
         for change in 1..(smaller+1) {
-            if colour(self.board[col-change][row+change]) != EMPTY { break }
             if colour(self.board[col-change][row+change]) == alt_colo {
                 possible_takes.push(Move { target: piece, orig: sq, dest: [col-change,row+change]});
             }
+            if colour(self.board[col-change][row+change]) != EMPTY { break }
         }
         smaller = min(7-col, 7-row);
         for change in 1..(smaller+1) {
-            if colour(self.board[col+change][row+change]) != EMPTY { break }
             if colour(self.board[col+change][row+change]) == alt_colo {
                 possible_takes.push(Move { target: piece, orig: sq, dest: [col+change,row+change]});
             }
+            if colour(self.board[col+change][row+change]) != EMPTY { break }
         }
         possible_takes
     }
