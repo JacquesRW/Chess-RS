@@ -62,24 +62,24 @@ pub fn as_string(pc: Piece) -> String {
 pub fn repr(pc: Piece) -> &'static str {
     match colour(pc) {
         BLACK => match name(pc) {
-            PAWN => " ♙",
-            BISHOP => " ♗",
-            KNIGHT => " ♘",
-            ROOK => " ♖",
-            QUEEN => " ♕",
-            KING => " ♔",
+            PAWN => "♙",
+            BISHOP => "♗",
+            KNIGHT => "♘",
+            ROOK => "♖",
+            QUEEN => "♕",
+            KING => "♔",
             _ => panic!("Not a valid piece!")
         },
         WHITE => match name(pc) {
-            PAWN => " ♟",
-            BISHOP => " ♝",
-            KNIGHT => " ♞",
-            ROOK => " ♜",
-            QUEEN => " ♛",
-            KING => " ♚",
+            PAWN => "♟",
+            BISHOP => "♝",
+            KNIGHT => "♞",
+            ROOK => "♜",
+            QUEEN => "♛",
+            KING => "♚",
             _ => panic!("Not a valid piece!")
         },
-        EMPTY => "  ",
+        EMPTY => " ",
         _ => panic!("Not valid colour.")
     }
 }

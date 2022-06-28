@@ -23,23 +23,24 @@ impl Board {
 
     fn engine_move(&mut self) -> Option<bool> {
         println!("AI Moving.");
-        let m = self.analyse(6);
+        let m = self.analyse(5);
         self.make_move(m)
     }
 }
 
 
 // not good atm bc i was just using it for testing
-//use std::{thread, time};
-//use std::io::{Write, stdout};
-//use crossterm::{QueueableCommand, cursor, terminal, ExecutableCommand};
+use std::{thread, time};
+use std::io::{Write, stdout};
+use crossterm::{QueueableCommand, cursor, terminal, ExecutableCommand};
 
 #[inline(always)]
 pub fn _p_v_e(fen: &str, player_color: Piece) {
     // player vs engine
     let mut game = Board::from_fen(fen);
-    //let mut stdout = stdout();
-    //stdout.queue(cursor::SavePosition).unwrap();
+    let mut stdout = stdout();
+    stdout.queue(cursor::SavePosition).unwrap();
+    stdout.execute(cursor::Hide).unwrap();
     game.log();
     let mut check: Option<bool>;
     loop {
@@ -47,11 +48,11 @@ pub fn _p_v_e(fen: &str, player_color: Piece) {
         if game.color == player_color {check = game.player_move();}
         else {check = game.engine_move()}
 
-        //stdout.queue(cursor::RestorePosition).unwrap();
-        //stdout.flush().unwrap();
-        //thread::sleep(time::Duration::from_millis(500));
-        //stdout.queue(cursor::RestorePosition).unwrap();
-        //stdout.queue(terminal::Clear(terminal::ClearType::All)).unwrap();
+        stdout.queue(cursor::RestorePosition).unwrap();
+        stdout.flush().unwrap();
+        thread::sleep(time::Duration::from_millis(500));
+        stdout.queue(cursor::RestorePosition).unwrap();
+        stdout.queue(terminal::Clear(terminal::ClearType::All)).unwrap();
         //stdout.execute(cursor::Show).unwrap();
 
         game.log();

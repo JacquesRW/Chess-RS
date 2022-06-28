@@ -16,5 +16,5 @@ pub const _TEST_POSITIONS: [&str;1] = ["r2qk2r/ppp4p/3p1pn1/3Pn1p1/2B1P3/2N2P1P/
 
 
 fn main() {
-    _p_v_e(_TEST_POSITIONS[0], WHITE);
+    _p_v_e(_START_POSITION, WHITE);
 }

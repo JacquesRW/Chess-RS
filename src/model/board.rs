@@ -35,12 +35,12 @@ impl Board {
                 line.push_str(&board_ref[7-i][j].to_string());
                 line.push_str(" ");
             }
-            println!("{}", line)
+            println!("{}", line);
+            println!("-------------------------");
         }
-        println!("-------------------------");
     }
 
-    pub fn log(&self) {
+    pub fn _old_log(&self) {
         println!("-------------------------");
         self.last_move.log();
         println!("-------------------------");
@@ -49,12 +49,30 @@ impl Board {
             let mut line: String = String::from(" ");
             for j in 0..8 {
                 line.push_str(&repr(board_ref[7-i][j]));
-                line.push_str(" ");
+                line.push_str("  ");
             }
             println!("{}", line);
         }
         println!("-------------------------");
         println!("{} to move.", match self.color { WHITE => "White", BLACK => "Black", _ => panic!("Invalid colour!")});
         println!("-------------------------");
+    }
+
+    pub fn log(&self) {
+        println!("---------------------------------");
+        self.last_move.log();
+        println!("+---+---+---+---+---+---+---+---+");
+        let board_ref: &[[Piece;8];8] = &self.board;
+        for i in 0..8 {
+            let mut line: String = String::from("| ");
+            for j in 0..8 {
+                line.push_str(&repr(board_ref[7-i][j]));
+                line.push_str(" | ");
+            }
+            println!("{}", line);
+            println!("+---+---+---+---+---+---+---+---+");
+        }
+        println!("{} to move.", match self.color { WHITE => "White", BLACK => "Black", _ => panic!("Invalid colour!")});
+        println!("---------------------------------");
     }
 }
