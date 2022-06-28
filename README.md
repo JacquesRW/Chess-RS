@@ -10,6 +10,7 @@ Chess-RS
 │  │  │  ├─ eval.rs
 │  │  │  ├─ minimax.rs
 │  │  │  ├─ mod.rs
+│  │  │  ├─ qmovegen.rs
 │  │  │  ├─ quiesce.rs
 │  │  ├─ board.rs
 │  │  ├─ defs.rs
@@ -17,10 +18,10 @@ Chess-RS
 │  │  ├─ helper.rs
 │  │  ├─ make_move.rs
 │  │  ├─ mod.rs
+│  │  ├─ movegen.rs
 │  │  ├─ moves.rs
 │  │  ├─ pieces.rs
 │  │  ├─ unmake_move.rs
-│  │  ├─ validation.rs
 │  ├─ controller.rs
 │  ├─ main.rs
 │  ├─ puzzles.rs
