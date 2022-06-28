@@ -5,7 +5,7 @@ Chess in Rust
 Chess-RS
 ├─ src/
 │  ├─ model/
-│  │  ├─ model/
+│  │  ├─ engine/
 │  │  │  ├─ constants.rs
 │  │  │  ├─ eval.rs
 │  │  │  ├─ minimax.rs
