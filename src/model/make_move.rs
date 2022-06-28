@@ -6,6 +6,7 @@ use crate::model::pieces::*;
 impl Board {
     #[inline(always)]
     pub fn switch_color(&mut self) {
+        // switches the color to move
         self.color = other_colour(self.color);
     }
 

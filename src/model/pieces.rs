@@ -3,23 +3,27 @@ use crate::model::defs::Piece;
 
 #[inline(always)]
 pub fn colour(pc: Piece) -> Piece {
+    // get colour of piece
     (pc >> 3) << 3
 }
 #[inline(always)]
 pub fn colour_to_index(colour: u8) -> usize {
+    // converts colour to the relevant index
     ((colour >> 3) - 1) as usize
 }
 
 #[inline(always)]
 pub fn name(pc: Piece) -> Piece {
+    // gets type of piece
     (pc << 5) >> 5
 }
 
-
+// colours and empty
 pub const EMPTY: Piece = 0b00000000;
 pub const WHITE: Piece = 0b00001000;
 pub const BLACK: Piece = 0b00010000;
 
+// piece types
 pub const PAWN: Piece = 0b00000001;
 pub const KNIGHT: Piece = 0b00000010;
 pub const BISHOP: Piece = 0b00000011;
@@ -29,6 +33,7 @@ pub const KING: Piece = 0b00000110;
 
 #[inline(always)]
 pub fn other_colour(color: Piece) -> Piece {
+    // returns opposite colour
     match color {
         WHITE => BLACK,
         BLACK => WHITE,
@@ -39,12 +44,14 @@ pub fn other_colour(color: Piece) -> Piece {
 
 #[inline(always)]
 pub fn as_string(pc: Piece) -> String {
+    // colour of the piece
     let color = match colour(pc) {
         WHITE => "white",
         BLACK => "black",
         EMPTY => "empty",
         _ => panic!("Not valid colour.")
     };
+    // type of piece
     let piece = match name(pc) {
         PAWN => "pawn",
         BISHOP => "bishop",

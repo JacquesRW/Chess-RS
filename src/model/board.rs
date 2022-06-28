@@ -3,15 +3,18 @@ use crate::model::defs::{Board, Piece, Square};
 use crate::model::pieces::*;
 impl Board {
     pub fn _new() -> Board {
+        // default starting position
         Board::from_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
     }
 
     pub fn _get_piece_selection(&self, sq: Square) {
+        // logs piece selected in console
         println!("{} selected.", as_string(self.board[sq[0]][sq[1]]))
     }
 
     #[inline(always)]
     pub fn get_king_square(&self, colour: u8) -> Square {
+        // finds the king location for the given colour
         let pc = KING | colour;
         for i in 0..8 {
             for j in 0..8 {
@@ -25,8 +28,9 @@ impl Board {
     }
 
     pub fn _raw_log(&self) {
+        // logs the raw board data
         println!("-------------------------");
-        self.last_move.log();
+        println!("{} {:?} {:?}", self.last_move.target, self.last_move.orig, self.last_move.dest);
         println!("-------------------------");
         let board_ref: &[[Piece;8];8] = &self.board;
         for i in 0..8 {
@@ -41,6 +45,7 @@ impl Board {
     }
 
     pub fn _old_log(&self) {
+        // old style of output
         println!("-------------------------");
         self.last_move.log();
         println!("-------------------------");
@@ -59,6 +64,7 @@ impl Board {
     }
 
     pub fn log(&self) {
+        // console output of the board, last move and side to move
         println!("---------------------------------");
         self.last_move.log();
         println!("+---+---+---+---+---+---+---+---+");
