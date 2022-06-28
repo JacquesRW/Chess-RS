@@ -12,10 +12,10 @@ impl Board {
 
     #[inline(always)]
     fn try_en_passant(&mut self, m: &Move) {
-        if m.target == WHITE | PAWN && m.orig[0] == 4 && self.last_move == (Move {target: BLACK | PAWN, orig: [6,m.dest[1]], dest: [4,m.dest[1]]}) {
+        if (m.target == WHITE | PAWN) && (m.orig[0] == 4) && (self.last_move == (Move {target: BLACK | PAWN, orig: [6,m.dest[1]], dest: [4,m.dest[1]]})) {
             self.board[4][m.dest[1]] = EMPTY;
         }
-        else if m.target == BLACK | PAWN && m.orig[0] == 3 && self.last_move == (Move {target: WHITE | PAWN, orig: [1,m.dest[1]], dest: [3,m.dest[1]]})  {
+        else if (m.target == BLACK | PAWN) && (m.orig[0] == 3) && (self.last_move == (Move {target: WHITE | PAWN, orig: [1,m.dest[1]], dest: [3,m.dest[1]]}))  {
             self.board[3][m.dest[1]] = EMPTY;
         }
     }
@@ -43,10 +43,10 @@ impl Board {
     #[inline(always)]
     fn update_castle(&mut self, m: &Move) {
         if name(m.target) == KING {self.castle[colour_to_index(colour(m.target))] = [false, false]}
-        else if m.orig == [0,0] || m.dest == [0,0] {self.castle[0][0] = false}
-        else if m.orig == [0,7] || m.dest == [0,7] {self.castle[0][1] = false}
-        else if m.orig == [7,0] || m.dest == [7,0] {self.castle[1][0] = false}
-        else if m.orig == [7,7] || m.dest == [7,7] {self.castle[1][1] = false}
+        else if (m.orig == [0,0]) || (m.dest == [0,0]) {self.castle[0][0] = false}
+        else if (m.orig == [0,7]) || (m.dest == [0,7]) {self.castle[0][1] = false}
+        else if (m.orig == [7,0]) || (m.dest == [7,0]) {self.castle[1][0] = false}
+        else if (m.orig == [7,7]) || (m.dest == [7,7]) {self.castle[1][1] = false}
     }
 
     #[inline(always)]
@@ -72,9 +72,9 @@ impl Board {
     #[inline(always)]
     pub fn pseudo_move(&mut self, m: Move) {
         // no checking for checkmate
-        self.try_en_passant(&m);
         self.board[m.dest[0]][m.dest[1]] = m.target;
         self.board[m.orig[0]][m.orig[1]] = EMPTY;
+        self.try_en_passant(&m);
         if (m.dest[0] == 7 || m.dest[0] == 0) && name(m.target) == PAWN {
             self.try_promote(&m);
         }

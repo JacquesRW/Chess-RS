@@ -1,8 +1,7 @@
 mod model;
 mod controller;
-use crate::model::defs::*;
 use crate::controller::*;
-use crate::model::pieces::*;
+use crate::model::{pieces::*,defs::*};
 
 
 // THIS USES [COLUMN, ROW] CONVENTION JOHN
@@ -14,20 +13,22 @@ mod puzzles;
 pub const _START_POSITION: &str = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 pub const _TEST_POSITIONS: [&str;1] = ["r2qk2r/ppp4p/3p1pn1/3Pn1p1/2B1P3/2N2P1P/PP2QP2/R4RK1 w kq - 1 15"];
 
-//const SHANNON_NUMS: [u64;6] = [20,400,8902,197281,4865609,119060324];
-
-fn move_counter() {
-    let mut game = Board::_new();
-    //let mut game = Board::from_fen("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - ");
-    //game.make_move(Move {target: WHITE | PAWN, orig: [1,4], dest: [3,4]});
-    let positions = game.perft(6);
-    println!("{} moves.", positions); 
-}
 
 fn main() {
-    move_counter();
-    let mut a = String::new();
-    let end = std::io::stdin().read_line(&mut a).unwrap();
-    println!("{}", end);
+    let mut game = Board::_new();  
+    //game.make_move( Move { target: WHITE | PAWN, orig: [1,1], dest: [3,1]});
+    //game.log();
+    //game.make_move( Move { target: BLACK | PAWN, orig: [6,0], dest: [5,0]});
+    //game.log();
+    //game.make_move( Move { target: WHITE | PAWN, orig: [3,1], dest: [4,1]});
+    //game.log();
+    //game.make_move( Move { target: BLACK | PAWN, orig: [6,2], dest: [4,2]});
+    //game.log();
+    //game.make_move( Move { target: WHITE | PAWN, orig: [4,1], dest: [5,1]});
+    //game.log();
+    let positions = game._root_perft(6);
+    println!("{positions}");
     _p_v_e(_START_POSITION, WHITE);
 }
+
+// black pawn, C5 to C4

@@ -26,6 +26,7 @@ pub const _PUZZLES: [&str; 4] = ["8/2krR3/1pp3bp/42p1/PPNp4/3P1PKP/8/8 w - - 0 1
 #[cfg(test)]
 mod test {
     use crate::puzzles::*;
+    use crate::model::{defs::*,pieces::*};
 
     #[test]
     fn all_puzzles() {
@@ -37,5 +38,29 @@ mod test {
     #[test]
     fn one_puzzle() {
         _play_puzzle(_PUZZLES[3]);
+    }
+    #[test]
+    fn overflow() {
+        let mut game = Board::_new();  
+        game.make_move( Move { target: WHITE | PAWN, orig: [1,1], dest: [3,1]});
+        game.log();
+        game.make_move( Move { target: BLACK | PAWN, orig: [6,0], dest: [5,0]});
+        game.log();
+        game.make_move( Move { target: WHITE | PAWN, orig: [3,1], dest: [4,1]});
+        game.log();
+        game.make_move( Move { target: BLACK | PAWN, orig: [6,2], dest: [4,2]});
+        game.log();
+        game.make_move( Move { target: WHITE | PAWN, orig: [4,1], dest: [5,1]});
+        game.log();
+        let moves = game.find_all_possible_moves();
+        let mut count = 0;
+        for m in moves {
+            m.log();
+            count += 1;
+        }
+        println!("{count}");
+        println!("Calculating one step positions.");
+        let positions = game._perft(1);
+        println!("{positions}");
     }
 }

@@ -45,6 +45,16 @@ impl Move {
         }
     }
 
+    pub fn _to_uci_string(&self) -> String {
+        match self {
+            Move { target: WHITE | KING , orig: [0,4], dest: [0,2] } => format!("castle queenside."),
+            Move { target: WHITE | KING , orig: [0,4], dest: [0,6] } => format!("castle kingside."),
+            Move { target: BLACK | KING , orig: [7,4], dest: [7,2] } => format!("castle queenside."),
+            Move { target: BLACK | KING , orig: [7,4], dest: [7,6] } => format!("castle kingside."),
+            _ => format!("{}{}", get_coords(&self.orig), get_coords(&self.dest))
+        }
+    }
+
     pub fn _print_destinations(moves: &Vec<Self>) {
         let mut message = String::from("Possible Destinations: ");
         for m in moves {
@@ -60,6 +70,6 @@ pub fn _output_move_list(move_list: &Vec<ScoredMove>) {
     // due to pruning strategies worse moves will not be effectively evaluated
     // so will only return an upper bound for them
     for m in move_list {
-        println!("{} Eval: {}", m.m._to_string(), m.s)
+        println!("{}: {}", m.m._to_uci_string(), m.s)
     }
 }

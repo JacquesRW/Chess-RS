@@ -1,4 +1,4 @@
-use crate::model::defs::{Piece, Board, Square, Move};
+use crate::model::defs::*;
 use crate::model::pieces::*;
 use std::cmp::min;
 
@@ -319,25 +319,45 @@ impl Board {
         possible_moves
     }
 
-    pub fn perft(&mut self, depth_left: u8) -> u64 {
-        if depth_left == 1 {
-            let moves = self.find_all_possible_moves();
-            let mut positions: u64 = 0;
-            for m in moves { if self.board[m.dest[0]][m.dest[1]] != EMPTY {positions += 1} }
-            return positions
-        }
+    pub fn _perft(&mut self, depth_left: u8) -> u64 {
         let moves = self.find_all_possible_moves();
         let mut positions: u64 = 0;
-        let mut check: Option<bool>;
+        if depth_left == 0 {
+            return 1
+        }
+        if depth_left == 1 {
+            for _ in &moves { 
+                positions += 1 
+            }
+            return positions
+        }
         for m in moves {
             let pen_castle = self.castle;
             let pen_move = self.last_move;
             let capture = self.board[m.dest[0]][m.dest[1]];
-            check = self.make_move(m);
-            if check.is_none() {
-                positions += self.perft(depth_left-1);
-            }
+            self.pseudo_move(m);
+            positions += self._perft(depth_left-1);
             self.unmake_move(m, pen_move, pen_castle, capture);
+        }  
+        positions
+    }
+
+    pub fn _root_perft(&mut self, depth_left: u8) -> u64 {
+        let mut new_move_list: Vec<(Move, u64)> = Vec::new();
+        let move_list = self.find_all_possible_moves();
+        for mo in move_list {
+            let pen_castle = self.castle;
+            let pen_move = self.last_move;
+            let capture = self.board[mo.dest[0]][mo.dest[1]];
+            self.pseudo_move(mo);
+            let score = self._perft(depth_left-1);
+            new_move_list.push((mo, score));
+            println!("{}: {}", mo._to_uci_string(), score);
+            self.unmake_move(mo, pen_move, pen_castle, capture);
+        }
+        let mut positions: u64 = 0;
+        for sm in new_move_list {
+            positions += sm.1;
         }
         positions
     }
