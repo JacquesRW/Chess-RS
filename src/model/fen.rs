@@ -91,7 +91,6 @@ impl Board {
             last_move: en_passant_square(vec[3], c), 
             castle: can_castle(vec[2]),
             kings: [[0,0],[0,0]],
-            capture: EMPTY
         };
         board.kings = [board.get_king_square(WHITE),board.get_king_square(BLACK)];
         board

@@ -227,12 +227,12 @@ impl Board {
             }
         }
         for pos in self._rook_moves(king_square, colour) {
-            if self.board[pos.dest[0]][pos.dest[1]] == ROOK | alt_color || self.board[pos.dest[0]][pos.dest[1]] == QUEEN | alt_color {
+            if (self.board[pos.dest[0]][pos.dest[1]] == ROOK | alt_color) || (self.board[pos.dest[0]][pos.dest[1]] == QUEEN | alt_color) {
                 return true 
             }
         }
         for pos in self._bishop_moves(king_square, colour) {
-            if self.board[pos.dest[0]][pos.dest[1]] == BISHOP | alt_color || self.board[pos.dest[0]][pos.dest[1]] == QUEEN | alt_color {
+            if (self.board[pos.dest[0]][pos.dest[1]] == BISHOP | alt_color) || (self.board[pos.dest[0]][pos.dest[1]] == QUEEN | alt_color) {
                 return true 
             }
         }
@@ -260,12 +260,12 @@ impl Board {
             }
         }
         for pos in temp._rook_moves(king_square, colour) {
-            if temp.board[pos.dest[0]][pos.dest[1]] == ROOK | alt_color || temp.board[pos.dest[0]][pos.dest[1]] == alt_color | QUEEN {
+            if (temp.board[pos.dest[0]][pos.dest[1]] == ROOK | alt_color) || (temp.board[pos.dest[0]][pos.dest[1]] == QUEEN | alt_color) {
                 return true 
             }
         }
         for pos in temp._bishop_moves(king_square, colour) {
-            if temp.board[pos.dest[0]][pos.dest[1]] == BISHOP | alt_color || temp.board[pos.dest[0]][pos.dest[1]] == alt_color | QUEEN {
+            if (temp.board[pos.dest[0]][pos.dest[1]] == BISHOP | alt_color) || (temp.board[pos.dest[0]][pos.dest[1]] == QUEEN | alt_color) {
                 return true 
             }
         }
@@ -317,5 +317,28 @@ impl Board {
             }
         }
         possible_moves
+    }
+
+    pub fn perft(&mut self, depth_left: u8) -> u64 {
+        if depth_left == 1 {
+            let moves = self.find_all_possible_moves();
+            let mut positions: u64 = 0;
+            for m in moves { if self.board[m.dest[0]][m.dest[1]] != EMPTY {positions += 1} }
+            return positions
+        }
+        let moves = self.find_all_possible_moves();
+        let mut positions: u64 = 0;
+        let mut check: Option<bool>;
+        for m in moves {
+            let pen_castle = self.castle;
+            let pen_move = self.last_move;
+            let capture = self.board[m.dest[0]][m.dest[1]];
+            check = self.make_move(m);
+            if check.is_none() {
+                positions += self.perft(depth_left-1);
+            }
+            self.unmake_move(m, pen_move, pen_castle, capture);
+        }
+        positions
     }
 }

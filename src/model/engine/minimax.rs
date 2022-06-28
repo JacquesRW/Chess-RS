@@ -22,28 +22,26 @@ impl Board {
             return self.quiesce(alpha, beta, 4) 
         }
         let mut moves = self.find_all_possible_moves();
-        moves.sort_by(|a, b| a.score(self.board[a.dest[0]][a.dest[1]]).cmp(&b.score(self.board[b.dest[0]][b.dest[1]])));
-        moves.reverse();
-        let mut check: Option<bool>;
+        if moves.is_empty() {
+            if self.check_for_check_static(self.get_king_square(self.color), self.color) {
+                function_to_count();
+                return -MAX
+            }
+            function_to_count();
+            return 0
+        }
+        if depth_left != 1 {
+            moves.sort_by(|a, b| a.score(self.board[a.dest[0]][a.dest[1]]).cmp(&b.score(self.board[b.dest[0]][b.dest[1]])));
+            moves.reverse();
+        }
         for m in moves {
             let pen_castle = self.castle;
             let pen_move = self.last_move;
             let capture = self.board[m.dest[0]][m.dest[1]];
-            check = self.make_move(m);
-            if check.is_some() { 
-                if check.unwrap() {
-                    self.unmake_move(m, pen_move, pen_castle, capture);
-                    function_to_count();
-                    return MAX
-                }
-                if !check.unwrap() {
-                    self.unmake_move(m, pen_move, pen_castle, capture);
-                    function_to_count();
-                    return 0
-                }
-            }
+            self.pseudo_move(m);
             let score = -self.negamax(-beta, -alpha, depth_left - 1);
             self.unmake_move(m, pen_move, pen_castle, capture);
+            //if score == MAX { return MAX }
             if score >= beta { return beta }
             if score > alpha { alpha = score }
         }

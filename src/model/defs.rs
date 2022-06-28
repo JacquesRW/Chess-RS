@@ -30,6 +30,4 @@ pub struct Board {
     pub color: u8,
     // king locations
     pub kings: [Square; 2],
-    // captured piece on last move
-    pub capture: Piece,
 }

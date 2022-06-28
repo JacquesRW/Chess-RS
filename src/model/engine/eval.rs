@@ -74,11 +74,22 @@ impl Board {
         eval * sign(self.color)
     }
 
-    #[inline(always)]
     pub fn quiesce(&mut self, mut alpha: i64, beta: i64, depth_left: u8) -> i64 {
         let stand_pat = self.evaluate();
         if depth_left == 0 { 
             function_to_count_qs();
+            return stand_pat 
+        }
+        let mut captures = self.find_all_possible_quiet_moves();
+        if captures.is_empty() {
+            let check = self.check_for_mate();
+            if check.is_some() {
+                if check.unwrap() {
+                    function_to_count_qs();
+                    return -MAX
+                }
+                return 0
+            }
             return stand_pat 
         }
         if stand_pat >= beta { 
@@ -92,27 +103,15 @@ impl Board {
         if alpha < stand_pat {
             alpha = stand_pat;
         }
-        let mut captures = self.find_all_possible_quiet_moves();
-        captures.sort_by(|a, b| a.score(self.board[a.dest[0]][a.dest[1]]).cmp(&b.score(self.board[b.dest[0]][b.dest[1]])));
-        captures.reverse();
-        let mut check: Option<bool>;
+        if depth_left != 1 {
+            captures.sort_by(|a, b| a.score(self.board[a.dest[0]][a.dest[1]]).cmp(&b.score(self.board[b.dest[0]][b.dest[1]])));
+            captures.reverse();
+        }
         for m in captures {
             let pen_castle = self.castle;
             let pen_move = self.last_move;
             let capture = self.board[m.dest[0]][m.dest[1]];
-            check = self.make_move(m);
-            if check.is_some() { 
-                if check.unwrap() {
-                    function_to_count_qs();
-                    self.unmake_move(m, pen_move, pen_castle, capture);
-                    return MAX
-                }
-                if !check.unwrap() {
-                    function_to_count_qs();
-                    self.unmake_move(m, pen_move, pen_castle, capture);
-                    return 0
-                }
-            }
+            self.pseudo_move(m);
             let score = -self.quiesce(-beta, -alpha, depth_left-1);
             self.unmake_move(m, pen_move, pen_castle, capture);
             if score >= beta { return beta }
