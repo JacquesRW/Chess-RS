@@ -4,8 +4,9 @@ use crate::controller::*;
 use crate::model::pieces::*;
 
 
-// THIS USES [COLUMN, ROW] CONVENTION JOHN
+// THIS USES [ROW, COLUMN]* CONVENTION JOHN
 // I BETTER NOT BE SEEING NO DUMBASS STUFF
+// *except its written [column, row] shhh
 
 #[cfg(test)]
 mod puzzles;

@@ -9,8 +9,10 @@ pub fn _play_puzzle(s: &str) {
         counter += 1;
         let m = game.analyse(6);
         let check = game.make_move(m);
+        println!("{:?}", check);
         game.log();
         if check.is_some() {
+            println!("IS some.");
             if check.unwrap() { println!("Checkmate! After {counter} moves!") };
             if !check.unwrap() { println!("Stalemate! After {counter} moves!") };
             break;
@@ -27,23 +29,8 @@ pub const _PUZZLES: [&str; 5] = ["8/2krR3/1pp3bp/42p1/PPNp4/3P1PKP/8/8 w - - 0 1
 #[cfg(test)]
 mod test {
     use crate::puzzles::*;
-
-    #[test]
-    fn all_puzzles() {
-        for puzzle in _PUZZLES {
-            _play_puzzle(puzzle);
-        }
-    }
-
     #[test]
     fn one_puzzle() {
         _play_puzzle(_PUZZLES[1]);
-    }
-
-    #[test]
-    fn test_pos() {
-        let mut game = Board::from_fen("8/8/1k6/1p6/K7/8/8/8 w - - 0 2");
-        game.log();
-        game._root_perft(1);
     }
 }

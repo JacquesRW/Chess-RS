@@ -1,3 +1,5 @@
+//* Generates all legal moves. */
+
 use crate::model::defs::*;
 use crate::model::pieces::*;
 use std::cmp::min;
@@ -182,6 +184,7 @@ impl Board {
         let row = sq[1];
         let mut possible_moves: Vec<Move> = Vec::new();
         let colo = colour(piece);
+        // each of the set squares the knight can move to, if not off the board
         if row<=5 && col<=6 && colour(self.board[col+1][row+2]) != colo {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1,row+2] })}
         if row>=2 && col<=6 && colour(self.board[col+1][row-2]) != colo {possible_moves.push(Move { target: piece, orig: sq, dest: [col+1,row-2] })}
         if row<=5 && col>=1 && colour(self.board[col-1][row+2]) != colo {possible_moves.push(Move { target: piece, orig: sq, dest: [col-1,row+2] })}
@@ -273,17 +276,21 @@ impl Board {
         let rank = king_square[0];
         let file = king_square[1];
         if colour == WHITE && rank <= 5 {
+            // up-right
             if file <= 6 && self.board[rank + 1][file + 1] == BLACK | PAWN {
                 return true
             }
+            // up-left
             if file >= 1 && self.board[rank + 1][file - 1] == BLACK | PAWN {
                 return true
             }
         }
         else if colour == BLACK && rank >= 2{
+            // down-right
             if file <= 6 && self.board[rank - 1][file + 1] == WHITE | PAWN {
                 return true
             }
+            // down-left
             if file >= 1 && self.board[rank - 1][file - 1] == WHITE | PAWN {
                 return true
             }
@@ -358,16 +365,14 @@ impl Board {
     }
 
     pub fn _perft(&mut self, depth_left: u8) -> u64 {
+        // returns number of legal positions that can be reached after specified depth
         let moves = self.find_all_possible_moves();
         let mut positions: u64 = 0;
         if depth_left == 0 {
             return 1
         }
         if depth_left == 1 {
-            for _ in &moves { 
-                positions += 1 
-            }
-            return positions
+            return moves.len() as u64
         }
         for m in moves {
             let pen_castle = self.castle;
@@ -380,7 +385,11 @@ impl Board {
         positions
     }
 
-    pub fn _root_perft(&mut self, depth_left: u8) -> u64 {
+    pub fn _root_perft(&mut self, depth: u8) -> u64 {
+        // recreation of stockfish's perft function
+        // displays the legal moves from the current position
+        // and the number of possible future positions up to depth specified
+        // returns total number of future positions at that depth
         let mut new_move_list: Vec<(Move, u64)> = Vec::new();
         let move_list = self.find_all_possible_moves();
         for mo in move_list {
@@ -388,7 +397,7 @@ impl Board {
             let pen_move = self.last_move;
             let capture = self.board[mo.dest[0]][mo.dest[1]];
             self.pseudo_move(mo);
-            let score = self._perft(depth_left-1);
+            let score = self._perft(depth-1);
             new_move_list.push((mo, score));
             println!("{}: {}", mo._to_uci_string(), score);
             self.unmake_move(mo, pen_move, pen_castle, capture);

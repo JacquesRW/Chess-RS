@@ -1,9 +1,6 @@
 use crate::model::defs::*;
 use crate::model::helper::*;
 use crate::model::pieces::*;
-//use std::{thread, time};
-//use std::io::{Write, stdout};
-//use crossterm::{QueueableCommand, cursor, terminal, ExecutableCommand};
 
 impl Board {
     fn player_move(&mut self) -> Option<bool> {
@@ -24,7 +21,7 @@ impl Board {
         }
     }
 
-    fn ai_move(&mut self) -> Option<bool> {
+    fn engine_move(&mut self) -> Option<bool> {
         println!("AI Moving.");
         let m = self.analyse(6);
         self.make_move(m)
@@ -33,9 +30,13 @@ impl Board {
 
 
 // not good atm bc i was just using it for testing
+//use std::{thread, time};
+//use std::io::{Write, stdout};
+//use crossterm::{QueueableCommand, cursor, terminal, ExecutableCommand};
 
 #[inline(always)]
 pub fn _p_v_e(fen: &str, player_color: Piece) {
+    // player vs engine
     let mut game = Board::from_fen(fen);
     //let mut stdout = stdout();
     //stdout.queue(cursor::SavePosition).unwrap();
@@ -44,7 +45,7 @@ pub fn _p_v_e(fen: &str, player_color: Piece) {
     loop {
         //stdout.execute(cursor::Hide).unwrap();
         if game.color == player_color {check = game.player_move();}
-        else {check = game.ai_move()}
+        else {check = game.engine_move()}
 
         //stdout.queue(cursor::RestorePosition).unwrap();
         //stdout.flush().unwrap();

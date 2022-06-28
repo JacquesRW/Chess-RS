@@ -1,3 +1,4 @@
+//* Unmakes moves on board. */
 use crate::model::defs::{Board, Move, Piece};
 use crate::model::pieces::*;
 

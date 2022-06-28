@@ -1,5 +1,4 @@
 //* Support for getting positions from Forsyth-Edwards Notation (FEN) */
-//* this is not good code */
 
 use crate::model::defs::*;
 use crate::model::pieces::*;

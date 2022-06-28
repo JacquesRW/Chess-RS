@@ -1,3 +1,6 @@
+//* Positional weights of pieces. */
+
+// array of positional evaluation weights
 pub type WeightArr = [[i64;8];8];
 
 pub const PW: WeightArr = [[0,  0,  0,  0,  0,  0,  0,  0],

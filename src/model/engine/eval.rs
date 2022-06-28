@@ -1,10 +1,13 @@
+//* Engine evaluation functions. */
+
 use crate::model::defs::*;
 use crate::model::pieces::*;
 use crate::model::engine::constants::*;
-const MAX: i64 = 999999;
 
 #[inline(always)]
 fn value(pc: Piece) -> i64 {
+    // piece values
+    // maybe enum instead?
     match name(pc) { 
         EMPTY => 0,
         PAWN => 100,
@@ -19,6 +22,7 @@ fn value(pc: Piece) -> i64 {
 
 #[inline(always)]
 fn sign(piece: Piece) -> i64 {
+    // sign of eval for each colour
     match colour(piece) {
         WHITE => 1, 
         BLACK => -1, 
@@ -28,6 +32,7 @@ fn sign(piece: Piece) -> i64 {
 
 #[inline(always)]
 fn weight(piece: Piece, i: usize, j: usize) -> i64 {
+    // gives the score for each piece in each position
     match colour(piece) {
         BLACK => match name(piece) {
             PAWN => PW[i][j],
@@ -52,72 +57,22 @@ fn weight(piece: Piece, i: usize, j: usize) -> i64 {
         }
 }
 
-use std::sync::atomic::{AtomicUsize, Ordering};
-pub static QS_CALLS: AtomicUsize = AtomicUsize::new(0);
-
-pub fn function_to_count_qs() {
-    QS_CALLS.fetch_add(1, Ordering::SeqCst);
-}
-
 impl Board {
     #[inline(always)]
     pub fn evaluate(&self) -> i64 {
         // PLANNED transition to endgame values
         let mut eval: i64 = 0;
         let mut piece: Piece;
+        // loops through every square in board
         for i in 0..8 {
             for j in 0..8 {
                 piece = self.board[i][j];
+                // takes the value of the piece, and the value of its position on the board
+                // positive for white, negative for black
                 eval += sign(piece) * (value(piece) + weight(piece,i,j));
                 }
         }
+        // positive for white, negative for black
         eval * sign(self.color)
-    }
-
-    pub fn quiesce(&mut self, mut alpha: i64, beta: i64, depth_left: u8) -> i64 {
-        let stand_pat = self.evaluate();
-        if depth_left == 0 { 
-            function_to_count_qs();
-            return stand_pat 
-        }
-        let mut captures = self.find_all_possible_quiet_moves();
-        if captures.is_empty() {
-            let check = self.check_for_mate();
-            if check.is_some() {
-                if check.unwrap() {
-                    function_to_count_qs();
-                    return -MAX
-                }
-                return 0
-            }
-            return stand_pat 
-        }
-        if stand_pat >= beta { 
-            function_to_count_qs();
-            return beta 
-        }
-        if stand_pat < alpha - 900 {
-            function_to_count_qs();
-            return alpha
-        }
-        if alpha < stand_pat {
-            alpha = stand_pat;
-        }
-        if depth_left != 1 {
-            captures.sort_by(|a, b| a.score(self.board[a.dest[0]][a.dest[1]]).cmp(&b.score(self.board[b.dest[0]][b.dest[1]])));
-            captures.reverse();
-        }
-        for m in captures {
-            let pen_castle = self.castle;
-            let pen_move = self.last_move;
-            let capture = self.board[m.dest[0]][m.dest[1]];
-            self.pseudo_move(m);
-            let score = -self.quiesce(-beta, -alpha, depth_left-1);
-            self.unmake_move(m, pen_move, pen_castle, capture);
-            if score >= beta { return beta }
-            if score > alpha { alpha = score }
-        }
-        function_to_count_qs();
-        alpha
     }
 }
