@@ -2,17 +2,19 @@ use crate::model::defs::Board;
 
 #[inline(always)]
 pub fn _play_puzzle(s: &str) {
+    // initialise board with fen string
     let mut game = Board::from_fen(s);
+    // display initial board config
     game.log();
+    // move counter
     let mut counter = 0;
     for _ in 0..8 {
         counter += 1;
         let m = game.analyse(6);
         let check = game.make_move(m);
-        println!("{:?}", check);
         game.log();
+        // check if game has ended
         if check.is_some() {
-            println!("IS some.");
             if check.unwrap() { println!("Checkmate! After {counter} moves!") };
             if !check.unwrap() { println!("Stalemate! After {counter} moves!") };
             break;

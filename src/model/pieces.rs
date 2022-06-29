@@ -67,6 +67,7 @@ pub fn as_string(pc: Piece) -> String {
 
 #[inline(always)]
 pub fn repr(pc: Piece) -> &'static str {
+    // piece string for console output
     match colour(pc) {
         BLACK => match name(pc) {
             PAWN => "♙",

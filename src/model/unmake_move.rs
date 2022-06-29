@@ -6,9 +6,11 @@ use crate::model::pieces::*;
 impl Board {
     #[inline(always)]
     fn untry_en_passant(&mut self, m: Move, pen_move: Move) {
+        // white en passant
         if pen_move == (Move {target: BLACK | PAWN, orig: [6, m.dest[1]], dest: [4, m.dest[1]]}) {
             self.board[4][m.dest[1]] = BLACK | PAWN;
         }
+        // black en passant
         else if pen_move == (Move {target: WHITE | PAWN, orig: [1, m.dest[1]], dest: [3, m.dest[1]]})  {
             self.board[3][m.dest[1]] = WHITE | PAWN;
         }

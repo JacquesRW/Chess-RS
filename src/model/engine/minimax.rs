@@ -35,7 +35,8 @@ impl Board {
             return 0
         }
         // sorts the list according to MVV-LVA
-        // PLANNED optimisation
+        // PLANNED optimisation - no built in functions serve better
+        // POTENTIAL rework to not order whole list
         // no sort on depth 1 because testing indicated it took longer
         if depth_left != 1 {
             moves.sort_by_key(|a| a.score(self.board[a.dest[0]][a.dest[1]]));
@@ -52,6 +53,9 @@ impl Board {
             // pseudo-move does not check for checkmates, done above instead
             // avoids double calculating moves
             self.pseudo_move(m);
+            // recursively calls itself for the next set of possible moves
+            // based on principle that max(a,b) = -min(-a,-b)
+            // i.e best outcome for other player is worst for you
             let score = -self.negamax(-beta, -alpha, depth_left - 1);
             self.unmake_move(m, pen_move, pen_castle, capture);
             // beta pruning
@@ -83,7 +87,7 @@ impl Board {
             }
             new_move_list.push(ScoredMove {m: mo, s: score} )
         }
-        // sorts list of moves
+        // sorts list of moves by score 
         // performed once per search so no sense in making it more optimal
         new_move_list.sort_by(|a, b| a.s.cmp(&b.s));
         new_move_list.reverse();

@@ -1,15 +1,17 @@
 ENGINE:
 - Opening book
-- Transition to endgame eval - tapered evaluation
-- Add checks to quiescence search
-- Pawn structure - doubled, passed, connected, etc
-- Mobility
+- Add checks to quiescence search - pseudo king move for all piece types then check
+for checks from the corresponding piece
+- Pawn structure - doubled, passed, connected, etc 
+- Mobility (potentially huge performance hit?)
 
 PERFORMANCE STUFF:
-- Transposition tables - Zobrist hashing
+- Transposition tables - Zobrist hashing 
 - refactor last_move to en passant square Option<Square>
-- Board.kings field:
+- Board.kings field: (infrastructure mostly in place)
     deprecate get_king_square apart from when loading a Board
     update king squares on king moves only
 
-TEST sorting methods for move ordering
+MEMORY EFFICIENCY:
+- get rid of board cloning in checking for checks - implement unmake move
+- refactor Board.castling to a u8
