@@ -12,6 +12,3 @@ PERFORMANCE STUFF:
     deprecate get_king_square apart from when loading a Board
     update king squares on king moves only
 
-MEMORY EFFICIENCY:
-- get rid of board cloning in checking for checks - implement unmake move
-- refactor Board.castling to a u8

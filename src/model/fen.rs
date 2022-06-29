@@ -45,16 +45,16 @@ fn en_passant_square(s: &str, c: Piece) -> Move {
     Move { target: other_colour(c) | PAWN, orig: [(sq[0] as i32 - x) as usize ,sq[1]], dest: [(sq[0] as i32 + x) as usize,sq[1]]}
 }
 
-fn can_castle(s: &str) -> [[bool;2];2] {
+fn can_castle(s: &str) -> Castle {
     // finds castling rights
-    if s == "-" { return [[false, false], [false, false]]}
-    let mut castle = [[false, false], [false, false]];
+    if s == "-" { return NO_RIGHTS}
+    let mut castle = NO_RIGHTS;
     for ch in s.chars() {
         match ch {
-            'Q' => castle[0][0] = true,
-            'K' => castle[0][1] = true,
-            'q' => castle[1][0] = true,
-            'k' => castle[1][1] = true,
+            'Q' => castle |= WHITE_QS,
+            'K' => castle |= WHITE_KS,
+            'q' => castle |= BLACK_QS,
+            'k' => castle |= BLACK_KS,
             _ => panic!("Not good castle info!")
         }
     }

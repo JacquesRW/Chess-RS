@@ -1,6 +1,6 @@
 //* Makes moves on board. */
 
-use crate::model::defs::{Board, Move};
+use crate::model::defs::*;
 use crate::model::engine::eval::*;
 use crate::model::pieces::*;
 
@@ -46,16 +46,17 @@ impl Board {
     #[inline(always)]
     fn update_castle(&mut self, m: &Move) {
         // if king moves, can't castle at all
-        if name(m.target) == KING {self.castle[colour_to_index(colour(m.target))] = [false, false]}
+        if m.target == WHITE | KING {self.castle &= !(WHITE_QS | WHITE_KS)}
+        if m.target == BLACK | KING {self.castle &= !(BLACK_QS | BLACK_KS)}
         // if rook moves, or is taken, can't castle to its respective side
-        else if (m.orig == [0,0]) || (m.dest == [0,0]) {self.castle[0][0] = false}
-        else if (m.orig == [0,7]) || (m.dest == [0,7]) {self.castle[0][1] = false}
-        else if (m.orig == [7,0]) || (m.dest == [7,0]) {self.castle[1][0] = false}
-        else if (m.orig == [7,7]) || (m.dest == [7,7]) {self.castle[1][1] = false}
+        else if (m.orig == [0,0]) || (m.dest == [0,0]) {self.castle &= !WHITE_QS}
+        else if (m.orig == [0,7]) || (m.dest == [0,7]) {self.castle &= !WHITE_KS}
+        else if (m.orig == [7,0]) || (m.dest == [7,0]) {self.castle &= !BLACK_QS}
+        else if (m.orig == [7,7]) || (m.dest == [7,7]) {self.castle &= !BLACK_KS}
     }
 
     #[inline(always)]
-    pub fn check_for_mate(&self) -> Option<bool> {
+    pub fn check_for_mate(&mut self) -> Option<bool> {
         // finds all possible moves - slow and not utilised by anything else
         // equivalent code is usually inlined where its needed but uses the found moves
         // rather than regenerating them
@@ -93,7 +94,7 @@ impl Board {
             self.try_promote(&m);
         }
         // castling is looked at if it is theoretically possible
-        if self.castle[colour_to_index(self.color)] != [false,false] {
+        if self.castle != NO_RIGHTS {
             self.try_castle(&m);
             self.update_castle(&m);
         }

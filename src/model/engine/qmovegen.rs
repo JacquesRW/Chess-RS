@@ -173,7 +173,7 @@ impl Board {
     }
 
     #[inline(always)]
-    fn possible_takes(&self, sq: Square, king_square: Square, colour: u8) -> Vec<Move> {
+    fn possible_takes(&mut self, sq: Square, king_square: Square, colour: u8) -> Vec<Move> {
         let unvalidated = self.unvalidated_takes(sq);
         let mut possible_takes: Vec<Move> = Vec::new();
         if self.board[sq[0]][sq[1]] == KING | colour {
@@ -195,7 +195,7 @@ impl Board {
     }
 
     #[inline(always)]
-    pub fn find_all_possible_quiet_moves(&self) -> Vec<Move> {
+    pub fn find_all_possible_quiet_moves(&mut self) -> Vec<Move> {
         let mut possible_takes: Vec<Move> = Vec::new();
         let king_square = self.get_king_square(self.color);
         for column in 0..8 {

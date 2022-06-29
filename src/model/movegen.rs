@@ -68,16 +68,33 @@ impl Board {
         let row = sq[1];
         let mut possible_moves: Vec<Move> = Vec::new();
         let colo = colour(piece);
-        // queenside
-        if self.castle[colour_to_index(colo)][0] && row == 4 && self.board[col][1] == EMPTY && self.board[col][2] == EMPTY && self.board[col][3] == EMPTY {
-            if !self.check_for_check_static(sq, colo) && !self.check_for_check_static([col, 1], colo) && !self.check_for_check_static([col, 2], colo) && !self.check_for_check_static([col, 3], colo) {
-                possible_moves.push(Move { target: piece, orig: sq, dest: [col,2]})
+        // white 
+        if col == 0 {
+            // queenside
+            if self.castle & WHITE_QS != NO_RIGHTS && self.board[col][1] == EMPTY && self.board[col][2] == EMPTY && self.board[col][3] == EMPTY {
+                if !self.check_for_check_static(sq, colo) && !self.check_for_check_static([col, 1], colo) && !self.check_for_check_static([col, 2], colo) && !self.check_for_check_static([col, 3], colo) {
+                    possible_moves.push(Move { target: piece, orig: sq, dest: [col,2]})
+                }
+            }
+            // kingside
+            if self.castle & WHITE_KS != NO_RIGHTS && self.board[col][5] == EMPTY && self.board[col][6] == EMPTY {
+                if !self.check_for_check_static(sq, colo) && !self.check_for_check_static([col, 5], colo) && !self.check_for_check_static([col, 6], colo) {
+                    possible_moves.push(Move { target: piece, orig: sq, dest: [col,6]})
+                }
             }
         }
-        // kingside
-        if self.castle[colour_to_index(colo)][1] && row == 4 && self.board[col][5] == EMPTY && self.board[col][6] == EMPTY {
-            if !self.check_for_check_static(sq, colo) && !self.check_for_check_static([col, 5], colo) && !self.check_for_check_static([col, 6], colo) {
-                possible_moves.push(Move { target: piece, orig: sq, dest: [col,6]})
+        if col == 7 {
+            // queenside
+            if self.castle & BLACK_QS != NO_RIGHTS && row == 4 && self.board[col][1] == EMPTY && self.board[col][2] == EMPTY && self.board[col][3] == EMPTY {
+                if !self.check_for_check_static(sq, colo) && !self.check_for_check_static([col, 1], colo) && !self.check_for_check_static([col, 2], colo) && !self.check_for_check_static([col, 3], colo) {
+                    possible_moves.push(Move { target: piece, orig: sq, dest: [col,2]})
+                }
+            }
+            // kingside
+            if self.castle & BLACK_KS != NO_RIGHTS && row == 4 && self.board[col][5] == EMPTY && self.board[col][6] == EMPTY {
+                if !self.check_for_check_static(sq, colo) && !self.check_for_check_static([col, 5], colo) && !self.check_for_check_static([col, 6], colo) {
+                    possible_moves.push(Move { target: piece, orig: sq, dest: [col,6]})
+                }
             }
         }
         possible_moves
@@ -267,31 +284,31 @@ impl Board {
         false
     }
 
-    pub fn check_for_check(&self, m: Move, king_square: Square, colour: u8) -> bool {
+    pub fn check_for_check(&mut self, m: Move, king_square: Square, colour: u8) -> bool {
         let mut temp = self.clone();
         temp.pseudo_move(m);
         temp.color = colour;
-        let alt_color = other_colour(temp.color);
+        let alt_color = other_colour(colour);
         // if any pawns giving a check
         let rank = king_square[0];
         let file = king_square[1];
         if colour == WHITE && rank <= 5 {
             // up-right
-            if file <= 6 && self.board[rank + 1][file + 1] == BLACK | PAWN {
+            if file <= 6 && temp.board[rank + 1][file + 1] == BLACK | PAWN {
                 return true
             }
             // up-left
-            if file >= 1 && self.board[rank + 1][file - 1] == BLACK | PAWN {
+            if file >= 1 && temp.board[rank + 1][file - 1] == BLACK | PAWN {
                 return true
             }
         }
         else if colour == BLACK && rank >= 2{
             // down-right
-            if file <= 6 && self.board[rank - 1][file + 1] == WHITE | PAWN {
+            if file <= 6 && temp.board[rank - 1][file + 1] == WHITE | PAWN {
                 return true
             }
             // down-left
-            if file >= 1 && self.board[rank - 1][file - 1] == WHITE | PAWN {
+            if file >= 1 && temp.board[rank - 1][file - 1] == WHITE | PAWN {
                 return true
             }
         }
@@ -314,8 +331,8 @@ impl Board {
             }
         }
         // if king blocking squares
-        for pos in self._base_king_moves(king_square,colour) {
-            if self.board[pos.dest[0]][pos.dest[1]] == KING | alt_color {
+        for pos in temp._base_king_moves(king_square,colour) {
+            if temp.board[pos.dest[0]][pos.dest[1]] == KING | alt_color {
                 return true 
             }
         }
@@ -323,7 +340,7 @@ impl Board {
     }
 
     #[inline(always)]
-    fn possible_moves(&self, sq: Square, king_square: Square, colour: u8) -> Vec<Move> {
+    fn possible_moves(&mut self, sq: Square, king_square: Square, colour: u8) -> Vec<Move> {
         let unvalidated = self.unvalidated_moves(sq);
         let mut possible_moves: Vec<Move> = Vec::new();
         if self.board[sq[0]][sq[1]] == KING | colour {
@@ -344,13 +361,13 @@ impl Board {
         }
     }
 
-    pub fn _selection_possible_moves(&self, sq: Square) -> Vec<Move> {
+    pub fn _selection_possible_moves(&mut self, sq: Square) -> Vec<Move> {
         let king_square = self.get_king_square(self.color);
         self.possible_moves(sq, king_square, self.color)
     }
 
     #[inline(always)]
-    pub fn find_all_possible_moves(&self) -> Vec<Move> {
+    pub fn find_all_possible_moves(&mut self) -> Vec<Move> {
         let mut possible_moves: Vec<Move> = Vec::new();
         let king_square = self.get_king_square(self.color);
         for column in 0..8 {
