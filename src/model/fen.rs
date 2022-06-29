@@ -1,6 +1,7 @@
 //* Support for getting positions from Forsyth-Edwards Notation (FEN) */
 
 use crate::model::defs::*;
+use crate::model::engine::eval::phase_value;
 use crate::model::pieces::*;
 use crate::model::helper::*;
 
@@ -83,6 +84,16 @@ fn convert_row(s: &str) -> [Piece;8] {
     row
 }
 
+fn get_phase(board: Array) -> i64 {
+    let mut eval: i64 = 0;
+    for i in 0..8 {
+        for j in 0..8 {
+            eval += phase_value(board[i][j]);               
+        }
+    }
+    eval as i64 
+}
+
 impl Board {
     pub fn from_fen(s: &str) -> Board {
         // splits fen string by whitespace
@@ -104,6 +115,7 @@ impl Board {
             last_move: en_passant_square(vec[3], c), 
             castle: can_castle(vec[2]),
             kings: [[0,0],[0,0]],
+            phase: get_phase(position)
         };
         // get king positions
         board.kings = [board.get_king_square(WHITE),board.get_king_square(BLACK)];

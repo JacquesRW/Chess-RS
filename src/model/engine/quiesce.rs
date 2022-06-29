@@ -14,7 +14,7 @@ pub fn count_qs_plus() {
 
 impl Board {
     pub fn quiesce(&mut self, mut alpha: i64, beta: i64, depth_left: u8) -> i64 {
-        // base eval for the current position, to be improved/worsened
+        // base eval for the current position, to be improved/worsened with these checks
         let stand_pat = self.evaluate();
         if depth_left == 0 { 
             count_qs_plus();
@@ -61,7 +61,8 @@ impl Board {
         // not as much effect as seen for negamax
         // probably because far fewer moves
         if depth_left != 1 {
-            captures.sort_by(|a, b| a.score(self.board[a.dest[0]][a.dest[1]]).cmp(&b.score(self.board[b.dest[0]][b.dest[1]])));
+            // MVV-LVA move ordering
+            captures.sort_by_key(|a| a.score(self.board[a.dest[0]][a.dest[1]]));
             captures.reverse();
         }
         // same as for negamax

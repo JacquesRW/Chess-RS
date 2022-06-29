@@ -38,7 +38,7 @@ impl Board {
         // PLANNED optimisation
         // no sort on depth 1 because testing indicated it took longer
         if depth_left != 1 {
-            moves.sort_by(|a, b| a.score(self.board[a.dest[0]][a.dest[1]]).cmp(&b.score(self.board[b.dest[0]][b.dest[1]])));
+            moves.sort_by_key(|a| a.score(self.board[a.dest[0]][a.dest[1]]));
             moves.reverse();
         }
         // going through legal moves

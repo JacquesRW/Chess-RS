@@ -1,5 +1,6 @@
 //* Unmakes moves on board. */
 use crate::model::defs::{Board, Move, Piece};
+use crate::model::engine::eval::*;
 use crate::model::pieces::*;
 
 impl Board {
@@ -39,6 +40,8 @@ impl Board {
 
     #[inline(always)]
     pub fn unmake_move(&mut self, m: Move, pen_move: Move, pen_castle: [[bool;2];2], capture: Piece) {
+        // restore self.phase
+        self.phase += phase_value(capture);
         // return target to its original square
         self.board[m.orig[0]][m.orig[1]] = m.target;
         // restore captured (or empty) piece

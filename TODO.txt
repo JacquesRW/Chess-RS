@@ -1,9 +1,15 @@
 ENGINE:
-- Add checks to quiescence
+- Opening book
+- Transition to endgame eval - tapered evaluation
+- Add checks to quiescence search
+- Pawn structure - doubled, passed, connected, etc
+- Mobility
 
 PERFORMANCE STUFF:
-- Optimise move ordering (currently sorting list before iterating through, potentially could be improved)
+- Transposition tables - Zobrist hashing
 - refactor last_move to en passant square Option<Square>
 - Board.kings field:
     deprecate get_king_square apart from when loading a Board
     update king squares on king moves only
+
+TEST sorting methods for move ordering

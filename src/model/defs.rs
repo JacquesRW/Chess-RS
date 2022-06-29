@@ -30,4 +30,6 @@ pub struct Board {
     pub color: u8,
     // king locations
     pub kings: [Square; 2],
+    // game phase heuristic
+    pub phase: i64
 }

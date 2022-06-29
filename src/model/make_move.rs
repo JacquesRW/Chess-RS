@@ -1,6 +1,7 @@
 //* Makes moves on board. */
 
 use crate::model::defs::{Board, Move};
+use crate::model::engine::eval::*;
 use crate::model::pieces::*;
 
 impl Board {
@@ -79,6 +80,8 @@ impl Board {
 
     #[inline(always)]
     pub fn pseudo_move(&mut self, m: Move) {
+        // updates self.phase
+        self.phase -= phase_value(self.board[m.dest[0]][m.dest[1]]);
         // destination receives the target piece
         self.board[m.dest[0]][m.dest[1]] = m.target;
         // target's old square is emptied
