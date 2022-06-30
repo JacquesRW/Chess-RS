@@ -1,6 +1,7 @@
 //* Engine evaluation functions. */
 
 use crate::model::defs::*;
+use std::cmp::max;
 use crate::model::pieces::*;
 use crate::model::engine::constants::*;
 
@@ -104,6 +105,15 @@ fn eg_weight(piece: Piece, i: usize, j: usize) -> i64 {
 
 impl Board {
     #[inline(always)]
+    fn kings_endgame(&self, colour: u8) -> i64 {
+        let friendly = self.kings[colour_to_index(colour)];
+        let opponent = self.kings[colour_to_index(other_colour(colour))];
+        let opp_ctr_dst = max(3-(opponent[0] as i64),(opponent[0] as i64) - 4) + max(3-(opponent[1] as i64), (opponent[1] as i64) - 4);
+        let k_dst = ((friendly[0] as i64) - (opponent[0] as i64)).abs() + ((friendly[1] as i64) - (opponent[1] as i64)).abs();
+        return 14 + opp_ctr_dst - k_dst
+    }
+
+    #[inline(always)]
     pub fn evaluate(&self) -> i64 {
         let mut mat_eval: i64 = 0;
         let mut mg_eval: i64 = 0;
@@ -117,9 +127,9 @@ impl Board {
                 mat_eval += s * value(piece);
                 mg_eval += s * mg_weight(piece,i,j);
                 eg_eval += s * eg_weight(piece,i,j);
-                }
+            }
         }
         let phase = ((TOTALPHASE - self.phase) * 256 + (TOTALPHASE / 2)) / TOTALPHASE;
-        sign(self.color) * (  mat_eval + ((256 - phase) * mg_eval + phase * eg_eval) / 256 )
+        sign(self.color) * (  mat_eval + ((256 - phase) * mg_eval + phase * (eg_eval + self.kings_endgame(self.color))) / 256 )
     }
 }
