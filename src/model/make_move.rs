@@ -49,10 +49,10 @@ impl Board {
         if m.target == WHITE | KING {self.castle &= !(WHITE_QS | WHITE_KS)}
         if m.target == BLACK | KING {self.castle &= !(BLACK_QS | BLACK_KS)}
         // if rook moves, or is taken, can't castle to its respective side
-        else if (m.orig == [0,0]) || (m.dest == [0,0]) {self.castle &= !WHITE_QS}
-        else if (m.orig == [0,7]) || (m.dest == [0,7]) {self.castle &= !WHITE_KS}
-        else if (m.orig == [7,0]) || (m.dest == [7,0]) {self.castle &= !BLACK_QS}
-        else if (m.orig == [7,7]) || (m.dest == [7,7]) {self.castle &= !BLACK_KS}
+        if (m.orig == [0,0]) || (m.dest == [0,0]) {self.castle &= !WHITE_QS}
+        if (m.orig == [0,7]) || (m.dest == [0,7]) {self.castle &= !WHITE_KS}
+        if (m.orig == [7,0]) || (m.dest == [7,0]) {self.castle &= !BLACK_QS}
+        if (m.orig == [7,7]) || (m.dest == [7,7]) {self.castle &= !BLACK_KS}
     }
 
     #[inline(always)]
