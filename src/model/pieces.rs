@@ -8,6 +8,12 @@ pub fn colour(pc: Piece) -> Piece {
 }
 
 #[inline(always)]
+pub fn colour_to_index(colour: u8) -> usize {
+    // converts colour to the relevant index
+    ((colour >> 3) - 1) as usize
+}
+
+#[inline(always)]
 pub fn name(pc: Piece) -> Piece {
     // gets type of piece
     (pc << 5) >> 5

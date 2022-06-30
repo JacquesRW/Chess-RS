@@ -236,7 +236,7 @@ impl Board {
         }
     }
 
-    pub fn check_for_check_static(&self, king_square: Square, colour: u8) -> bool {
+    pub fn check_for_check_static(&self, king_square: Square,  colour: u8) -> bool {
         let alt_color = other_colour(colour);
         // if any pawns giving a check
         let rank = king_square[0];
@@ -284,11 +284,11 @@ impl Board {
         false
     }
 
-    pub fn check_for_check(&mut self, m: Move, king_square: Square, colour: u8) -> bool {
+    pub fn check_for_check(&mut self, m: Move, colour: u8) -> bool {
         let mut temp = self.clone();
         temp.pseudo_move(m);
-        temp.color = colour;
         let alt_color = other_colour(colour);
+        let king_square = temp.kings[colour_to_index(colour)];
         // if any pawns giving a check
         let rank = king_square[0];
         let file = king_square[1];
@@ -340,40 +340,28 @@ impl Board {
     }
 
     #[inline(always)]
-    fn possible_moves(&mut self, sq: Square, king_square: Square, colour: u8) -> Vec<Move> {
+    fn possible_moves(&mut self, sq: Square, colour: u8) -> Vec<Move> {
         let unvalidated = self.unvalidated_moves(sq);
         let mut possible_moves: Vec<Move> = Vec::new();
-        if self.board[sq[0]][sq[1]] == KING | colour {
-            for m in unvalidated {
-                if !(self.check_for_check(m, m.dest, colour)) {
+        for m in unvalidated {
+            if !(self.check_for_check(m, colour)) {
                     possible_moves.push(m);
-                }
             }
-            return possible_moves
         }
-        else {
-            for m in unvalidated {
-                if !(self.check_for_check(m, king_square, colour)) {
-                    possible_moves.push(m);
-                }
-            }
-            return possible_moves
-        }
+        return possible_moves
     }
 
     pub fn _selection_possible_moves(&mut self, sq: Square) -> Vec<Move> {
-        let king_square = self.get_king_square(self.color);
-        self.possible_moves(sq, king_square, self.color)
+        self.possible_moves(sq, self.color)
     }
 
     #[inline(always)]
     pub fn find_all_possible_moves(&mut self) -> Vec<Move> {
         let mut possible_moves: Vec<Move> = Vec::new();
-        let king_square = self.get_king_square(self.color);
         for column in 0..8 {
             for row in 0..8 {
                 if colour(self.board[column][row]) == self.color {
-                    let mut current_moves = self.possible_moves([column,row], king_square, self.color);
+                    let mut current_moves = self.possible_moves([column,row], self.color);
                     possible_moves.append(&mut current_moves);
                 }
             }
@@ -392,12 +380,13 @@ impl Board {
             return moves.len() as u64
         }
         for m in moves {
+            let pen_kings = self.kings;
             let pen_castle = self.castle;
             let pen_move = self.last_move;
             let capture = self.board[m.dest[0]][m.dest[1]];
             self.pseudo_move(m);
             positions += self._perft(depth_left-1);
-            self.unmake_move(m, pen_move, pen_castle, capture);
+            self.unmake_move(m, pen_move, pen_castle, capture, pen_kings);
         }  
         positions
     }
@@ -410,6 +399,7 @@ impl Board {
         let mut new_move_list: Vec<(Move, u64)> = Vec::new();
         let move_list = self.find_all_possible_moves();
         for mo in move_list {
+            let pen_kings = self.kings;
             let pen_castle = self.castle;
             let pen_move = self.last_move;
             let capture = self.board[mo.dest[0]][mo.dest[1]];
@@ -417,7 +407,7 @@ impl Board {
             let score = self._perft(depth-1);
             new_move_list.push((mo, score));
             println!("{}: {}", mo._to_uci_string(), score);
-            self.unmake_move(mo, pen_move, pen_castle, capture);
+            self.unmake_move(mo, pen_move, pen_castle, capture, pen_kings);
         }
         let mut positions: u64 = 0;
         for sm in new_move_list {

@@ -28,7 +28,7 @@ impl Board {
         if moves.is_empty() {
             count_plus();
             // checkmate
-            if self.check_for_check_static(self.get_king_square(self.color), self.color) {
+            if self.check_for_check_static(self.kings[colour_to_index(self.color)], self.color) {
                 return -MAX
             }
             // stalemate
@@ -47,6 +47,7 @@ impl Board {
             // relevant info needed to unmake move
             // not stored in Board struct for memory reasons, as the Board struct is used elsewhere
             // where these fields are not relevant
+            let pen_kings = self.kings;
             let pen_castle = self.castle;
             let pen_move = self.last_move;
             let capture = self.board[m.dest[0]][m.dest[1]];
@@ -57,7 +58,7 @@ impl Board {
             // based on principle that max(a,b) = -min(-a,-b)
             // i.e best outcome for other player is worst for you
             let score = -self.negamax(-beta, -alpha, depth_left - 1);
-            self.unmake_move(m, pen_move, pen_castle, capture);
+            self.unmake_move(m, pen_move, pen_castle, capture, pen_kings);
             // beta pruning
             if score >= beta { return beta }
             // improve alpha bound
@@ -76,12 +77,13 @@ impl Board {
         // equivalent negamax to above but records the scores of each move
         for sm in move_list {
             let mo = sm.m;
+            let pen_kings = self.kings;
             let pen_castle = self.castle;
             let pen_move = self.last_move;
             let capture = self.board[mo.dest[0]][mo.dest[1]];
             self.pseudo_move(mo);
             let score = -self.negamax(-beta, -alpha, depth_left - 1);
-            self.unmake_move(mo, pen_move, pen_castle, capture);
+            self.unmake_move(mo, pen_move, pen_castle, capture, pen_kings);
             if score > alpha {
                 alpha = score - 1;
             }

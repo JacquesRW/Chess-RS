@@ -2,13 +2,9 @@ ENGINE:
 - Opening book
 - Add checks to quiescence search - pseudo king move for all piece types then check
 for checks from the corresponding piece
+- Add Sebastian Lague's endgame eval trick
 - Pawn structure - doubled, passed, connected, etc 
-- Mobility (potentially huge performance hit?)
 
 PERFORMANCE STUFF:
 - Transposition tables - Zobrist hashing 
 - refactor last_move to en passant square Option<Square>
-- Board.kings field: (infrastructure mostly in place)
-    deprecate get_king_square apart from when loading a Board
-    update king squares on king moves only
-

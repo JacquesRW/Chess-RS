@@ -67,12 +67,13 @@ impl Board {
         }
         // same as for negamax
         for m in captures {
+            let pen_kings = self.kings;
             let pen_castle = self.castle;
             let pen_move = self.last_move;
             let capture = self.board[m.dest[0]][m.dest[1]];
             self.pseudo_move(m);
             let score = -self.quiesce(-beta, -alpha, depth_left-1);
-            self.unmake_move(m, pen_move, pen_castle, capture);
+            self.unmake_move(m, pen_move, pen_castle, capture, pen_kings);
             if score >= beta { return beta }
             if score > alpha { alpha = score }
         }

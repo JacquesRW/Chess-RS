@@ -75,6 +75,7 @@ fn mg_weight(piece: Piece, i: usize, j: usize) -> i64 {
         }) as i64
 }
 
+#[inline(always)]
 fn eg_weight(piece: Piece, i: usize, j: usize) -> i64 {
     // gives the score for each piece in each position
     (match colour(piece) {
@@ -103,44 +104,22 @@ fn eg_weight(piece: Piece, i: usize, j: usize) -> i64 {
 
 impl Board {
     #[inline(always)]
-    fn opening(&self) -> i64 {
-        // PLANNED transition to endgame values
-        let mut eval: i64 = 0;
-        let mut piece: Piece;
-        // loops through every square in board
-        for i in 0..8 {
-            for j in 0..8 {
-                piece = self.board[i][j];
-                // takes the value of the piece, and the value of its position on the board
-                // positive for white, negative for black
-                eval += sign(piece) * (value(piece) + mg_weight(piece,i,j));
-                }
-        }
-        // positive for white, negative for black
-        eval
-    }
-
-    fn endgame(&self) -> i64 {
-        // PLANNED transition to endgame values
-        let mut eval: i64 = 0;
-        let mut piece: Piece;
-        // loops through every square in board
-        for i in 0..8 {
-            for j in 0..8 {
-                piece = self.board[i][j];
-                // takes the value of the piece, and the value of its position on the board
-                // positive for white, negative for black
-                eval += sign(piece) * (value(piece) + eg_weight(piece,i,j));
-                }
-        }
-        // positive for white, negative for black
-        eval
-    }
-
-    pub fn phase(&self) -> i64 { ((TOTALPHASE - self.phase) * 256 + (TOTALPHASE / 2)) / TOTALPHASE }
-
     pub fn evaluate(&self) -> i64 {
-        let phase = self.phase();
-        sign(self.color) * (((256 - phase) * self.opening()) + (phase * self.endgame())) / 256
+        let mut mat_eval: i64 = 0;
+        let mut mg_eval: i64 = 0;
+        let mut eg_eval: i64 = 0;
+        let mut piece: Piece;
+        let mut s: i64;
+        for i in 0..8 {
+            for j in 0..8 {
+                piece = self.board[i][j];
+                s = sign(piece);
+                mat_eval += s * value(piece);
+                mg_eval += s * mg_weight(piece,i,j);
+                eg_eval += s * eg_weight(piece,i,j);
+                }
+        }
+        let phase = ((TOTALPHASE - self.phase) * 256 + (TOTALPHASE / 2)) / TOTALPHASE;
+        sign(self.color) * (  mat_eval + ((256 - phase) * mg_eval + phase * eg_eval) / 256 )
     }
 }

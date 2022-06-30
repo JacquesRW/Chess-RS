@@ -62,7 +62,7 @@ impl Board {
         // rather than regenerating them
         let possible_moves = self.find_all_possible_moves();
         if possible_moves.is_empty() {
-            if self.check_for_check_static(self.get_king_square(self.color), self.color) {
+            if self.check_for_check_static(self.kings[colour_to_index(self.color)], self.color) {
                 return Some(true)
             }
             return Some(false)
@@ -81,6 +81,9 @@ impl Board {
 
     #[inline(always)]
     pub fn pseudo_move(&mut self, m: Move) {
+        // updating self.kings if relevant
+        if m.target == WHITE | KING { self.kings[0] = m.dest }
+        else if m.target == BLACK | KING { self.kings[1] = m.dest }
         // updates self.phase
         self.phase -= phase_value(self.board[m.dest[0]][m.dest[1]]);
         // destination receives the target piece
