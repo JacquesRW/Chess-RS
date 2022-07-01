@@ -25,18 +25,22 @@ impl Board {
     #[inline(always)]
     fn try_castle(&mut self, &m: &Move) { 
         // assumes castling has been validated and looks for the specific 4 moves that indicate castling
+        // white queenside
         if m == (Move { target: WHITE | KING, orig: [0,4], dest: [0,2] }) {
             self.board[0][3] = WHITE | ROOK;
             self.board[0][0] = EMPTY;
         }
+        // white kingside
         else if m == (Move { target: WHITE | KING, orig: [0,4], dest: [0,6] }) {
             self.board[0][5] = WHITE | ROOK;
             self.board[0][7] = EMPTY;
         }
+        // black queenside
         else if m == (Move { target: BLACK | KING, orig: [7,4], dest: [7,2] }) {
             self.board[7][3] = BLACK | ROOK;
             self.board[7][0] = EMPTY;
         }
+        // black kingside
         else if m == (Move { target: BLACK | KING, orig: [7,4], dest: [7,6] }) {
             self.board[7][5] = BLACK | ROOK;
             self.board[7][7] = EMPTY;
@@ -47,12 +51,14 @@ impl Board {
     fn update_castle(&mut self, m: &Move) {
         // if king moves, can't castle at all
         if m.target == WHITE | KING {self.castle &= !(WHITE_QS | WHITE_KS)}
-        if m.target == BLACK | KING {self.castle &= !(BLACK_QS | BLACK_KS)}
+        else if m.target == BLACK | KING {self.castle &= !(BLACK_QS | BLACK_KS)}
         // if rook moves, or is taken, can't castle to its respective side
-        if (m.orig == [0,0]) || (m.dest == [0,0]) {self.castle &= !WHITE_QS}
-        if (m.orig == [0,7]) || (m.dest == [0,7]) {self.castle &= !WHITE_KS}
-        if (m.orig == [7,0]) || (m.dest == [7,0]) {self.castle &= !BLACK_QS}
-        if (m.orig == [7,7]) || (m.dest == [7,7]) {self.castle &= !BLACK_KS}
+        else {
+            if (m.orig == [0,0]) || (m.dest == [0,0]) {self.castle &= !WHITE_QS}
+            if (m.orig == [0,7]) || (m.dest == [0,7]) {self.castle &= !WHITE_KS}
+            if (m.orig == [7,0]) || (m.dest == [7,0]) {self.castle &= !BLACK_QS}
+            if (m.orig == [7,7]) || (m.dest == [7,7]) {self.castle &= !BLACK_KS}
+        }
     }
 
     #[inline(always)]
@@ -62,14 +68,15 @@ impl Board {
         // rather than regenerating them
         let possible_moves = self.find_all_possible_moves();
         if possible_moves.is_empty() {
+            // checkmate
             if self.check_for_check_static(self.kings[colour_to_index(self.color)], self.color) {
                 return Some(true)
             }
+            // stalemate
             return Some(false)
         }
-        else {
-            None
-        }
+        // game continues
+        None
     }
 
     #[inline(always)]

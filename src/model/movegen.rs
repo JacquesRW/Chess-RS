@@ -238,9 +238,9 @@ impl Board {
 
     pub fn check_for_check_static(&self, king_square: Square,  colour: u8) -> bool {
         let alt_color = other_colour(colour);
-        // if any pawns giving a check
         let rank = king_square[0];
         let file = king_square[1];
+        // if any pawns giving a check
         if rank <= 5 && colour == WHITE {
             if file <= 6 && self.board[rank + 1][file + 1] == BLACK | PAWN {
                 return true
@@ -348,7 +348,7 @@ impl Board {
                     possible_moves.push(m);
             }
         }
-        return possible_moves
+        possible_moves
     }
 
     pub fn _selection_possible_moves(&mut self, sq: Square) -> Vec<Move> {
