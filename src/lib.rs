@@ -1,5 +1,5 @@
 mod model;
-use crate::model::defs::*;
+pub use crate::model::defs::*;
 
 impl Board {
     pub fn new() -> Board {
@@ -20,7 +20,7 @@ impl Board {
         self.make_move(m)
     }
 
-    
+
 }
 
 #[cfg(test)]
