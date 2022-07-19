@@ -1,4 +1,4 @@
-mod model;
+pub mod model;
 pub use crate::model::defs::*;
 
 impl Board {
