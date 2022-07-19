@@ -112,12 +112,4 @@ impl Board {
         self.last_move = m;
         self.switch_color();
     }
-
-    #[inline(always)]
-    pub fn make_move(&mut self, m: Move) -> Option<bool> {
-        // checks for mate and returns Some(true) (if mate), Some(false) (if stalemate), None (else)
-        // should only be used when actually playing moves as adds significant overhead
-        self.pseudo_move(m);
-        self.check_for_mate()
-    }
 }

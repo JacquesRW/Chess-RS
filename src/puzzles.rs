@@ -5,14 +5,14 @@ pub fn _play_puzzle(s: &str) {
     // initialise board with fen string
     let mut game = Board::from_fen(s);
     // display initial board config
-    game.log();
+    game._log();
     // move counter
     let mut counter = 0;
     for _ in 0..50 {
         counter += 1;
         let m = game.analyse(6);
         let check = game.make_move(m);
-        game.log();
+        game._log();
         // check if game has ended
         if check.is_some() {
             if check.unwrap() { println!("Checkmate! After {counter} moves!") };
