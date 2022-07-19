@@ -1,6 +1,4 @@
 use crate::model::defs::*;
-use crate::model::helper::*;
-use crate::model::pieces::*;
 use crate::draw::draw_square;
 
 impl Board {
