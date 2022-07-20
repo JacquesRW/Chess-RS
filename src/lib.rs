@@ -1,6 +1,8 @@
 pub mod model;
 pub use crate::model::defs::*;
 
+// top level commands exposed by this library
+// should be able to get by with just these
 impl Board {
     pub fn new() -> Board {
         // default starting position
@@ -14,9 +16,11 @@ impl Board {
         self.check_for_mate()
     }
 
-    pub fn engine_move(&mut self) -> Option<bool> {
+    pub fn engine_move(&mut self, depth: u8, quiesce_depth: u8, cli_output: bool, move_log: bool) -> Option<bool> {
+        // making an AI move
         println!("AI Moving.");
-        let m = self.analyse(5);
+        let m = self.analyse(depth, quiesce_depth, cli_output);
+        if move_log { m.log() }
         self.make_move(m)
     }
 
@@ -24,7 +28,4 @@ impl Board {
 }
 
 #[cfg(test)]
-mod puzzles; // de facto testing module now
-
-pub const _START_POSITION: &str = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-pub const _TEST_POSITIONS: [&str;1] = ["r2qk2r/ppp4p/3p1pn1/3Pn1p1/2B1P3/2N2P1P/PP2QP2/R4RK1 w kq - 1 15"];
+mod test; // de facto testing module now

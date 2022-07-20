@@ -27,9 +27,8 @@ Chess-RS
 │  │  ├─ moves.rs
 │  │  ├─ pieces.rs
 │  │  ├─ unmake_move.rs
-│  ├─ controller.rs
 │  ├─ main.rs
-│  ├─ puzzles.rs
+│  ├─ test.rs
 ├─ .gitignore
 ├─ cargo.toml
 ├─ README.md

@@ -14,12 +14,12 @@ fn count_plus() {
 }
 
 impl Board {
-    fn negamax(&mut self, mut alpha: i64, beta: i64, depth_left: u8) -> i64 {
+    fn negamax(&mut self, mut alpha: i64, beta: i64, depth_left: u8, quiesce_depth: u8) -> i64 {
         // end of recursive depth of search
         if depth_left == 0 {
             count_plus();
             // quiescence search of only takes, promotions and checks to mitigate horizon effect
-            return self.quiesce(alpha, beta, 4) 
+            return self.quiesce(alpha, beta, quiesce_depth) 
         }
         let mut moves = self.find_all_possible_moves();
         // checks if the game is over in this position, returns max if mate and 0 for stalemate
@@ -57,7 +57,7 @@ impl Board {
             // recursively calls itself for the next set of possible moves
             // based on principle that max(a,b) = -min(-a,-b)
             // i.e best outcome for other player is worst for you
-            let score = -self.negamax(-beta, -alpha, depth_left - 1);
+            let score = -self.negamax(-beta, -alpha, depth_left - 1, quiesce_depth);
             self.unmake_move(m, pen_move, pen_castle, capture, pen_kings);
             // beta pruning
             if score >= beta { return beta }
@@ -70,7 +70,7 @@ impl Board {
     }
 
     #[inline(always)]
-    fn negamax_root(&mut self, mut alpha: i64, beta: i64, depth_left: u8, move_list: Vec<ScoredMove>) -> Vec<ScoredMove> {
+    fn negamax_root(&mut self, mut alpha: i64, beta: i64, depth_left: u8, move_list: Vec<ScoredMove>, quiesce_depth: u8) -> Vec<ScoredMove> {
         // vector of (move, score)
         // uses scored move_list from previous depth search (in iterative deepening)
         let mut new_move_list: Vec<ScoredMove> = Vec::new();
@@ -82,7 +82,7 @@ impl Board {
             let pen_move = self.last_move;
             let capture = self.board[mo.dest[0]][mo.dest[1]];
             self.pseudo_move(mo);
-            let score = -self.negamax(-beta, -alpha, depth_left - 1);
+            let score = -self.negamax(-beta, -alpha, depth_left - 1, quiesce_depth);
             self.unmake_move(mo, pen_move, pen_castle, capture, pen_kings);
             if score > alpha {
                 alpha = score - 1;
@@ -98,7 +98,7 @@ impl Board {
     }
 
     #[inline(always)]
-    pub fn analyse(&mut self, depth: u8) -> Move {
+    pub fn analyse(&mut self, depth: u8, quiesce_depth: u8, cli: bool) -> Move {
         // an iterative deepening search
         // PLANNED Zobrist hashing for more performance
         let now = Instant::now();
@@ -111,17 +111,19 @@ impl Board {
         }
         // loop of iterative deepening, up to preset max depth
         for d in 1..(depth+1) {
-            move_list = self.negamax_root(-9999999, 9999999, d, move_list);
+            move_list = self.negamax_root(-9999999, 9999999, d, move_list, quiesce_depth);
             // if a forced checkmate is found the search ends obviously
             if move_list[0].s == MAX {
                 break;
             }
         }
-        println!("Took {} ms to evalute {:?} normal nodes and {:?} quiescent nodes", now.elapsed().as_millis(), NM_CALLS.load(Ordering::SeqCst), QS_CALLS.load(Ordering::SeqCst));
+        if cli {
+            println!("Took {} ms to evalute {:?} normal nodes and {:?} quiescent nodes", now.elapsed().as_millis(), NM_CALLS.load(Ordering::SeqCst), QS_CALLS.load(Ordering::SeqCst));
+            println!("Current eval is {}.", match self.color { BLACK => -move_list[0].s, WHITE => move_list[0].s, _ => panic!("Invalid colour!")});
+        }
         // reset atomic counters to zero before next position analysed
         NM_CALLS.store(0, Ordering::SeqCst);
         QS_CALLS.store(0, Ordering::SeqCst);
-        println!("Current eval is {}.", match self.color { BLACK => -move_list[0].s, WHITE => move_list[0].s, _ => panic!("Invalid colour!")});
         move_list[0].m
     }
 }

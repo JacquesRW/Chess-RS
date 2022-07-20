@@ -28,26 +28,20 @@ impl Move {
         Move {target: EMPTY, orig: [0,0], dest: [0,0]}
     }
 
-    pub fn log(&self) {
-        // logs move in console
-        match self {
-            Move { target: WHITE | KING , orig: [0,4], dest: [0,2] } => println!("White castles queenside."),
-            Move { target: WHITE | KING , orig: [0,4], dest: [0,6] } => println!("White castles kingside."),
-            Move { target: BLACK | KING , orig: [7,4], dest: [7,2] } => println!("Black castles queenside."),
-            Move { target: BLACK | KING , orig: [7,4], dest: [7,6] } => println!("Black castles kingside."),
-            _ => println!("{}, {} to {}", as_string(self.target), get_coords(&self.orig), get_coords(&self.dest))
-        }
-    }
-
     pub fn _to_string(&self) -> String {
         // string of move
         match self {
-            Move { target: WHITE | KING , orig: [0,4], dest: [0,2] } => format!("castle queenside."),
-            Move { target: WHITE | KING , orig: [0,4], dest: [0,6] } => format!("castle kingside."),
-            Move { target: BLACK | KING , orig: [7,4], dest: [7,2] } => format!("castle queenside."),
-            Move { target: BLACK | KING , orig: [7,4], dest: [7,6] } => format!("castle kingside."),
+            Move { target: WHITE | KING , orig: [0,4], dest: [0,2] } => format!("White castles queenside."),
+            Move { target: WHITE | KING , orig: [0,4], dest: [0,6] } => format!("White castles kingside."),
+            Move { target: BLACK | KING , orig: [7,4], dest: [7,2] } => format!("Black castles queenside."),
+            Move { target: BLACK | KING , orig: [7,4], dest: [7,6] } => format!("Black castles kingside."),
             _ => format!("{}, {} to {}", as_string(self.target), get_coords(&self.orig), get_coords(&self.dest))
         }
+    }
+
+    pub fn log(&self) {
+        // logs move in console
+        println!("{}", self._to_string())
     }
 
     pub fn _to_uci_string(&self) -> String {

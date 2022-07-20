@@ -1,8 +1,8 @@
 ENGINE:
+- Rewrite completely using bitboards
 - Opening book
 - Add checks to quiescence search - pseudo king move for all piece types then check
 for checks from the corresponding piece
-- Add Sebastian Lague's endgame eval trick
 - Pawn structure - doubled, passed, connected, etc 
 
 PERFORMANCE STUFF:

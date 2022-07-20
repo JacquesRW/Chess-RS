@@ -10,7 +10,7 @@ pub fn _play_puzzle(s: &str) {
     let mut counter = 0;
     for _ in 0..50 {
         counter += 1;
-        let m = game.analyse(6);
+        let m = game.analyse(5, 4, true);
         let check = game.make_move(m);
         game._log();
         // check if game has ended
@@ -32,7 +32,7 @@ pub const _PUZZLES: [&str; 7] = ["8/2krR3/1pp3bp/42p1/PPNp4/3P1PKP/8/8 w - - 0 1
 
 #[cfg(test)]
 mod test {
-    use crate::puzzles::*;
+    use crate::test::*;
     #[test]
     fn one_puzzle() {
         _play_puzzle(_PUZZLES[1]);
