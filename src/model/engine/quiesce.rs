@@ -5,19 +5,11 @@ use crate::model::defs::*;
 // value returned if forced checkmate found
 pub const MAX: i64 = 999999;
 
-// atomic count of quiescence nodes searched
-use std::sync::atomic::{AtomicUsize, Ordering};
-pub static QS_CALLS: AtomicUsize = AtomicUsize::new(0);
-pub fn count_qs_plus() {
-    QS_CALLS.fetch_add(1, Ordering::SeqCst);
-}
-
 impl Board {
     pub fn quiesce(&mut self, mut alpha: i64, beta: i64, depth_left: u8) -> i64 {
         // base eval for the current position, to be improved/worsened with these checks
         let stand_pat = self.evaluate();
         if depth_left == 0 { 
-            count_qs_plus();
             return stand_pat 
         }
         let mut captures = self.find_all_possible_quiet_moves();
@@ -31,7 +23,6 @@ impl Board {
             if check.is_some() {
                 // checkmate
                 if check.unwrap() {
-                    count_qs_plus();
                     return -MAX
                 }
                 // stalemate
@@ -43,14 +34,12 @@ impl Board {
         // there is an argument for returning stand pat instead of beta
         // TESTING required
         if stand_pat >= beta { 
-            count_qs_plus();
             return beta 
         }
         // delta pruning, no need to search if up a queen's worth of material 
         // prevents excessive branching in clearly winning positions
         // (when move quality is not as important)
         if stand_pat < alpha - 900 {
-            count_qs_plus();
             return alpha
         }
         // improving alpha bound
@@ -77,7 +66,6 @@ impl Board {
             if score >= beta { return beta }
             if score > alpha { alpha = score }
         }
-        count_qs_plus();
         alpha
     }
 }

@@ -2,22 +2,12 @@
 
 use crate::model::defs::*;
 use crate::model::pieces::*;
-use std::time::Instant;
-
-use std::sync::atomic::{AtomicUsize, Ordering};
-// atomic call counts because negamax already returns a value + easy to just remove than one written into it
-static NM_CALLS: AtomicUsize = AtomicUsize::new(0);
-use crate::model::engine::quiesce::{QS_CALLS, MAX};
-// add 1 to node counts
-fn count_plus() {
-    NM_CALLS.fetch_add(1, Ordering::SeqCst);
-}
+use crate::model::engine::quiesce::MAX;
 
 impl Board {
     fn negamax(&mut self, mut alpha: i64, beta: i64, depth_left: u8, quiesce_depth: u8) -> i64 {
         // end of recursive depth of search
         if depth_left == 0 {
-            count_plus();
             // quiescence search of only takes, promotions and checks to mitigate horizon effect
             return self.quiesce(alpha, beta, quiesce_depth) 
         }
@@ -26,7 +16,6 @@ impl Board {
         // NOTE this comes after quiescence search because if depth 0 && chechmate/stalemate, it will be picked up
         // but if the other way round it will generate all legal moves for non-ending positions and slow algorithm down
         if moves.is_empty() {
-            count_plus();
             // checkmate
             if self.check_for_check_static(self.kings[colour_to_index(self.color)], self.color) {
                 return -MAX
@@ -65,7 +54,6 @@ impl Board {
             if score > alpha { alpha = score }
         }
         // if no beta pruning, return alpha
-        count_plus();
         alpha
     }
 
@@ -98,10 +86,9 @@ impl Board {
     }
 
     #[inline(always)]
-    pub fn analyse(&mut self, depth: u8, quiesce_depth: u8, cli: bool) -> Move {
+    pub fn analyse(&mut self, depth: u8, quiesce_depth: u8) -> Move {
         // an iterative deepening search
         // PLANNED Zobrist hashing for more performance
-        let now = Instant::now();
         // all possible moves to seed the search
         let moves = self.find_all_possible_moves();
         // creating the initial scored move list with all scores set to 0
@@ -117,13 +104,6 @@ impl Board {
                 break;
             }
         }
-        if cli {
-            println!("Took {} ms to evalute {:?} normal nodes and {:?} quiescent nodes", now.elapsed().as_millis(), NM_CALLS.load(Ordering::SeqCst), QS_CALLS.load(Ordering::SeqCst));
-            println!("Current eval is {}.", match self.color { BLACK => -move_list[0].s, WHITE => move_list[0].s, _ => panic!("Invalid colour!")});
-        }
-        // reset atomic counters to zero before next position analysed
-        NM_CALLS.store(0, Ordering::SeqCst);
-        QS_CALLS.store(0, Ordering::SeqCst);
         move_list[0].m
     }
 }

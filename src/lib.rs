@@ -16,10 +16,10 @@ impl Board {
         self.check_for_mate()
     }
 
-    pub fn engine_move(&mut self, depth: u8, quiesce_depth: u8, cli_output: bool, move_log: bool) -> Option<bool> {
+    pub fn engine_move(&mut self, depth: u8, quiesce_depth: u8, move_log: bool) -> Option<bool> {
         // making an AI move
         println!("AI Moving.");
-        let m = self.analyse(depth, quiesce_depth, cli_output);
+        let m = self.analyse(depth, quiesce_depth);
         if move_log { m.log() }
         self.make_move(m)
     }

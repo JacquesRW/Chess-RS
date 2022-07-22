@@ -10,7 +10,7 @@ pub fn _play_puzzle(s: &str) {
     let mut counter = 0;
     for _ in 0..50 {
         counter += 1;
-        let m = game.analyse(5, 4, true);
+        let m = game.analyse(5, 4);
         let check = game.make_move(m);
         game._log();
         // check if game has ended
