@@ -1,7 +1,7 @@
 # Chess-RS
 Command line chess in Rust.
 
-Uses a negamax search with alpha-beta pruning, evaluates positons by performing a further quiescence serach (additional 4 ply) with beta and delta pruning.
+Uses a negamax search with alpha-beta pruning, MVVLVA move ordering and iterative deepening. It evaluates positons by performing a further quiescence serach (additional depth but only considering captures, etc) with beta and delta pruning.
 Static evaluation of final nodes is material eval, piece square tables and tapers from an opening eval to endgame eval. 
 
 It is quite good.
