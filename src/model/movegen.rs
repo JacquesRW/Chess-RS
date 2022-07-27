@@ -371,11 +371,11 @@ impl Board {
 
     pub fn _perft(&mut self, depth_left: u8) -> u64 {
         // returns number of legal positions that can be reached after specified depth
-        let moves = self.find_all_possible_moves();
-        let mut positions: u64 = 0;
         if depth_left == 0 {
             return 1
         }
+        let moves = self.find_all_possible_moves();
+        let mut positions: u64 = 0;
         if depth_left == 1 {
             return moves.len() as u64
         }

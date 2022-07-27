@@ -37,4 +37,16 @@ mod test {
     fn one_puzzle() {
         _play_puzzle(_PUZZLES[1]);
     }
+
+    use std::time::Instant;
+    #[test]
+    fn base_log() {
+        let now = Instant::now();
+        for i in 1..7 {
+            let mut pos = Board::new();
+            let count = pos._perft(i);
+            println!("{count} positions at depth {i}");
+        }
+        println!("took {}ms", now.elapsed().as_millis())
+    }
 }
